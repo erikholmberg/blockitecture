@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-08: all recommendations)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 296d823
 
 ## Goal
 The only ways to move the camera today are gestures: drag to orbit, scroll or pinch to zoom, right-drag to pan. They're mentioned once on the
