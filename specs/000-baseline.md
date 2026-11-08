@@ -28,11 +28,11 @@ Visitors can orbit (default, slow auto-rotate) or walk through it in first perso
 ### Build sequence (`src/build/sequencer.ts`): `tests/sequencer.test.ts`
 - **S1** [unit] The build order includes every piece exactly once.
 - **S2** [unit] Phases build in catalog order and never interleave:
-  hillside → foundations & pool basin → floor slab & terrace → steel frame → roof deck →
-  glass & walls → interior & furniture → pool, garden & finishing touches.
+  hillside → foundations & pool basin → floor slab & terrace → steel frame → interior & furniture →
+  glass & walls → roof deck → pool, garden & finishing touches. *(Order changed by spec 002.)*
 - **S3** [unit] Start times never decrease along the order, starting at 0 and ending within the total.
 - **S4** [unit] There is one phase start per phase, strictly increasing (these drive the timeline ticks).
-- **S5** [unit] `layer` phases build bottom-up; `group` phases build object by object.
+- **S5** [unit] `layer` phases build bottom-up; `group` phases build object by object. *(Amended by 002: ceiling-hung pieces come last in their phase, top-down.)*
 - **S6** [unit] A full build at 1× takes 220–250 s (currently 236.7 s).
 
 ### Walk mode collision (`src/controls/collision.ts`): `tests/collision.test.ts`

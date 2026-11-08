@@ -61,9 +61,11 @@ export function buildInterior(b: Builder) {
   });
   b.add(28, 42, F + 8, 1, 1, 3, C.lightGray, 'bar'); // faucet
   // suspended aluminium & wood cabinets over the island
-  b.newGroup();
-  for (const x of [24, 32]) b.add(x, 36, 22, 1, 1, 7, C.lightGray, 'bar');
-  b.box(23, 35, 33, 37, 17, 22, { kind: 'brick', unit: 5, color: (x) => (x % 2 ? C.lightGray : C.wood) });
+  // (ceiling-hung: built with the roof deck, see spec 002)
+  b.hanging(P.ROOF, () => {
+    for (const x of [24, 32]) b.add(x, 36, 22, 1, 1, 7, C.lightGray, 'bar');
+    b.box(23, 35, 33, 37, 17, 22, { kind: 'brick', unit: 5, color: (x) => (x % 2 ? C.lightGray : C.wood) });
+  });
   // pink GE appliances
   b.newGroup();
   b.box(20, 44, 23, 47, F, F + 18, { kind: 'brick', color: C.pink });
@@ -72,12 +74,14 @@ export function buildInterior(b: Builder) {
   // tall pantry cabinets along the corner wall
   b.box(20, 38, 22, 44, F, F + 21, { kind: 'brick', color: C.wood });
   // illuminated plastic ceiling with three spherical lamps
-  b.newGroup();
-  b.box(21, 32, 30, 48, Y.BEAM_TOP - 1, Y.BEAM_TOP, { kind: 'light', color: C.warmLight });
-  for (const x of [23, 27, 31]) {
-    b.add(x, 42, 22, 1, 1, 6, C.black, 'bar');
-    b.add(x, 42, 19, 1, 1, 3, C.warmLight, 'lamp');
-  }
+  // (ceiling-hung: built with the roof deck, see spec 002)
+  b.hanging(P.ROOF, () => {
+    b.box(21, 32, 30, 48, Y.BEAM_TOP - 1, Y.BEAM_TOP, { kind: 'light', color: C.warmLight });
+    for (const x of [23, 27, 31]) {
+      b.add(x, 42, 22, 1, 1, 6, C.black, 'bar');
+      b.add(x, 42, 19, 1, 1, 3, C.warmLight, 'lamp');
+    }
+  });
 
   // ---------------- Dining ----------------
   b.newGroup();

@@ -55,6 +55,8 @@ export class Builder {
   occ = new Uint8Array(G.nx * G.nz * G.ny);
   phase = 0;
   group = 0;
+  /** while true, placed pieces are flagged as ceiling-hung */
+  hangs = false;
 
   setPhase(p: number) {
     this.phase = p;
@@ -62,6 +64,16 @@ export class Builder {
   }
   newGroup() {
     this.group++;
+  }
+
+  /** Place ceiling-hung pieces: they join phase `p` and are hung after its solid pieces. */
+  hanging(p: number, place: () => void) {
+    const prev = this.phase;
+    this.setPhase(p);
+    this.hangs = true;
+    place();
+    this.hangs = false;
+    this.setPhase(prev);
   }
 
   private idx(x: number, y: number, z: number) {
@@ -102,6 +114,7 @@ export class Builder {
       phase: this.phase, group: this.group,
       studs: opts.studs ?? KIND_STUDS[kind],
     };
+    if (this.hangs) b.hangs = true;
     this.bricks.push(b);
     this.mark(b);
     return true;
@@ -179,6 +192,7 @@ export class Builder {
                 x: x0 + dx, y, z: z0 + dz, w: lx, d: lz, h, color: c, kind,
                 phase: this.phase, group: this.group, studs, thin,
               };
+              if (this.hangs) br.hangs = true;
               this.bricks.push(br);
               this.mark(br);
               done = true;
@@ -192,6 +206,7 @@ export class Builder {
               x: x0 + dx, y, z: z0 + dz, w: 1, d: 1, h, color: c, kind,
               phase: this.phase, group: this.group, studs, thin,
             };
+            if (this.hangs) br.hangs = true;
             this.bricks.push(br);
             this.mark(br);
           }

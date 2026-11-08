@@ -20,8 +20,11 @@ export function sequence(bricks: Brick[]): Schedule {
     const list = byPhase[p];
     const sweep = (b: Brick) => b.x * 0.55 + b.z * 0.45;
     if (ph.order === 'layer') {
+      // bottom-up; ceiling-hung pieces last, top-down from the ceiling
       list.sort((a, c) => {
         const A = bricks[a], B = bricks[c];
+        if (!A.hangs !== !B.hangs) return A.hangs ? 1 : -1;
+        if (A.hangs) return B.y + B.h - (A.y + A.h) || sweep(A) - sweep(B);
         return A.y - B.y || sweep(A) - sweep(B);
       });
     } else {

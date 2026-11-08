@@ -26,6 +26,8 @@ export interface Brick {
   studs: boolean;
   /** for glass panels: which axis is thin (0 = x, 2 = z) */
   thin?: 0 | 2;
+  /** hangs from the ceiling: built after the solid pieces of its phase, top-down (spec 002) */
+  hangs?: true;
 }
 
 export const C = {
@@ -77,9 +79,10 @@ export const PHASES: { name: string; dur: number; order: 'layer' | 'group' }[] =
   { name: 'Foundations & pool basin', dur: 18, order: 'layer' },
   { name: 'Floor slab & terrace', dur: 18, order: 'layer' },
   { name: 'Steel frame', dur: 24, order: 'layer' },
-  { name: 'Roof deck', dur: 24, order: 'layer' },
-  { name: 'Glass & walls', dur: 30, order: 'layer' },
+  // interior goes in while the frame is still open, so it can be watched (spec 002)
   { name: 'Interior & furniture', dur: 52, order: 'group' },
+  { name: 'Glass & walls', dur: 30, order: 'layer' },
+  { name: 'Roof deck', dur: 24, order: 'layer' },
   { name: 'Pool, garden & finishing touches', dur: 34, order: 'group' },
 ];
 
@@ -88,9 +91,9 @@ export const P = {
   FOUNDATION: 1,
   FLOOR: 2,
   STEEL: 3,
-  ROOF: 4,
+  INTERIOR: 4,
   ENVELOPE: 5,
-  INTERIOR: 6,
+  ROOF: 6,
   LANDSCAPE: 7,
 };
 

@@ -1,4 +1,4 @@
-// Spec: specs/000-baseline.md — §Build sequence (S1–S6)
+// Spec: specs/000-baseline.md — §Build sequence (S1–S6); S5 amended by specs/002 (A6)
 import { describe, expect, it } from 'vitest';
 import { buildStahlHouse } from '../src/model/stahlHouse';
 import { DROP_DUR, sequence } from '../src/build/sequencer';
@@ -36,12 +36,12 @@ describe('build sequence', () => {
     for (let p = 1; p < PHASES.length; p++) expect(s.phaseStart[p]).toBeGreaterThan(s.phaseStart[p - 1]);
   });
 
-  it('S5: "layer" phases build bottom-up', () => {
+  it('S5: "layer" phases build bottom-up (hanging pieces excluded, see 002-A3)', () => {
     for (let p = 0; p < PHASES.length; p++) {
       if (PHASES[p].order !== 'layer') continue;
       let y = -Infinity;
       for (const i of s.order) {
-        if (bricks[i].phase !== p) continue;
+        if (bricks[i].phase !== p || bricks[i].hangs) continue;
         expect(bricks[i].y).toBeGreaterThanOrEqual(y);
         y = bricks[i].y;
       }
