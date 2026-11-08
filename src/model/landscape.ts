@@ -4,10 +4,12 @@ import { HeightMap, TERRAIN } from './site';
 import { inAny, inRect, PLATEAU, ROAD, ROOF, Y } from './layout';
 import { buildPoolWater } from './pool';
 
-function palm(b: Builder, x: number, z: number, y: number, height: number) {
+export function palm(b: Builder, x: number, z: number, y: number, height: number) {
   b.newGroup();
   for (let i = 0; i < height; i += 3) {
-    b.add(x, z, y + i, 1, 1, 3, i % 6 === 0 ? C.darkTan : C.dirt, 'round', { studs: false });
+    // last segment is shortened so the trunk ends exactly where the crown starts
+    const h = Math.min(3, height - i);
+    b.add(x, z, y + i, 1, 1, h, i % 6 === 0 ? C.darkTan : C.dirt, 'round', { studs: false });
   }
   const t = y + height;
   b.add(x, z, t, 1, 1, 2, C.darkGreen, 'round', { studs: false });

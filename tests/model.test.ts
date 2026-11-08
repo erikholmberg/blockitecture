@@ -1,6 +1,8 @@
-// Spec: specs/000-baseline.md — §Model (M1–M6)
+// Spec: specs/000-baseline.md — §Model (M1–M6); specs/001-fix-occupancy-overlaps.md (A1–A3)
 import { describe, expect, it } from 'vitest';
 import { buildStahlHouse } from '../src/model/stahlHouse';
+import { Builder, G } from '../src/model/voxel';
+import { palm } from '../src/model/landscape';
 import { PHASES } from '../src/bricks/catalog';
 
 const { builder, heightmap } = buildStahlHouse();
@@ -37,7 +39,7 @@ describe('model', () => {
     }
   });
 
-  it('M5: no two pieces occupy the same cell (known exceptions: KI-1)', () => {
+  it('M5 / 001-A2: no two pieces occupy the same cell', () => {
     const seen = new Map<string, number>();
     const overlaps: [number, number][] = [];
     bricks.forEach((b, i) => {
@@ -66,9 +68,28 @@ describe('model', () => {
   });
 });
 
-/**
- * KI-1 (specs/000-baseline.md): one palm trunk's top segment overlaps its crown
- * (landscape.ts palm(), height not a multiple of 3; above the occupancy grid ceiling).
- * Lower this to 0 when KI-1 is fixed. Never raise it without a spec change.
- */
-const KNOWN_FORCED_OVERLAPS = 1;
+/** Overlaps allowed in the finished model. Never raise this without a spec change. */
+const KNOWN_FORCED_OVERLAPS = 0;
+
+describe('001: occupancy overlaps', () => {
+  it('A1: every piece lies inside the occupancy grid', () => {
+    const outside = bricks.filter(
+      (b) =>
+        b.x < G.x0 || b.x + b.w > G.x0 + G.nx ||
+        b.z < G.z0 || b.z + b.d > G.z0 + G.nz ||
+        b.y < G.y0 || b.y + b.h > G.y0 + G.ny,
+    );
+    expect(outside.length).toBe(0);
+  });
+
+  it.each([30, 31, 32, 33])('A3: palm of height %i — trunk is exactly that tall, crown sits on top', (height) => {
+    const b = new Builder();
+    palm(b, 0, 0, 0, height);
+    const trunk = b.bricks.filter((q) => q.x === 0 && q.z === 0 && q.kind === 'round'); // segments…, crown
+    const segs = trunk.slice(0, -1), crown = trunk[trunk.length - 1];
+    expect(segs.reduce((n, q) => n + q.h, 0)).toBe(height);
+    expect(Math.max(...segs.map((q) => q.y + q.h))).toBe(height);
+    expect(crown.y).toBe(height);
+    expect(b.bricks.length).toBeGreaterThan(trunk.length); // fronds placed too
+  });
+});

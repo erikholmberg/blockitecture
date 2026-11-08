@@ -1,7 +1,8 @@
 import { Brick, Kind, KIND_STUDS, KIND_UNIT, SIZES } from '../bricks/catalog';
 
 /** Occupancy grid bounds (studs / plates). */
-export const G = { x0: -120, nx: 272, z0: -128, nz: 272, y0: -136, ny: 180 };
+/** Must contain every piece (tests/model.test.ts, spec 001-A1); pieces outside it skip overlap checks. */
+export const G = { x0: -128, nx: 280, z0: -128, nz: 272, y0: -136, ny: 200 };
 
 export type ColorArg = number | ((x: number, y: number, z: number) => number);
 export type Mask = (x: number, z: number, y: number) => boolean;

@@ -22,7 +22,7 @@ Visitors can orbit (default, slow auto-rotate) or walk through it in first perso
 - **M2** [unit] Generation is deterministic: two builds produce identical brick lists.
 - **M3** [unit] Every piece belongs to one of the 8 phases, and every phase has at least one piece.
 - **M4** [unit] Every piece has integer coordinates and positive integer size (studs × studs × plates).
-- **M5** [unit] No two pieces overlap, apart from the known exceptions listed under *Known issues*.
+- **M5** [unit] No two pieces overlap.
 - **M6** [unit] Generation completes in < 1.5 s in Node (currently ~65 ms).
 
 ### Build sequence (`src/build/sequencer.ts`): `tests/sequencer.test.ts`
@@ -64,11 +64,11 @@ Visitors can orbit (default, slow auto-rotate) or walk through it in first perso
 Rendering correctness (shaders, instancing, lighting) has no automated tests. It's checked by eye.
 
 ## Known issues
-- **KI-1** One palm trunk's top segment overlaps its crown. In `palm()` (`src/model/landscape.ts`),
+- **KI-1** *(Fixed in 001.)* One palm trunk's top segment overlaps its crown. In `palm()` (`src/model/landscape.ts`),
   when the trunk height isn't a multiple of 3, the last 3-plate segment runs past `t`, where the crown is placed.
   The overlap is above the occupancy grid ceiling (`G.y0 + G.ny = 44` plates in `voxel.ts`), so `add()` doesn't catch it.
   `tests/model.test.ts` allows exactly this one overlap; fix it in a follow-up spec and set the allowance to 0.
-- **KI-2** The occupancy grid only covers y < 44 plates, so placement above that height is never checked.
+- **KI-2** *(Fixed in 001.)* The occupancy grid only covers y < 44 plates, so placement above that height is never checked.
 
 ## Implementation notes
 Retroactive spec, written by reading the code at 64ae035.
