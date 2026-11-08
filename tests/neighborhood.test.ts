@@ -1,8 +1,9 @@
 // Spec: specs/003-real-neighborhood.md (A1–A4, A6; A5 is covered by tests/phaseOrder.test.ts)
 import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
-import { groundHeight, parseNeighborhood, sampleGrid } from '../src/scene/neighborhoodData';
-import { TERRAIN } from '../src/model/site';
+import { groundHeight, parseNeighborhood, sampleGrid } from '../src/engine/scene/neighborhoodData';
+import { TERRAIN } from '../src/houses/stahl-house/model/site';
+import { STAHL } from '../src/houses/stahl-house/definition';
 
 const file = readFileSync('public/stahl-house/neighborhood.bin');
 const n = parseNeighborhood(file.buffer.slice(file.byteOffset, file.byteOffset + file.byteLength));
@@ -41,8 +42,8 @@ describe('003: real neighborhood data', () => {
     expect(sampleGrid(n.near, 32, 12 - 3000)).toBeLessThan(-350);
     expect(n.near.h.reduce((m, v) => Math.max(m, v), -Infinity)).toBeGreaterThan(200);
     // outside the lot the ground is the real ground (spec 004-A4 removed the blend to the old −48 ft lot edge)
-    expect(groundHeight(n, TERRAIN.x1 + 0.5, 0)).toBeCloseTo(sampleGrid(n.near, TERRAIN.x1 + 0.5, 0), 3);
-    expect(groundHeight(n, 0, TERRAIN.z0 - 0.5)).toBeCloseTo(sampleGrid(n.near, 0, TERRAIN.z0 - 0.5), 3);
+    expect(groundHeight(n, STAHL.lot, TERRAIN.x1 + 0.5, 0)).toBeCloseTo(sampleGrid(n.near, TERRAIN.x1 + 0.5, 0), 3);
+    expect(groundHeight(n, STAHL.lot, 0, TERRAIN.z0 - 0.5)).toBeCloseTo(sampleGrid(n.near, 0, TERRAIN.z0 - 0.5), 3);
   });
 
   it('A3: decoded terrain is continuous (no decoding glitches)', () => {

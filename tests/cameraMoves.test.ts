@@ -1,8 +1,12 @@
 // Spec: specs/006-camera-controls.md (A1, A2)
 import { describe, expect, it } from 'vitest';
 import {
-  distance, ease, Glide, MAX_DIST, MIN_DIST, ROTATE_STEP, rotated, VIEWS, View, ZOOM_STEP, zoomed,
-} from '../src/controls/cameraMoves';
+  distance, ease, Glide, MAX_DIST, MIN_DIST, ROTATE_STEP, rotated, View, ZOOM_STEP, zoomed,
+} from '../src/engine/controls/cameraMoves';
+import { STAHL } from '../src/houses/stahl-house/definition';
+
+/** the Stahl House's named views (spec 006), from its house definition since spec 010a */
+const VIEWS = STAHL.views;
 
 const home: View = VIEWS.overview.view;
 const close = (a: number, b: number, eps = 1e-6) => expect(Math.abs(a - b)).toBeLessThan(eps);

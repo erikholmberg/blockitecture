@@ -1,8 +1,9 @@
-import { C, P } from '../bricks/catalog';
-import { Builder } from './voxel';
+import { C } from '@/engine/catalog';
+import { P } from '@/houses/stahl-house/phases';
+import { Builder } from '@/engine/voxel';
 import {
   BEDROOMS, CORNER, HOUSE, inAny, inPool, inRect, LIVING, ROOF, TERRACE, Y,
-} from './layout';
+} from '@/houses/stahl-house/model/layout';
 
 /** Concrete grade beams that carry the cantilevered living room (built before the terrain). */
 export function buildCantileverBeams(b: Builder) {

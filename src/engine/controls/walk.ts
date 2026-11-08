@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Collision } from './collision';
+import { Collision } from '@/engine/controls/collision';
 
 const EYE = 5.4;
 const HEIGHT = 5.9;
@@ -20,7 +20,8 @@ export class Walker {
   enabled = false;
   locked = false;
 
-  constructor(private camera: THREE.PerspectiveCamera, private dom: HTMLElement, private col: Collision) {
+  /** `start`: where walk mode begins and where you respawn after falling off the world (x, z, yaw) */
+  constructor(private camera: THREE.PerspectiveCamera, private dom: HTMLElement, private col: Collision, private start: [number, number, number]) {
     addEventListener('keydown', (e) => {
       if (!this.enabled) return;
       this.keys.add(e.code);
@@ -106,7 +107,7 @@ export class Walker {
       this.onGround = true;
     } else this.onGround = ny - g < 0.05;
     p.y = ny;
-    if (p.y < -200) this.place(23.5, -16, -2.6, t);
+    if (p.y < -200) this.place(...this.start, t);
 
     this.camera.position.set(p.x, p.y + EYE, p.z);
     this.camera.rotation.set(this.pitch, this.yaw, 0, 'YXZ');

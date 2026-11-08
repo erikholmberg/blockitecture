@@ -1,9 +1,10 @@
-import { C, P, TERRAIN_SIZES } from '../bricks/catalog';
-import { Builder, hash2, noise2 } from './voxel';
+import { C, TERRAIN_SIZES } from '@/engine/catalog';
+import { P } from '@/houses/stahl-house/phases';
+import { Builder, hash2, noise2 } from '@/engine/voxel';
 import {
   CARPORT, DRIVE, inAny, inPool, inRect, PLATEAU, ROOF, sdRoundRect, Y,
-} from './layout';
-import { LOT_GROUND } from './lotTerrain';
+} from '@/houses/stahl-house/model/layout';
+import { LOT_GROUND } from '@/houses/stahl-house/model/lotTerrain';
 
 export const TERRAIN = { x0: -112, z0: -120, x1: 144, z1: 132 };
 

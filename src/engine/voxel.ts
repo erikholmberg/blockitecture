@@ -1,4 +1,4 @@
-import { Brick, Kind, KIND_STUDS, KIND_UNIT, SIZES } from '../bricks/catalog';
+import { Brick, Kind, KIND_STUDS, KIND_UNIT, SIZES } from '@/engine/catalog';
 
 /** Occupancy grid bounds (studs / plates). */
 /**

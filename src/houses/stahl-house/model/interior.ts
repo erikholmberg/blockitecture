@@ -1,6 +1,7 @@
-import { C, P } from '../bricks/catalog';
-import { Builder } from './voxel';
-import { Y } from './layout';
+import { C } from '@/engine/catalog';
+import { P } from '@/houses/stahl-house/phases';
+import { Builder } from '@/engine/voxel';
+import { Y } from '@/houses/stahl-house/model/layout';
 
 const F = Y.FLOOR;
 

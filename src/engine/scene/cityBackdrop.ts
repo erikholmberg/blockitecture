@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { rng } from '../model/voxel';
-import { Neighborhood, sampleGrid } from './neighborhoodData';
+import { rng } from '@/engine/voxel';
+import { Neighborhood, sampleGrid } from '@/engine/scene/neighborhoodData';
 
 /**
  * The Los Angeles basin beyond the real neighborhood (spec 003): procedural blocks and a carpet of
@@ -13,7 +13,8 @@ export class City {
   private glow: THREE.PointsMaterial;
   private blocks: THREE.MeshStandardMaterial;
 
-  constructor(n: Neighborhood) {
+  /** `downtownDir`: model-space direction from the house toward downtown */
+  constructor(n: Neighborhood, downtownDir: [number, number]) {
     const r = rng(1960);
     const cx = n.anchor.offsetX, cz = n.anchor.offsetZ;
     const R0 = 1200 / 0.3048 + 150; // real data covers everything inside this
@@ -28,8 +29,8 @@ export class City {
       const s = Math.abs(h(x + 250, z) - y) + Math.abs(h(x, z + 250) - y);
       return s < 45; // flat ground only
     };
-    // Downtown LA: real bearing (ESE of the house, rotated 180° like the rest), pulled in to 16,000 ft
-    const dir = new THREE.Vector2(-36400, -18400).normalize();
+    // downtown: along the house's real bearing to it (in model space), pulled in to 16,000 ft
+    const dir = new THREE.Vector2(downtownDir[0], downtownDir[1]).normalize();
     const downtown = new THREE.Vector2(cx + dir.x * 16000, cz + dir.y * 16000);
 
     // buildings: houses and low blocks on a ~330 ft LA street grid, towers downtown

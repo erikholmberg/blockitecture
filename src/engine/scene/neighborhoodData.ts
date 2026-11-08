@@ -5,7 +5,7 @@
  * Model coordinates: x/z in ft (1 unit = 1 stud ≈ 1 ft), y up in ft, y = 0 is the brick lot.
  * The real world is rotated 180° to match the brick model (see the script header).
  */
-import { surfaceFt, TERRAIN } from '../model/site';
+import type { Lot } from '@/engine/house';
 
 export interface Grid {
   x0: number; z0: number; step: number; nx: number; nz: number;
@@ -110,9 +110,10 @@ export const FAR_BLEND = 500;
 const smooth = (t: number) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t));
 
 /** Distance from (x,z) to the brick lot rectangle; 0 inside. */
-export function lotDistance(x: number, z: number) {
-  const dx = Math.max(TERRAIN.x0 - x, 0, x - TERRAIN.x1);
-  const dz = Math.max(TERRAIN.z0 - z, 0, z - TERRAIN.z1);
+export function lotDistance(lot: Lot, x: number, z: number) {
+  const r = lot.rect;
+  const dx = Math.max(r.x0 - x, 0, x - r.x1);
+  const dz = Math.max(r.z0 - z, 0, z - r.z1);
   return Math.hypot(dx, dz);
 }
 
@@ -124,14 +125,14 @@ export const UNDER_LOT = 3;
  * near grid. Inside the brick lot it sits UNDER_LOT ft below the lowest real or designed surface (pad, driveway,
  * pool floor) within one mesh cell, so the bricks hide it.
  */
-export function groundHeight(n: Neighborhood, x: number, z: number): number {
-  const d = lotDistance(x, z);
+export function groundHeight(n: Neighborhood, lot: Lot, x: number, z: number): number {
+  const d = lotDistance(lot, x, z);
   if (d === 0) {
     // lowest surface within one mesh cell in every direction, so the interpolated mesh stays under the bricks
     const s = n.near.step;
     let m = Infinity;
     for (let dz = -s; dz <= s; dz += s / 4)
-      for (let dx = -s; dx <= s; dx += s / 4) m = Math.min(m, sampleGrid(n.near, x + dx, z + dz), surfaceFt(x + dx, z + dz));
+      for (let dx = -s; dx <= s; dx += s / 4) m = Math.min(m, sampleGrid(n.near, x + dx, z + dz), lot.surfaceFt(x + dx, z + dz));
     return m - UNDER_LOT;
   }
   const far = sampleGrid(n.far, x, z);

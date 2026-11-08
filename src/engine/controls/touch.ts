@@ -1,4 +1,4 @@
-import { Walker } from './walk';
+import { Walker } from '@/engine/controls/walk';
 
 /** Left half: virtual joystick. Right half: drag to look. */
 export function attachTouch(root: HTMLElement, walker: Walker) {

@@ -1,13 +1,15 @@
 // Spec: specs/005-hillside-from-the-top.md (A1–A5)
 import { describe, expect, it } from 'vitest';
-import { buildStahlHouse } from '../src/model/stahlHouse';
-import { sequence, WAVE_CENTER } from '../src/build/sequencer';
-import { P, PHASES, PLATE } from '../src/bricks/catalog';
-import { PLATEAU } from '../src/model/layout';
+import { buildStahlHouse } from '../src/houses/stahl-house/model/stahlHouse';
+import { sequence } from '../src/engine/sequencer';
+import { PLATE } from '../src/engine/catalog';
+import { P, PHASES } from '../src/houses/stahl-house/phases';
+import { PLATEAU } from '../src/houses/stahl-house/model/layout';
 import { modelFingerprint } from './fingerprint';
+import { STAHL } from '../src/houses/stahl-house/definition';
 
 const bricks = buildStahlHouse().builder.bricks;
-const s = sequence(bricks);
+const s = sequence(bricks, PHASES, STAHL.center);
 const site = bricks.map((_, i) => i).filter((i) => bricks[i].phase === P.SITE);
 const t0 = s.phaseStart[P.SITE], dur = PHASES[P.SITE].dur;
 const u = (i: number) => (s.start[i] - t0) / dur; // 0…1 through the phase
@@ -15,7 +17,7 @@ const u = (i: number) => (s.start[i] - t0) / dur; // 0…1 through the phase
 /** horizontal distance from the house + drop of the piece's top below the pad, in ft */
 const waveKey = (i: number) => {
   const b = bricks[i];
-  const d = Math.hypot(b.x + b.w / 2 - WAVE_CENTER.x, b.z + b.d / 2 - WAVE_CENTER.z);
+  const d = Math.hypot(b.x + b.w / 2 - STAHL.center.x, b.z + b.d / 2 - STAHL.center.z);
   return d + Math.max(0, -(b.y + b.h) * PLATE);
 };
 

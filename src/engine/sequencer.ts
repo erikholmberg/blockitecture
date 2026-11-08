@@ -1,21 +1,18 @@
-import { Brick, PHASES, PLATE } from '../bricks/catalog';
-import { CENTER } from '../model/layout';
-
-/** Where the hillside wave starts: the middle of the house pad (spec 005). */
-export const WAVE_CENTER = { x: CENTER.x, z: CENTER.z };
+import { Brick, PLATE } from '@/engine/catalog';
+import type { Phase } from '@/engine/house';
 
 /**
  * Outward-and-downhill order: horizontal distance from the house plus the drop of each piece's top below the pad
  * (ft). Then each piece is pushed after every piece under it in any of its stud cells, so stacks still go up
  * bottom-first and nothing floats.
  */
-function waveKeys(bricks: Brick[], list: number[]) {
+function waveKeys(bricks: Brick[], list: number[], c: { x: number; z: number }) {
   const key = new Map<number, number>();
   const below = new Map<number, number>(); // stud cell → key of the highest piece placed in it so far
   const byY = [...list].sort((a, c) => bricks[a].y - bricks[c].y);
   for (const i of byY) {
     const b = bricks[i];
-    let k = Math.hypot(b.x + b.w / 2 - WAVE_CENTER.x, b.z + b.d / 2 - WAVE_CENTER.z) + Math.max(0, -(b.y + b.h) * PLATE);
+    let k = Math.hypot(b.x + b.w / 2 - c.x, b.z + b.d / 2 - c.z) + Math.max(0, -(b.y + b.h) * PLATE);
     for (let z = b.z; z < b.z + b.d; z++)
       for (let x = b.x; x < b.x + b.w; x++) {
         const under = below.get(x * 4096 + z);
@@ -36,18 +33,21 @@ export interface Schedule {
 
 export const DROP_DUR = 0.7;
 
-export function sequence(bricks: Brick[]): Schedule {
-  const byPhase: number[][] = PHASES.map(() => []);
+/**
+ * Build order and start times. `waveCenter` is where 'wave' phases start (the middle of the house pad, spec 005).
+ */
+export function sequence(bricks: Brick[], phases: Phase[], waveCenter: { x: number; z: number }): Schedule {
+  const byPhase: number[][] = phases.map(() => []);
   bricks.forEach((b, i) => byPhase[b.phase].push(i));
   const order: number[] = [];
   const start = new Float32Array(bricks.length);
   const phaseStart: number[] = [];
   let t = 0;
-  PHASES.forEach((ph, p) => {
+  phases.forEach((ph, p) => {
     const list = byPhase[p];
     const sweep = (b: Brick) => b.x * 0.55 + b.z * 0.45;
     if (ph.order === 'wave') {
-      const key = waveKeys(bricks, list);
+      const key = waveKeys(bricks, list, waveCenter);
       list.sort((a, c) => key.get(a)! - key.get(c)! || a - c);
     } else if (ph.order === 'layer') {
       // bottom-up; ceiling-hung pieces last, top-down from the ceiling

@@ -1,10 +1,10 @@
-import { Builder } from './voxel';
-import { buildPaving, buildSite, HeightMap } from './site';
-import { buildPoolBasin } from './pool';
-import { buildCantileverBeams, buildSlabs, buildSteel } from './structure';
-import { buildEnvelope } from './envelope';
-import { buildInterior } from './interior';
-import { buildLandscape } from './landscape';
+import { Builder } from '@/engine/voxel';
+import { buildPaving, buildSite, HeightMap } from '@/houses/stahl-house/model/site';
+import { buildPoolBasin } from '@/houses/stahl-house/model/pool';
+import { buildCantileverBeams, buildSlabs, buildSteel } from '@/houses/stahl-house/model/structure';
+import { buildEnvelope } from '@/houses/stahl-house/model/envelope';
+import { buildInterior } from '@/houses/stahl-house/model/interior';
+import { buildLandscape } from '@/houses/stahl-house/model/landscape';
 
 /**
  * Generation order sets priority for space (first come, first served);

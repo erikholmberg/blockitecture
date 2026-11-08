@@ -5,10 +5,14 @@ Famous houses built brick by brick in the browser. A home page (`/`) lists them;
 pages and the viewer HUD are React + shadcn/ui + Tailwind v4 + Inter (spec 007). See README.md for features.
 
 ## Layout
-- `index.html` + `src/home/` — home page; `src/houses.ts` — the house registry (cards).
-- `stahl-house/index.html` + `src/main.ts` — the Stahl House viewer (engine, keys, camera); `src/ui/Hud.tsx` — its controls.
+- `index.html` + `src/home/` — home page; `src/houses/index.ts` — the house registry (cards).
+- `src/engine/` — the house-agnostic viewer (spec 010a): `viewer.ts` (`startViewer(house)`), `house.ts` (`HouseDefinition`),
+  voxel builder, brick rendering, sequencer, controls, sun, environment, neighborhood, city, `ui/Hud.tsx`.
+  **Nothing in `src/engine` may import from `src/houses`** (tested).
+- `src/houses/<slug>/` — one house: `model/` (its bricks), `phases.ts`, `definition.ts` (texts, site, views, lights, roof cut,
+  lot, data path…), `main.ts` (page entry). Page HTML at `<slug>/index.html`, listed in `PAGES` (`vite.config.ts`).
+- `public/<slug>/` — per-house static files (thumbnail, `neighborhood.bin`). `scripts/houses/<slug>.mjs` — its real-world data settings.
 - `src/components/ui/` — shadcn components (ours to edit; add more with `npx shadcn@latest add <name>`).
-- `public/<slug>/` — per-house static files (thumbnail, data). Every page path needs an entry in `PAGES` (`vite.config.ts`).
 - Don't use `backdrop-blur` on anything over the 3D canvas: it re-blurs the scene every frame (−22% fps, spec 007).
 
 ## We use spec-driven development
@@ -39,12 +43,12 @@ npm run dev          # http://localhost:5173 (?debug for the FPS overlay and win
 npm test             # Vitest, once
 npm run test:watch
 npm run check        # tsc (src + tests) + tests: must pass before every commit
-node scripts/fetch-neighborhood.mjs   # regenerate public/neighborhood.bin and src/model/lotTerrain.ts (OSM + terrain; cached in scripts/.cache)
+node scripts/fetch-neighborhood.mjs <slug>   # regenerate public/<slug>/neighborhood.bin and the house's model/lotTerrain.ts (OSM + terrain; cached in scripts/.cache)
 npm run build        # tsc + vite build → dist/
 ```
 
 ## Testability notes
-- `src/model/*`, `src/build/sequencer.ts`, `src/bricks/catalog.ts` and `src/controls/collision.ts`
+- `src/houses/*/model/*`, `src/engine/sequencer.ts`, `src/engine/catalog.ts` and `src/engine/controls/collision.ts`
   are pure (no DOM, no Three.js) and can be tested directly in Node. Keep new logic in pure modules
   like these where possible, so criteria can be `[unit]` and not `[manual]`.
 - Units: x/z in studs, y in plates (`PLATE = 0.4` world units). Generation is deterministic (seeded `rng`).

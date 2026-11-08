@@ -3,8 +3,9 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Hud, HudHandlers } from '../src/ui/Hud';
-import { createHudStore } from '../src/ui/hudStore';
+import { Hud, HudHandlers } from '../src/engine/ui/Hud';
+import { createHudStore } from '../src/engine/ui/hudStore';
+import { STAHL } from '../src/houses/stahl-house/definition';
 
 beforeAll(() => {
   // browser APIs Radix uses that jsdom lacks
@@ -26,7 +27,7 @@ const setup = () => {
     mode: 'orbit', walkHint: '', autoRotate: true, phaseStart: [0, 17.5], light: 'day', hidden: false,
   });
   const h = handlers();
-  render(<Hud store={store} h={h} />);
+  render(<Hud store={store} h={h} house={{ text: STAHL.text, views: STAHL.views, phaseNames: STAHL.phases.map((p) => p.name) }} />);
   return { store, h, user: userEvent.setup() };
 };
 

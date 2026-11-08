@@ -7,8 +7,7 @@ import { createRoot } from 'react-dom/client';
 import {
   ArrowLeft, Expand, Eye, Home, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Repeat,
 } from 'lucide-react';
-import { PHASES } from '@/bricks/catalog';
-import { VIEWS } from '@/controls/cameraMoves';
+import type { HouseDefinition } from '@/engine/house';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -18,9 +17,12 @@ import { Slider } from '@/components/ui/slider';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { createHudStore, HudSnapshot, HudStore } from './hudStore';
+import { createHudStore, HudSnapshot, HudStore } from '@/engine/ui/hudStore';
 
-export type CamAction = 'in' | 'out' | 'left' | 'right' | 'home' | 'auto' | 'full' | `view:${keyof typeof VIEWS}`;
+export type CamAction = 'in' | 'out' | 'left' | 'right' | 'home' | 'auto' | 'full' | `view:${string}`;
+
+/** What the HUD shows about the house (spec 010a). */
+export type HudHouse = Pick<HouseDefinition, 'text' | 'views'> & { phaseNames: string[] };
 
 export interface HudState {
   t: number; total: number; playing: boolean; speed: number; placed: number; pieces: number; phase: number;
@@ -89,7 +91,8 @@ function CamButton({ label, keyHint, onClick, pressed, children }: {
   );
 }
 
-export function Hud({ store, h }: { store: HudStore; h: HudHandlers }) {
+export function Hud({ store, h, house }: { store: HudStore; h: HudHandlers; house: HudHouse }) {
+  const { text } = house;
   const s = useSyncExternalStore(store.subscribe, store.get);
   const [started, setStarted] = useState(false);
   const [roof, setRoof] = useState<'on' | 'off'>('on');
@@ -117,19 +120,18 @@ export function Hud({ store, h }: { store: HudStore; h: HudHandlers }) {
             <Card className="w-full max-w-md shadow-2xl">
               <CardHeader>
                 <CardDescription className="text-[11px] tracking-[0.14em] uppercase">
-                  Case Study House #22 · Pierre Koenig · 1959–60
+                  {text.eyebrow}
                 </CardDescription>
                 <CardTitle className="text-3xl leading-tight font-bold tracking-tight">
-                  The Stahl House,
+                  {text.headline[0]}
                   <br />
-                  brick by brick
+                  {text.headline[1]}
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-5">
                 <p className="text-[15px] leading-relaxed text-muted-foreground">
-                  Steel, glass and a view over the whole of Los Angeles. Watch all{' '}
-                  <b className="text-foreground">{s.pieces.toLocaleString('en-US')}</b> pieces snap into place on the Hollywood
-                  Hills. Fly around it, or walk in and look around while it goes up.
+                  {text.intro[0]}{' '}
+                  <b className="text-foreground">{s.pieces.toLocaleString('en-US')}</b> {text.intro[1]}
                 </p>
                 <Button size="lg" className="h-11 w-fit px-5 text-[15px]" onClick={() => { setStarted(true); h.onStart(); }}>
                   Start building
@@ -148,8 +150,8 @@ export function Hud({ store, h }: { store: HudStore; h: HudHandlers }) {
             <a href="/" className="mb-0.5 flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
               <ArrowLeft className="size-3" aria-hidden /> All houses
             </a>
-            <div className="text-[13px] font-semibold">Stahl House</div>
-            <div className="hidden text-[11px] text-muted-foreground sm:block">1635 Woods Drive, Los Angeles</div>
+            <div className="text-[13px] font-semibold">{text.name}</div>
+            <div className="hidden text-[11px] text-muted-foreground sm:block">{text.address}</div>
           </div>
           <div className="pointer-events-auto flex flex-wrap justify-end gap-2">
             <Seg label="Camera mode" value={s.mode} onChange={(m) => h.onMode(m)} items={[['orbit', 'Orbit'], ['walk', 'Walk']]} />
@@ -186,8 +188,8 @@ export function Hud({ store, h }: { store: HudStore; h: HudHandlers }) {
               </DropdownMenuTrigger>
               <DropdownMenuContent side="left" align="start" className="min-w-44">
                 <DropdownMenuLabel>Views</DropdownMenuLabel>
-                {Object.entries(VIEWS).map(([k, v]) => (
-                  <DropdownMenuItem key={k} onSelect={() => h.onCam(`view:${k as keyof typeof VIEWS}`)}>
+                {Object.entries(house.views).map(([k, v]) => (
+                  <DropdownMenuItem key={k} onSelect={() => h.onCam(`view:${k}`)}>
                     {v.label}
                   </DropdownMenuItem>
                 ))}
@@ -217,7 +219,7 @@ export function Hud({ store, h }: { store: HudStore; h: HudHandlers }) {
           />
           <div className="order-first min-w-[120px] basis-full md:order-none md:flex-1 md:basis-auto">
             <div className="mb-1 flex justify-between gap-2 text-xs">
-              <span className="truncate font-semibold">{done ? 'Complete. Welcome to Case Study House #22' : PHASES[s.phase]?.name}</span>
+              <span className="truncate font-semibold">{done ? text.complete : house.phaseNames[s.phase]}</span>
               <span className="whitespace-nowrap text-muted-foreground tabular-nums">
                 {s.placed.toLocaleString('en-US')} / {s.pieces.toLocaleString('en-US')} pieces
               </span>
@@ -235,7 +237,7 @@ export function Hud({ store, h }: { store: HudStore; h: HudHandlers }) {
               />
               <div className="pointer-events-none absolute inset-x-0 -bottom-0.5 h-1.5" aria-hidden>
                 {s.phaseStart.map((p, i) => (
-                  <i key={i} title={PHASES[i]?.name} className="absolute h-1.5 w-px bg-foreground/25" style={{ left: `${(p / s.total) * 100}%` }} />
+                  <i key={i} title={house.phaseNames[i]} className="absolute h-1.5 w-px bg-foreground/25" style={{ left: `${(p / s.total) * 100}%` }} />
                 ))}
               </div>
             </div>
@@ -250,7 +252,7 @@ export function Hud({ store, h }: { store: HudStore; h: HudHandlers }) {
 }
 
 /** Same API main.ts used with the old vanilla Hud class. */
-export function mountHud(parent: HTMLElement, h: HudHandlers, total: number, pieces: number) {
+export function mountHud(parent: HTMLElement, h: HudHandlers, total: number, pieces: number, house: HudHouse) {
   const store = createHudStore({
     t: 0, total, playing: false, speed: 1, placed: 0, pieces, phase: 0,
     mode: 'orbit', walkHint: '', autoRotate: true, phaseStart: [], light: 'day', hidden: false,
@@ -258,7 +260,7 @@ export function mountHud(parent: HTMLElement, h: HudHandlers, total: number, pie
   const el = document.createElement('div');
   el.className = 'hud-root';
   parent.appendChild(el);
-  createRoot(el).render(<Hud store={store} h={h} />);
+  createRoot(el).render(<Hud store={store} h={h} house={house} />);
   return {
     store,
     update: (s: HudState) => store.set(s),

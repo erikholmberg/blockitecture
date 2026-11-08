@@ -1,12 +1,11 @@
 import * as THREE from 'three';
-import { groundHeight, inGrid, lotDistance, Neighborhood, parseNeighborhood, sampleGrid } from './neighborhoodData';
-import { hash2, noise2 } from '../model/voxel';
-import { DRIVE } from '../model/layout';
-import { TERRAIN } from '../model/site';
+import { groundHeight, inGrid, lotDistance, Neighborhood, parseNeighborhood, sampleGrid } from '@/engine/scene/neighborhoodData';
+import { hash2, noise2 } from '@/engine/voxel';
+import type { Lot } from '@/engine/house';
 
 /**
  * Spec 003: the real Hollywood Hills around the house: terrain, roads and buildings from
- * OpenStreetMap / AWS Terrain Tiles (public/stahl-house/neighborhood.bin). Scenery only, not part of the build.
+ * OpenStreetMap / AWS Terrain Tiles (public/<slug>/neighborhood.bin). Scenery only, not part of the build.
  */
 export class NeighborhoodScene {
   group = new THREE.Group();
@@ -14,8 +13,8 @@ export class NeighborhoodScene {
   private glow: THREE.PointsMaterial;
   private mats: THREE.MeshStandardMaterial[] = [];
 
-  constructor(private n: Neighborhood) {
-    const ground = (x: number, z: number) => groundHeight(n, x, z);
+  constructor(private n: Neighborhood, private lot: Lot) {
+    const ground = (x: number, z: number) => groundHeight(n, lot, x, z);
     this.group.add(this.terrain(ground));
     this.group.add(this.farTerrain());
     this.group.add(this.roads(ground));
@@ -110,29 +109,31 @@ export class NeighborhoodScene {
     const COLOR = [0x77746c, 0x5d5d5a, 0x4f504f, 0x4a4c4e];
     const pos: number[] = [], col: number[] = [];
     const c = new THREE.Color();
-    const paths: { pts: [number, number][]; cls: number }[] = [];
+    const paths: { pts: [number, number][]; cls: number; connector?: boolean }[] = [];
     for (let r = 0; r < count; r++) {
       const pts: [number, number][] = [];
       for (let p = start[r]; p < start[r + 1]; p++) pts.push([xz[p * 2], xz[p * 2 + 1]]);
       paths.push({ pts, cls: cls[r] });
     }
-    // spec 004: join the brick driveway's end to the nearest real street
-    const end: [number, number] = [TERRAIN.x0, (DRIVE[1] + DRIVE[3]) / 2];
-    let best: [number, number] = end, bestD = Infinity;
-    for (const { pts, cls: k } of paths) {
-      if (k === 0) continue; // not service roads
-      for (let i = 0; i < pts.length - 1; i++) {
-        const [ax, az] = pts[i], [bx, bz] = pts[i + 1];
-        const L2 = (bx - ax) ** 2 + (bz - az) ** 2 || 1;
-        const t = Math.max(0, Math.min(1, ((end[0] - ax) * (bx - ax) + (end[1] - az) * (bz - az)) / L2));
-        const px = ax + (bx - ax) * t, pz = az + (bz - az) * t, d = Math.hypot(px - end[0], pz - end[1]);
-        if (d < bestD) { bestD = d; best = [px, pz]; }
+    // spec 004: join the brick driveway's end (if the house has one) to the nearest real street
+    const end = this.lot.driveEnd;
+    if (end) {
+      let best: [number, number] = end, bestD = Infinity;
+      for (const { pts, cls: k } of paths) {
+        if (k === 0) continue; // not service roads
+        for (let i = 0; i < pts.length - 1; i++) {
+          const [ax, az] = pts[i], [bx, bz] = pts[i + 1];
+          const L2 = (bx - ax) ** 2 + (bz - az) ** 2 || 1;
+          const t = Math.max(0, Math.min(1, ((end[0] - ax) * (bx - ax) + (end[1] - az) * (bz - az)) / L2));
+          const px = ax + (bx - ax) * t, pz = az + (bz - az) * t, d = Math.hypot(px - end[0], pz - end[1]);
+          if (d < bestD) { bestD = d; best = [px, pz]; }
+        }
       }
+      if (bestD < 400) paths.push({ pts: [[end[0] - 1, end[1]], best], cls: 0, connector: true });
     }
-    if (bestD < 400) paths.push({ pts: [[end[0] - 1, end[1]], best], cls: 0 });
-    for (const { pts, cls: k } of paths) {
+    for (const { pts, cls: k, connector } of paths) {
       const hw = WIDTH[k] / 2;
-      c.setHex(k === 0 && pts.length === 2 && pts[0][0] === end[0] - 1 ? 0xc9c3b5 : COLOR[k]);
+      c.setHex(connector ? 0xc9c3b5 : COLOR[k]);
       // resample to ≤ 16 ft segments so the ribbon follows the ground
       const line: [number, number][] = [];
       for (let p = 0; p < pts.length - 1; p++) {
@@ -143,7 +144,7 @@ export class NeighborhoodScene {
       line.push(pts[pts.length - 1]);
       for (let i = 0; i < line.length - 1; i++) {
         const [ax, az] = line[i], [bx, bz] = line[i + 1];
-        if (lotDistance(ax, az) < 2 || lotDistance(bx, bz) < 2) continue; // the brick lot has its own road
+        if (lotDistance(this.lot, ax, az) < 2 || lotDistance(this.lot, bx, bz) < 2) continue; // the brick lot has its own road
         const L = Math.hypot(bx - ax, bz - az) || 1;
         const px = (-(bz - az) / L) * hw, pz = ((bx - ax) / L) * hw;
         const v = (x: number, z: number) => { pos.push(x, ground(x, z) + 1.2, z); col.push(c.r, c.g, c.b); };
@@ -239,7 +240,7 @@ export class NeighborhoodScene {
         const L = Math.hypot(bx - ax, bz - az);
         for (let t = (90 - acc) % 90; t < L; t += 90) {
           const x = ax + ((bx - ax) * t) / L, z = az + ((bz - az) * t) / L;
-          if (lotDistance(x, z) < 4) continue;
+          if (lotDistance(this.lot, x, z) < 4) continue;
           pos.push(x, ground(x, z) + 3, z);
           col.push(sodium.r, sodium.g, sodium.b);
         }
@@ -258,9 +259,9 @@ export class NeighborhoodScene {
 }
 
 /** Fetch the neighborhood from our own static file (never from a map service). */
-export async function loadNeighborhood(): Promise<Neighborhood> {
-  // absolute path: works at /stahl-house/ and /stahl-house alike (spec 007)
-  const res = await fetch(`${import.meta.env.BASE_URL}stahl-house/neighborhood.bin`);
+export async function loadNeighborhood(path: string): Promise<Neighborhood> {
+  // absolute path under BASE_URL: works with and without the page's trailing slash (spec 007)
+  const res = await fetch(`${import.meta.env.BASE_URL}${path}`);
   if (!res.ok) throw new Error(`neighborhood.bin: ${res.status}`);
   return parseNeighborhood(await res.arrayBuffer());
 }

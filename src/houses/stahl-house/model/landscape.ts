@@ -1,8 +1,9 @@
-import { C, P } from '../bricks/catalog';
-import { Builder, hash2, rng } from './voxel';
-import { HeightMap, TERRAIN } from './site';
-import { DRIVE, inAny, inRect, PLATEAU, ROOF, Y } from './layout';
-import { buildPoolWater } from './pool';
+import { C } from '@/engine/catalog';
+import { P } from '@/houses/stahl-house/phases';
+import { Builder, hash2, rng } from '@/engine/voxel';
+import { HeightMap, TERRAIN } from '@/houses/stahl-house/model/site';
+import { DRIVE, inAny, inRect, PLATEAU, ROOF, Y } from '@/houses/stahl-house/model/layout';
+import { buildPoolWater } from '@/houses/stahl-house/model/pool';
 
 export function palm(b: Builder, x: number, z: number, y: number, height: number) {
   b.newGroup();

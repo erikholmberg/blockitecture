@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { Sky } from 'three/addons/objects/Sky.js';
-import { CENTER } from '../model/layout';
 
 interface Preset {
   elevation: number; azimuth: number; turbidity: number; rayleigh: number; mie: number;
@@ -42,7 +41,9 @@ export class Environment {
   constructor(
     private renderer: THREE.WebGLRenderer,
     private scene: THREE.Scene,
-    sun?: Record<'day' | 'dusk', { theta: number; elevation: number }>,
+    sun: Record<'day' | 'dusk', { theta: number; elevation: number }> | undefined,
+    /** the house: shadow/sun centre and its lights (spec 010a) */
+    private house: { center: { x: number; z: number }; lights: { interior: [number, number, number][]; pool?: [number, number, number] } },
   ) {
     this.presets = {
       day: { ...PRESETS.day, ...(sun && { azimuth: sun.day.theta, elevation: sun.day.elevation }) },
@@ -63,18 +64,20 @@ export class Environment {
     cam.near = 10; cam.far = 600;
     s.shadow.bias = -0.0004;
     s.shadow.normalBias = 0.05;
-    s.target.position.set(CENTER.x, 0, CENTER.z);
+    s.target.position.set(house.center.x, 0, house.center.z);
     scene.add(s, s.target, this.hemi);
 
-    for (const [x, y, z] of [[58, 7, 40], [30, 8, 40], [10, 8, 15]]) {
+    for (const [x, y, z] of house.lights.interior) {
       const l = new THREE.PointLight(0xffd9a0, 0, 45, 1.6);
       l.position.set(x, y, z);
       this.interiorLights.push(l);
       scene.add(l);
     }
     // underwater pool light
-    this.poolLight.position.set(42, -3, 12);
-    scene.add(this.poolLight);
+    if (house.lights.pool) {
+      this.poolLight.position.set(...house.lights.pool);
+      scene.add(this.poolLight);
+    }
     scene.fog = new THREE.Fog(0xffffff, 300, 2000);
     this.pmrem = new THREE.PMREMGenerator(renderer);
     this.apply(this.current);
@@ -98,7 +101,7 @@ export class Environment {
     }
     const lightDir = sun.clone();
     lightDir.y = Math.max(lightDir.y, 0.12);
-    this.sunLight.position.set(CENTER.x, 0, CENTER.z).addScaledVector(lightDir.normalize(), 300);
+    this.sunLight.position.set(this.house.center.x, 0, this.house.center.z).addScaledVector(lightDir.normalize(), 300);
     this.sunLight.intensity = p.sun;
     this.sunLight.color.setHex(p.sunColor);
     this.hemi.intensity = p.hemi;

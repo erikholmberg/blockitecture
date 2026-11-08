@@ -1,12 +1,13 @@
 // Spec: specs/002-interior-before-enclosure.md (A1–A6)
 import { describe, expect, it } from 'vitest';
-import { buildStahlHouse } from '../src/model/stahlHouse';
-import { sequence } from '../src/build/sequencer';
-import { P, PHASES } from '../src/bricks/catalog';
+import { buildStahlHouse } from '../src/houses/stahl-house/model/stahlHouse';
+import { sequence } from '../src/engine/sequencer';
+import { P, PHASES } from '../src/houses/stahl-house/phases';
 import { houseFingerprint } from './fingerprint';
+import { STAHL } from '../src/houses/stahl-house/definition';
 
 const bricks = buildStahlHouse().builder.bricks;
-const s = sequence(bricks);
+const s = sequence(bricks, PHASES, STAHL.center);
 const startsOf = (pred: (i: number) => boolean) => bricks.map((_, i) => i).filter(pred).map((i) => s.start[i]);
 const min = (a: number[]) => a.reduce((m, v) => Math.min(m, v), Infinity);
 const max = (a: number[]) => a.reduce((m, v) => Math.max(m, v), -Infinity);

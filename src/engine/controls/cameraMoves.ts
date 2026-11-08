@@ -67,13 +67,3 @@ export class Glide {
     return lerpView(this.from, this.to, ease(this.t / this.dur));
   }
 }
-
-/** Named viewpoints (spec 006-Q2). The real world is rotated 180° to fit the model: the LA basin lies toward −z / +x. */
-export const VIEWS: Record<'overview' | 'famous' | 'pool' | 'basin', { label: string; view: View }> = {
-  overview: { label: 'Overview', view: { pos: v3(-95, 70, -120), target: v3(32, 6, 12) } },
-  // eye level just outside the living room's view-side glass, looking through it toward the city (like Shulman's 1960 photo)
-  famous: { label: 'The famous view', view: { pos: v3(44, 7, 62), target: v3(86, 1, 22) } },
-  pool: { label: 'Pool', view: { pos: v3(60, 9, -6), target: v3(36, 1, 16) } },
-  // from above the hills behind the house, out over the Sunset Strip and the basin
-  basin: { label: 'Hills & basin', view: { pos: v3(-520, 620, 1150), target: v3(32, -150, -250) } },
-};

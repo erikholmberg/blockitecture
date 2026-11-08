@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { House, houseUrl } from '@/houses';
+import { House, houseUrl } from '@/houses/index';
 
 /** Toy-brick placeholder for houses that aren't built yet. */
 function BrickPlaceholder() {

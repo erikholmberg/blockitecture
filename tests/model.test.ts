@@ -1,9 +1,9 @@
 // Spec: specs/000-baseline.md — §Model (M1–M6); specs/001-fix-occupancy-overlaps.md (A1–A3)
 import { describe, expect, it } from 'vitest';
-import { buildStahlHouse } from '../src/model/stahlHouse';
-import { Builder, G } from '../src/model/voxel';
-import { palm } from '../src/model/landscape';
-import { PHASES } from '../src/bricks/catalog';
+import { buildStahlHouse } from '../src/houses/stahl-house/model/stahlHouse';
+import { Builder, G } from '../src/engine/voxel';
+import { palm } from '../src/houses/stahl-house/model/landscape';
+import { PHASES } from '../src/houses/stahl-house/phases';
 
 const { builder, heightmap } = buildStahlHouse();
 const bricks = builder.bricks;

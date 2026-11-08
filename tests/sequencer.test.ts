@@ -1,11 +1,12 @@
 // Spec: specs/000-baseline.md — §Build sequence (S1–S6); S5 amended by specs/002 (A6) and 005 (A4)
 import { describe, expect, it } from 'vitest';
-import { buildStahlHouse } from '../src/model/stahlHouse';
-import { DROP_DUR, sequence } from '../src/build/sequencer';
-import { PHASES } from '../src/bricks/catalog';
+import { buildStahlHouse } from '../src/houses/stahl-house/model/stahlHouse';
+import { DROP_DUR, sequence } from '../src/engine/sequencer';
+import { PHASES } from '../src/houses/stahl-house/phases';
+import { STAHL } from '../src/houses/stahl-house/definition';
 
 const bricks = buildStahlHouse().builder.bricks;
-const s = sequence(bricks);
+const s = sequence(bricks, PHASES, STAHL.center);
 
 describe('build sequence', () => {
   it('S1: order is a permutation of every brick', () => {

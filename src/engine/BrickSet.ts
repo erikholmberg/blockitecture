@@ -1,19 +1,25 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { Brick, Kind, PLATE } from './catalog';
-import { Stud } from '../model/voxel';
-import { DROP_DUR } from '../build/sequencer';
+import { Brick, Kind, PLATE } from '@/engine/catalog';
+import { Stud } from '@/engine/voxel';
+import { DROP_DUR } from '@/engine/sequencer';
+import type { HouseDefinition } from '@/engine/house';
 
 const DROP_HEIGHT = 9;
 
 /** When on, everything above the ceiling inside the roof outline is cut away. */
 export const roofCut = { value: 0 };
+/** GLSL for the cut, generated from the house's roof outline (spec 010a). */
+let CUT_FRAG = '';
+const f = (n: number) => n.toFixed(2);
+function roofCutGlsl({ y0, y1, rects }: HouseDefinition['roofCut']) {
+  const inRect = rects.map(([x0, z0, x1, z1]) =>
+    `(vCutPos.x > ${f(x0)} && vCutPos.x < ${f(x1)} && vCutPos.z > ${f(z0)} && vCutPos.z < ${f(z1)})`).join(' ||\n   ');
+  return `if (uRoofCut > 0.5 && vCutPos.y > ${f(y0)} && vCutPos.y < ${f(y1)} &&\n  (${inRect || 'false'})) discard;`;
+}
 const CUT_VERT_DECL = 'varying vec3 vCutPos;';
 const CUT_VERT = 'vCutPos = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;';
 const CUT_FRAG_DECL = 'varying vec3 vCutPos;\nuniform float uRoofCut;';
-const CUT_FRAG = `if (uRoofCut > 0.5 && vCutPos.y > 11.65 && vCutPos.y < 14.0 &&
-  ((vCutPos.x > -3.0 && vCutPos.x < 78.0 && vCutPos.z > 22.5 && vCutPos.z < 58.0) ||
-   (vCutPos.x > -3.0 && vCutPos.x < 28.0 && vCutPos.z > -37.0 && vCutPos.z < 23.0))) discard;`;
 
 function withRoofCut(shader: THREE.WebGLProgramParametersWithUniforms) {
   shader.uniforms.uRoofCut = roofCut;
@@ -157,7 +163,8 @@ export class BrickSet {
   lightMaterials: THREE.MeshStandardMaterial[] = [];
   total: number;
 
-  constructor(bricks: Brick[], order: number[], start: Float32Array, studs: Stud[]) {
+  constructor(bricks: Brick[], order: number[], start: Float32Array, studs: Stud[], cut: HouseDefinition['roofCut']) {
+    CUT_FRAG = roofCutGlsl(cut);
     this.total = order.length;
     const counts: Record<LayerName, number> = { box: 0, round: 0, stud: studs.length, glass: 0, water: 0, light: 0, lamp: 0 };
     for (const b of bricks) counts[LAYER_OF[b.kind]]++;

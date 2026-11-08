@@ -90,4 +90,32 @@ from "Coming soon" to live.
       *Recommended: yes, with the same timing approach as the Stahl House (about 4 minutes in total).*
 
 ## Implementation notes
-<!-- filled in after approval -->
+
+### 010a: multi-house engine (done 2026-11-08)
+- **Layout:** `src/engine/` (generic) and `src/houses/stahl-house/` (model, `phases.ts`, `definition.ts`, `main.ts`).
+  27 files moved with `git mv` (history kept), and every import was rewritten by resolving it against the file's old location.
+- **`HouseDefinition`** (`src/engine/house.ts`): texts, site, phases, `build()`, center, views, walk start, lights, roof cut,
+  lot (rect, `surfaceFt`, optional `driveEnd`), data path and downtown direction.
+  - `startViewer(house)` replaces the module-level `main.ts`.
+  - Engine changes:
+    - the sequencer takes `phases` and the wave centre;
+    - `Environment` takes the centre and the lights;
+    - `BrickSet` generates the roof-cut GLSL from the house's rectangles;
+    - `Walker` takes its start, which is also the respawn point that used to be hard-coded;
+    - `NeighborhoodScene` and `groundHeight` take the `Lot`, and the drive connector is optional;
+    - `City` takes the downtown direction;
+    - the HUD takes text, views and phase names as props.
+  - `PHASES`/`P` moved from the engine catalog to the house. `VIEWS` moved from `cameraMoves` to the definition.
+    The debug global is now `window.__viewer`, with `__stahl` kept as an alias.
+- **Data script:** `node scripts/fetch-neighborhood.mjs <slug>` with `scripts/houses/<slug>.mjs` settings.
+  The rotation is generic, with cos/sin snapped so multiples of 90° are exact. Cache files are per house.
+- **Proof that nothing changed:**
+  - All 77 existing tests pass with only import paths / call signatures changed, and **no assertion changed**. That includes model `ebe0f28f` /
+    27,222 pieces, house `e781fb43`, the 228.7 s total and the sun bearings.
+  - The regenerated `public/stahl-house/neighborhood.bin` and `lotTerrain.ts` are **byte-identical** (same SHA-256 as before).
+  - New `tests/engine.test.ts`: no engine file imports a house, and each live house page boots `startViewer`. 79 tests total.
+  - Chrome:
+    - the page boots via `src/houses/stahl-house/main.ts` and loads 27,222 pieces and 4,159 neighborhood buildings;
+    - the intro text comes from the definition;
+    - No roof cuts exactly the roof;
+    - Home → (−95, 70, −120); Walk starts and respawns at (23.5, −16).

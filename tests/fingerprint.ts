@@ -1,4 +1,5 @@
-import { Brick, P } from '../src/bricks/catalog';
+import { Brick } from '../src/engine/catalog';
+import { P } from '../src/houses/stahl-house/phases';
 
 /** FNV-1a: small, dependency-free fingerprint */
 export const fnv1a = (str: string) => {

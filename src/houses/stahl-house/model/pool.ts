@@ -1,6 +1,7 @@
-import { BIG_SIZES, C, P } from '../bricks/catalog';
-import { Builder } from './voxel';
-import { inPool, POOL_INLETS, POOL_MAIN, Y } from './layout';
+import { BIG_SIZES, C } from '@/engine/catalog';
+import { P } from '@/houses/stahl-house/phases';
+import { Builder } from '@/engine/voxel';
+import { inPool, POOL_INLETS, POOL_MAIN, Y } from '@/houses/stahl-house/model/layout';
 
 const N4 = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const isLining = (x: number, z: number) =>

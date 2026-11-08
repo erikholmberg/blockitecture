@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import { HomePage } from '../src/home/HomePage';
-import { HOUSES } from '../src/houses';
+import { HOUSES } from '../src/houses/index';
 
 const html = renderToString(<HomePage houses={HOUSES} />);
 const doc = new DOMParser().parseFromString(html, 'text/html');

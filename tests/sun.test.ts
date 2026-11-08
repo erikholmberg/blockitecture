@@ -1,12 +1,14 @@
 // Spec: specs/009-compass-correct-sun.md (A1–A4, A6)
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { bearingToTheta, dateParam, solarNoon, solarPosition, sunFor } from '../src/scene/sun';
-import { SITE } from '../src/model/layout';
-import { parseNeighborhood } from '../src/scene/neighborhoodData';
-import { buildStahlHouse } from '../src/model/stahlHouse';
-import { sequence } from '../src/build/sequencer';
+import { bearingToTheta, dateParam, solarNoon, solarPosition, sunFor } from '../src/engine/scene/sun';
+import { SITE } from '../src/houses/stahl-house/model/layout';
+import { parseNeighborhood } from '../src/engine/scene/neighborhoodData';
+import { buildStahlHouse } from '../src/houses/stahl-house/model/stahlHouse';
+import { sequence } from '../src/engine/sequencer';
 import { houseFingerprint, modelFingerprint } from './fingerprint';
+import { STAHL } from '../src/houses/stahl-house/definition';
+import { PHASES } from '../src/houses/stahl-house/phases';
 
 const rad = Math.PI / 180;
 const expectedSunset = (declDeg: number, latDeg: number) => 360 - Math.acos(Math.sin(declDeg * rad) / Math.cos(latDeg * rad)) / rad;
@@ -74,6 +76,6 @@ describe('009: compass-correct sun', () => {
     const bricks = buildStahlHouse().builder.bricks;
     expect(modelFingerprint(bricks)).toEqual({ count: 27222, hash: 'ebe0f28f' });
     expect(houseFingerprint(bricks)).toEqual({ count: 3603, hash: 'e781fb43' });
-    expect(sequence(bricks).total).toBeCloseTo(228.7, 5);
+    expect(sequence(bricks, PHASES, STAHL.center).total).toBeCloseTo(228.7, 5);
   });
 });

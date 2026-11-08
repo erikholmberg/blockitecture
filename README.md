@@ -34,14 +34,17 @@ controls are React with [shadcn/ui](https://ui.shadcn.com) components, Tailwind 
 
 ```sh
 npm install
-npm run dev     # http://localhost:5173  (viewer: /stahl-house/?debug for an FPS overlay)
+npm run dev     # http://localhost:5173  (viewer: /stahl-house/?debug for an FPS overlay and window.__viewer)
 npm run check   # type-check + tests
 npm run build   # static site in dist/ (deployed on Vercel)
 ```
 
 ### Adding a house
-1. An entry in `src/houses.ts` (`status: 'coming-soon'` shows a placeholder card).
-2. When it's live: a page at `<slug>/index.html`, listed in `PAGES` in `vite.config.ts`, and its files in `public/<slug>/`
-   (`thumbnail.jpg`, 1200 × 675, captured from `/<slug>/?view=…&clean`).
+1. An entry in `src/houses/index.ts` (`status: 'coming-soon'` shows a placeholder card).
+2. The house itself in `src/houses/<slug>/`: its brick model, build phases and a `HouseDefinition` (`definition.ts`), plus
+   `main.ts` calling `startViewer()`. The viewer engine in `src/engine/` is shared and knows nothing about any one house.
+3. Real-world surroundings: settings in `scripts/houses/<slug>.mjs`, then `node scripts/fetch-neighborhood.mjs <slug>`.
+4. When it's live: a page at `<slug>/index.html`, listed in `PAGES` in `vite.config.ts`, and `public/<slug>/thumbnail.jpg`
+   (1200 × 675, captured from `/<slug>/?view=…&clean&date=…`).
 
 These are fan tributes in a generic toy-brick style and are not affiliated with the LEGO Group.

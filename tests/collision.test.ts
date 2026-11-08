@@ -1,9 +1,9 @@
 // Spec: specs/000-baseline.md — §Walk mode collision (W1–W4)
 import { describe, expect, it } from 'vitest';
-import { Collision } from '../src/controls/collision';
-import { Brick, PLATE } from '../src/bricks/catalog';
-import { DROP_DUR } from '../src/build/sequencer';
-import { HeightMap } from '../src/model/site';
+import { Collision } from '../src/engine/controls/collision';
+import { Brick, PLATE } from '../src/engine/catalog';
+import { DROP_DUR } from '../src/engine/sequencer';
+import { HeightMap } from '../src/houses/stahl-house/model/site';
 
 const brick = (o: Partial<Brick>): Brick => ({
   x: 0, y: 0, z: 0, w: 1, d: 1, h: 3, color: 0, kind: 'brick', phase: 0, group: 0, studs: true, ...o,

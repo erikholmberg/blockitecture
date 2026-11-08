@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Spec 003: fetch the real neighborhood around the Stahl House and write public/neighborhood.bin.
+ * Spec 003 (per-house since 010a): fetch the real neighborhood around a house and write public/<slug>/neighborhood.bin
+ * and the baked lot ground. Settings per house in scripts/houses/<slug>.mjs.
  *
- *   node scripts/fetch-neighborhood.mjs
+ *   node scripts/fetch-neighborhood.mjs <house-slug>      e.g. stahl-house
  *
  * Sources (downloaded once, cached in scripts/.cache):
  *   - Buildings and roads: OpenStreetMap via the Overpass API. © OpenStreetMap contributors, ODbL.
@@ -17,23 +18,27 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
 
+const SLUG = process.argv[2];
+if (!SLUG) { console.error('usage: node scripts/fetch-neighborhood.mjs <house-slug>   (settings in scripts/houses/<slug>.mjs)'); process.exit(1); }
+const H = (await import(`./houses/${SLUG}.mjs`)).default;
+
 const CACHE = 'scripts/.cache';
-const OUT = 'public/stahl-house/neighborhood.bin';
+const OUT = H.out.bin;
 const UA = 'blockitecture-data-script/1.0';
 const FT = 0.3048;
 
-// OSM centroid of "Case Study House No. 22" (way with wikidata=Q2328939)
-const LAT0 = 34.1004395, LON0 = -118.3702198;
-const RADIUS_M = 1200; // real buildings within this radius (spec 003, Q2)
+const LAT0 = H.lat, LON0 = H.lon;
+const RADIUS_M = H.radiusM;
 const KX = (111320 * Math.cos((LAT0 * Math.PI) / 180)) / FT; // ft per degree of longitude
 const KZ = 110574 / FT; // ft per degree of latitude
 
 // model geometry this must agree with (src/model/layout.ts, src/model/site.ts)
-const ROOF = [[-2, 23, 77, 57], [-2, -36, 27, 23]];
-const TERRAIN = { x0: -112, z0: -120, x1: 144, z1: 132 };
+const ROOF = H.fit.roof;
+const TERRAIN = H.lot;
 
-const NEAR = { half: 4200, step: 20, zoom: 15 }; // ft
-const FAR = { half: 30000, step: 250, zoom: 11 };
+const NEAR = H.near; // ft
+const FAR = H.far;
+const [CX, CZ] = H.center;
 
 fs.mkdirSync(CACHE, { recursive: true });
 
@@ -99,9 +104,20 @@ async function elevation(lat, lon, z) {
 // ---------- coordinates ----------
 let OX = 0, OZ = 0; // fitted below
 /** real lat/lon → model ft, rotated 180° about the house */
-const local = (lat, lon) => [-(lon - LON0) * KX, (lat - LAT0) * KZ];
+// rotation of the real world into the model; cos/sin snapped so multiples of 90° are exact
+const RC = Math.round(Math.cos((H.rotationDeg * Math.PI) / 180) * 1e9) / 1e9 + 0;
+const RS = Math.round(Math.sin((H.rotationDeg * Math.PI) / 180) * 1e9) / 1e9 + 0;
+/** real (east, north) ft → unrotated model (x = east, z = south) → rotated by rotationDeg */
+const local = (lat, lon) => {
+  const x = (lon - LON0) * KX, z = -(lat - LAT0) * KZ;
+  return [x * RC - z * RS, x * RS + z * RC];
+};
 const toModel = (lat, lon) => { const [x, z] = local(lat, lon); return [x + OX, z + OZ]; };
-const toLatLon = (x, z) => [LAT0 + (z - OZ) / KZ, LON0 - (x - OX) / KX];
+const toLatLon = (mx, mz) => {
+  const a = mx - OX, b = mz - OZ;
+  const x = a * RC + b * RS, z = -a * RS + b * RC; // undo the rotation
+  return [LAT0 - z / KZ, LON0 + x / KX];
+};
 
 function pointInPoly(x, z, ring) {
   let inside = false;
@@ -137,29 +153,29 @@ function fitHouse(ringLatLon) {
 // ---------- main ----------
 const R = RADIUS_M;
 const buildingsRaw = await overpass(
-  `buildings-${R}.json`,
+  `${SLUG}-buildings-${R}.json`,
   `[out:json][timeout:180];way["building"](around:${R},${LAT0},${LON0});out tags geom;`,
 );
 const roadsRaw = await overpass(
-  `roads-${R}.json`,
+  `${SLUG}-roads-${R}.json`,
   `[out:json][timeout:180];way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|service)$"](around:${R + 200},${LAT0},${LON0});out tags geom;`,
 );
 
-const stahl = buildingsRaw.find((e) => e.tags?.wikidata === 'Q2328939');
-if (!stahl) throw new Error('Stahl House not found in OSM data');
-const fit = fitHouse(stahl.geometry.map((g) => [g.lat, g.lon]));
+const self = buildingsRaw.find((e) => e.tags?.wikidata === H.fit.wikidata);
+if (!self) throw new Error(`${SLUG}: the house (wikidata ${H.fit.wikidata}) was not found in the OSM data`);
+const fit = fitHouse(self.geometry.map((g) => [g.lat, g.lon]));
 OX = fit.ox; OZ = fit.oz;
 console.log(`house fit: offset (${OX}, ${OZ}) ft, IoU ${fit.score.toFixed(3)}, OSM ${fit.osmArea} ft², roof ${fit.roofArea} ft²`);
 
 // y = 0 is the brick lot: the terrain elevation at the house
-const [hLat, hLon] = toLatLon(32, 12);
+const [hLat, hLon] = toLatLon(CX, CZ);
 const E0 = await elevation(hLat, hLon, NEAR.zoom);
 console.log(`lot elevation ${E0.toFixed(1)} m`);
 const toY = (m) => (m - E0) / FT;
 
 async function grid({ half, step, zoom }) {
   const n = Math.round((2 * half) / step) + 1;
-  const x0 = Math.round(32 - half), z0 = Math.round(12 - half);
+  const x0 = Math.round(CX - half), z0 = Math.round(CZ - half);
   const h = new Int16Array(n * n);
   for (let j = 0; j < n; j++)
     for (let i = 0; i < n; i++) {
@@ -199,16 +215,16 @@ ${rows.join('\n')}
   ],
 };
 `;
-  fs.writeFileSync('src/model/lotTerrain.ts', src);
-  console.log(`wrote src/model/lotTerrain.ts: ${(i1 - i0 + 1) * (j1 - j0 + 1)} samples`);
+  fs.writeFileSync(H.out.lot, src);
+  console.log(`wrote ${H.out.lot}: ${(i1 - i0 + 1) * (j1 - j0 + 1)} samples`);
 }
 
 // buildings
 const KIND = { house: 0, apartments: 1, commercial: 2, retail: 2, hotel: 2, office: 2 };
 const bCoords = [], bStart = [], bBase = [], bTop = [], bKind = [];
-let skipped = { stahl: 0, lot: 0, far: 0, tiny: 0 };
+let skipped = { self: 0, lot: 0, far: 0, tiny: 0 };
 for (const e of buildingsRaw) {
-  if (e === stahl) { skipped.stahl++; continue; }
+  if (e === self) { skipped.self++; continue; }
   if (!e.geometry || e.geometry.length < 4) continue;
   let ring = e.geometry.slice(0, -1).map((g) => toModel(g.lat, g.lon));
   // drop near-duplicate vertices
@@ -275,7 +291,7 @@ const arrays = {
 const header = {
   version: 1,
   attribution: ['© OpenStreetMap contributors (ODbL)', 'Terrain: Mapzen / AWS Terrain Tiles'],
-  anchor: { lat: LAT0, lon: LON0, rotationDeg: 180, lotElevationM: +E0.toFixed(2), offsetX: OX, offsetZ: OZ, houseIoU: +fit.score.toFixed(3) },
+  anchor: { lat: LAT0, lon: LON0, rotationDeg: H.rotationDeg, lotElevationM: +E0.toFixed(2), offsetX: OX, offsetZ: OZ, houseIoU: +fit.score.toFixed(3) },
   scale: { coords: 2, heights: 4 },
   encoding: { nearH: 'row-delta', farH: 'row-delta', bCoords: 'path-delta', rCoords: 'path-delta' },
   near: { x0: near.x0, z0: near.z0, step: near.step, nx: near.nx, nz: near.nz },

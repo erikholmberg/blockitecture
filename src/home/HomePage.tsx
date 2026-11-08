@@ -1,6 +1,6 @@
 import { Separator } from '@/components/ui/separator';
-import { House } from '@/houses';
-import { HouseCard } from './HouseCard';
+import { House } from '@/houses/index';
+import { HouseCard } from '@/home/HouseCard';
 
 export function HomePage({ houses }: { houses: House[] }) {
   return (

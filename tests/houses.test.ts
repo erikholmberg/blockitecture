@@ -1,9 +1,9 @@
 // Spec: specs/007-home-page.md (A1)
 import { describe, expect, it } from 'vitest';
 import { existsSync } from 'node:fs';
-import { HOUSES } from '../src/houses';
+import { HOUSES } from '../src/houses/index';
 import { PAGES } from '../vite.config';
-import { buildStahlHouse } from '../src/model/stahlHouse';
+import { buildStahlHouse } from '../src/houses/stahl-house/model/stahlHouse';
 
 describe('007: house registry', () => {
   it('A1: slugs are unique and URL-safe', () => {

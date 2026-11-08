@@ -1,6 +1,6 @@
-import { Brick, PLATE } from '../bricks/catalog';
-import { DROP_DUR } from '../build/sequencer';
-import { HeightMap } from '../model/site';
+import { Brick, PLATE } from '@/engine/catalog';
+import { DROP_DUR } from '@/engine/sequencer';
+import type { Ground } from '@/engine/house';
 
 /**
  * Column-span collision: for each stud cell, list of [bottom, top, landedTime].
@@ -8,7 +8,7 @@ import { HeightMap } from '../model/site';
  */
 export class Collision {
   private cells = new Map<number, number[]>();
-  constructor(bricks: Brick[], start: Float32Array, private hm: HeightMap) {
+  constructor(bricks: Brick[], start: Float32Array, private hm: Ground) {
     bricks.forEach((b, i) => {
       if (b.kind === 'light' && b.y > 20) return;
       if (b.kind === 'lamp' || b.kind === 'bar') return;

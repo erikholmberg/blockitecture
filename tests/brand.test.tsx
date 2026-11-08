@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { existsSync, readFileSync } from 'node:fs';
 import { renderToString } from 'react-dom/server';
 import { HomePage } from '../src/home/HomePage';
-import { HOUSES } from '../src/houses';
+import { HOUSES } from '../src/houses/index';
 
 describe('008: Quantico wordmark and B favicon', () => {
   it('A1: the wordmark is Quantico, bold, all caps, with no brick icon', () => {
