@@ -6,13 +6,8 @@ export function HomePage({ houses }: { houses: House[] }) {
   return (
     <div className="mx-auto flex min-h-svh max-w-6xl flex-col px-5 py-10 sm:px-8 sm:py-14">
       <header className="mb-10 max-w-2xl">
-        <div className="mb-3 flex items-center gap-2">
-          <svg viewBox="0 0 32 32" className="size-7" aria-hidden>
-            <rect x="2" y="12" width="28" height="14" rx="2" fill="var(--primary)" />
-            <rect x="7" y="7" width="6" height="5" rx="1" fill="var(--primary)" />
-            <rect x="19" y="7" width="6" height="5" rx="1" fill="var(--primary)" />
-          </svg>
-          <span className="text-sm font-semibold tracking-tight">Blockitecture</span>
+        <div data-logo className="mb-4 font-logo text-xl font-bold tracking-wide uppercase">
+          Blockitecture
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-4xl">
           Famous houses, built brick by brick

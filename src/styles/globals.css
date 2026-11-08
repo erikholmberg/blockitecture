@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@fontsource-variable/inter";
+@import "@fontsource/quantico/latin-700.css"; /* logo wordmark (spec 008) */
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
@@ -8,6 +9,7 @@
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-logo: 'Quantico', 'Inter Variable', ui-sans-serif, sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
