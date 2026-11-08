@@ -4,7 +4,7 @@
   for the favicon use the quantico b black on an orange background"; fully specified, no open questions)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 1a2727c
 
 ## Goal
 Give the site a typographic logo: the wordmark in **Quantico Bold, all caps**, without the orange brick icon. The favicon becomes
