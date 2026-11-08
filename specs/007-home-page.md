@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-08 via the plan: shadcn on home + viewer HUD; coming-soon cards for the Eames House and Fallingwater)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 54f994d
 
 ## Goal
 Erik wants to make many of these brick-by-brick renderings. Today the site *is* the Stahl House viewer at `/`.
