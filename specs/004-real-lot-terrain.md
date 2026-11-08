@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-08: all recommendations)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 0222851
 
 ## Goal
 The brick lot is still the old made-up mound: every edge stops at a flat −48 ft. Since spec 003 the land around it is real,
