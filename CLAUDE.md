@@ -1,7 +1,15 @@
 # Blockitecture: working agreement
 
-Pierre Koenig's Stahl House built brick by brick in the browser. Vite + TypeScript + Three.js;
-all geometry is procedural. See README.md for features.
+Famous houses built brick by brick in the browser. A home page (`/`) lists them; each house is its own page
+(today: the Stahl House at `/stahl-house/`). Vite multi-page + TypeScript + Three.js (procedural geometry);
+pages and the viewer HUD are React + shadcn/ui + Tailwind v4 + Inter (spec 007). See README.md for features.
+
+## Layout
+- `index.html` + `src/home/` — home page; `src/houses.ts` — the house registry (cards).
+- `stahl-house/index.html` + `src/main.ts` — the Stahl House viewer (engine, keys, camera); `src/ui/Hud.tsx` — its controls.
+- `src/components/ui/` — shadcn components (ours to edit; add more with `npx shadcn@latest add <name>`).
+- `public/<slug>/` — per-house static files (thumbnail, data). Every page path needs an entry in `PAGES` (`vite.config.ts`).
+- Don't use `backdrop-blur` on anything over the 3D canvas: it re-blurs the scene every frame (−22% fps, spec 007).
 
 ## We use spec-driven development
 

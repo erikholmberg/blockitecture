@@ -9,7 +9,7 @@ import { PLATE, P } from '../src/bricks/catalog';
 import { groundHeight, lotDistance, parseNeighborhood, sampleGrid } from '../src/scene/neighborhoodData';
 import { houseFingerprint } from './fingerprint';
 
-const file = readFileSync('public/neighborhood.bin');
+const file = readFileSync('public/stahl-house/neighborhood.bin');
 const n = parseNeighborhood(file.buffer.slice(file.byteOffset, file.byteOffset + file.byteLength));
 const { builder, heightmap: hm } = buildStahlHouse();
 const real = (x: number, z: number) => sampleGrid(n.near, x, z);

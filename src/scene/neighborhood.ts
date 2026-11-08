@@ -6,7 +6,7 @@ import { TERRAIN } from '../model/site';
 
 /**
  * Spec 003: the real Hollywood Hills around the house: terrain, roads and buildings from
- * OpenStreetMap / AWS Terrain Tiles (public/neighborhood.bin). Scenery only, not part of the build.
+ * OpenStreetMap / AWS Terrain Tiles (public/stahl-house/neighborhood.bin). Scenery only, not part of the build.
  */
 export class NeighborhoodScene {
   group = new THREE.Group();
@@ -259,7 +259,8 @@ export class NeighborhoodScene {
 
 /** Fetch the neighborhood from our own static file (never from a map service). */
 export async function loadNeighborhood(): Promise<Neighborhood> {
-  const res = await fetch(new URL('neighborhood.bin', document.baseURI));
+  // absolute path: works at /stahl-house/ and /stahl-house alike (spec 007)
+  const res = await fetch(`${import.meta.env.BASE_URL}stahl-house/neighborhood.bin`);
   if (!res.ok) throw new Error(`neighborhood.bin: ${res.status}`);
   return parseNeighborhood(await res.arrayBuffer());
 }

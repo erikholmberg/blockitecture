@@ -18,7 +18,7 @@ import path from 'node:path';
 import { PNG } from 'pngjs';
 
 const CACHE = 'scripts/.cache';
-const OUT = 'public/neighborhood.bin';
+const OUT = 'public/stahl-house/neighborhood.bin';
 const UA = 'blockitecture-data-script/1.0';
 const FT = 0.3048;
 

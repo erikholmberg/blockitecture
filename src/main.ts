@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import '@/styles/globals.css';
 import './ui/styles.css';
 import { buildStahlHouse } from './model/stahlHouse';
 import { sequence } from './build/sequencer';
@@ -10,7 +11,7 @@ import { loadNeighborhood, NeighborhoodScene } from './scene/neighborhood';
 import { Collision } from './controls/collision';
 import { Walker } from './controls/walk';
 import { attachTouch } from './controls/touch';
-import { CamAction, Hud } from './ui/hud';
+import { CamAction, mountHud } from './ui/Hud';
 import { Glide, MAX_DIST, MIN_DIST, rotated, View, VIEWS, zoomed } from './controls/cameraMoves';
 import { CENTER } from './model/layout';
 
@@ -18,6 +19,10 @@ const app = document.getElementById('app')!;
 const loading = document.getElementById('loading')!;
 const params = new URLSearchParams(location.search);
 const DEBUG = params.has('debug');
+// spec 007: ?view=<key>&light=dusk for sharing a view; &clean = finished house, no HUD (for thumbnails)
+const VIEW_PARAM = params.get('view') as keyof typeof VIEWS | null;
+const LIGHT_PARAM = params.get('light') === 'dusk' ? 'dusk' : 'day';
+const CLEAN = params.has('clean');
 const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
 // the real neighborhood (spec 003) downloads while the model is generated
@@ -66,13 +71,7 @@ let hood: NeighborhoodScene | null = null;
     scene.add(hood.group, city.group);
     if (DEBUG) console.log(`[stahl] neighborhood: ${n.buildings.count} buildings, ${n.roads.count} roads, ready in ${(performance.now() - t1).toFixed(0)} ms`);
   }
-  const credit = document.createElement('a');
-  credit.className = 'credit';
-  credit.href = 'https://www.openstreetmap.org/copyright';
-  credit.target = '_blank';
-  credit.rel = 'noopener';
-  credit.textContent = '© OpenStreetMap contributors · Terrain: Mapzen / AWS Terrain Tiles';
-  app.appendChild(credit);
+  // the OSM credit is rendered by the HUD (src/ui/Hud.tsx)
 }
 
 const set = new BrickSet(bricks, schedule.order, schedule.start, studs);
@@ -184,7 +183,7 @@ renderer.domElement.addEventListener('click', () => {
   if (mode === 'walk' && !walker.locked) walker.lock();
 });
 
-const hud = new Hud(app, {
+const hud = mountHud(app, {
   onStart() { playing = true; },
   onPlayPause() { playing = !playing; if (t >= schedule.total) { t = 0; playing = true; } },
   onSpeed(s) { speed = s; },
@@ -192,14 +191,33 @@ const hud = new Hud(app, {
   onFinish() { t = schedule.total; },
   onRestart() { t = 0; playing = true; },
   onMode: setMode,
-  onLight(l) { env.set(l); },
+  onLight(l) { env.set(l); hud.setLight(l); },
   onRoof(on) { roofCut.value = on ? 0 : 1; },
   onCam: camAction,
 }, schedule.total, bricks.length);
 hud.setPhaseTicks(schedule.phaseStart, schedule.total);
 
+if (VIEW_PARAM && VIEWS[VIEW_PARAM]) {
+  const v = VIEWS[VIEW_PARAM].view;
+  camera.position.set(v.pos.x, v.pos.y, v.pos.z);
+  orbit.target.set(v.target.x, v.target.y, v.target.z);
+  orbit.autoRotate = false;
+  hud.setAutoRotate(false);
+  orbit.update();
+}
+if (LIGHT_PARAM === 'dusk') { env.set('dusk'); hud.setLight('dusk'); }
+if (CLEAN) {
+  t = schedule.total;
+  orbit.autoRotate = false;
+  hud.hide();
+}
+
 addEventListener('keydown', (e) => {
   if (e.target instanceof HTMLInputElement) return;
+  // the keys the HUD's own widgets use (timeline slider, toggle groups, menus) belong to them, not to the camera;
+  // everything else (P, F, Tab, H, R, + / −) still works while one of them has focus
+  const widgetKey = /^(Arrow|Home$|End$|Page)/.test(e.key);
+  if (widgetKey && e.target instanceof Element && e.target.closest('[role=slider],[role=menu],[data-slot=toggle-group]')) return;
   if (e.code === 'KeyP') { playing = !playing; }
   if (e.code === 'KeyF' && mode === 'orbit') t = schedule.total;
   if (e.code === 'Tab') { e.preventDefault(); setMode(mode === 'orbit' ? 'walk' : 'orbit'); }
@@ -224,7 +242,7 @@ addEventListener('resize', () => {
 
 // ---------- debug overlay ----------
 let fpsEl: HTMLElement | null = null;
-if (DEBUG) {
+if (DEBUG && !CLEAN) {
   fpsEl = document.createElement('div');
   fpsEl.className = 'fps';
   app.appendChild(fpsEl);

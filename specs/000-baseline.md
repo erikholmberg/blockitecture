@@ -5,6 +5,8 @@
 - **Created:** 2026-11-08
 - **Commits:** ba2d559, 64ae035
 
+*Since spec 007 the viewer lives at `/stahl-house/` (the home page is `/`), and its controls are React/shadcn (`src/ui/Hud.tsx`).*
+
 ## Goal
 Describe what the site already does, so that later specs only cover changes and the
 behavior that exists today is protected by tests.

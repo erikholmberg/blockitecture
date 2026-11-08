@@ -4,7 +4,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { groundHeight, parseNeighborhood, sampleGrid } from '../src/scene/neighborhoodData';
 import { TERRAIN } from '../src/model/site';
 
-const file = readFileSync('public/neighborhood.bin');
+const file = readFileSync('public/stahl-house/neighborhood.bin');
 const n = parseNeighborhood(file.buffer.slice(file.byteOffset, file.byteOffset + file.byteLength));
 const RADIUS_FT = 1200 / 0.3048;
 const HOUSE = { x: n.anchor.offsetX, z: n.anchor.offsetZ };
@@ -67,10 +67,11 @@ describe('003: real neighborhood data', () => {
   });
 
   it('A6: the site never calls map services at runtime', () => {
-    const files = readdirSync('src', { recursive: true }).filter((f: string | Buffer) => String(f).endsWith('.ts'));
+    const files = readdirSync('src', { recursive: true }).filter((f: string | Buffer) => /\.(ts|tsx|css)$/.test(String(f)));
     for (const f of files) {
       const src = readFileSync(`src/${f}`, 'utf8');
-      expect(src).not.toMatch(/overpass|openstreetmap\.org\/api|amazonaws|googleapis|maps\.google/i);
+      // no map services, and (spec 007-A4) no font CDN: Inter is self-hosted via @fontsource-variable
+      expect(src).not.toMatch(/overpass|openstreetmap\.org\/api|amazonaws|googleapis|gstatic|maps\.google|fonts\.bunny|use\.typekit/i);
     }
   });
 });
