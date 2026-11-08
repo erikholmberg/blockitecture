@@ -4,7 +4,7 @@
   sunset in the accurate place"; sun follows the visitor's today; keep Day / Dusk, no Dawn)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** cb55516
 
 ## Goal
 The sun should rise and set where it really does at the Stahl House, on the day you're looking at it.
