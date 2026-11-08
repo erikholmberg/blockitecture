@@ -6,6 +6,8 @@ Every visitor watches all ~17,800 pieces of the house snap into place on the Hol
 
 - **Timeline**: play/pause, 1×/4×/16× speed, scrub, finish, restart
 - **Orbit / Walk** (Tab): WASD + mouse, Shift to run, Space to jump; a touch joystick on phones
+- **Camera controls**: zoom (+/−), rotate (←/→), home (H), auto-rotate (R), fullscreen, and named views:
+  Overview, The famous view, Pool, Hills & basin
 - **No roof**: lift the roof off to watch the interior being furnished
 - **Day / Dusk**: dusk lights up the house over the city
 

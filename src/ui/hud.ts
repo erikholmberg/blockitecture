@@ -1,4 +1,7 @@
 import { PHASES } from '../bricks/catalog';
+import { VIEWS } from '../controls/cameraMoves';
+
+export type CamAction = 'in' | 'out' | 'left' | 'right' | 'home' | 'auto' | 'full' | `view:${keyof typeof VIEWS}`;
 
 export interface HudState {
   t: number;
@@ -20,6 +23,7 @@ export interface HudHandlers {
   onMode(m: 'orbit' | 'walk'): void;
   onLight(l: 'day' | 'dusk'): void;
   onRoof(on: boolean): void;
+  onCam(a: CamAction): void;
 }
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -58,6 +62,19 @@ export class Hud {
           </div>
         </div>
       </div>
+      <div class="camctl" data-el="cam" role="toolbar" aria-label="Camera">
+        <button data-a="views" title="Views" aria-label="Views" aria-expanded="false">Views</button>
+        <div class="views" data-el="views">
+          ${Object.entries(VIEWS).map(([k, v]) => `<button data-a="view:${k}">${v.label}</button>`).join('')}
+        </div>
+        <button data-a="in" title="Zoom in (+)" aria-label="Zoom in">+</button>
+        <button data-a="out" title="Zoom out (−)" aria-label="Zoom out">−</button>
+        <button data-a="left" title="Rotate left (←)" aria-label="Rotate left">⟲</button>
+        <button data-a="right" title="Rotate right (→)" aria-label="Rotate right">⟳</button>
+        <button data-a="home" title="Back to the default view (H)" aria-label="Default view">⌂</button>
+        <button data-a="auto" data-el="auto" class="on" title="Auto-rotate on/off (R)" aria-label="Auto-rotate" aria-pressed="true">↻</button>
+        <button data-a="full" data-el="full" title="Fullscreen" aria-label="Fullscreen">⛶</button>
+      </div>
       <div class="walkhint" data-el="walkhint"></div>
       <div class="bar">
         <button class="icon" data-el="play" title="Play / pause (P)">❚❚</button>
@@ -95,6 +112,26 @@ export class Hud {
     seg(E.mode, (v) => h.onMode(v as 'orbit' | 'walk'));
     seg(E.light, (v) => h.onLight(v as 'day' | 'dusk'));
     seg(E.roof, (v) => h.onRoof(v === 'on'));
+    // camera controls (spec 006)
+    const viewsBtn = E.cam.querySelector<HTMLButtonElement>('[data-a=views]')!;
+    const showViews = (on: boolean) => {
+      E.views.classList.toggle('open', on);
+      viewsBtn.setAttribute('aria-expanded', String(on));
+    };
+    E.cam.querySelectorAll<HTMLButtonElement>('button[data-a]').forEach((b) => {
+      b.onclick = (ev) => {
+        ev.stopPropagation();
+        const a = b.dataset.a!;
+        if (a === 'views') showViews(!E.views.classList.contains('open'));
+        else {
+          if (a.startsWith('view:')) showViews(false);
+          h.onCam(a as CamAction);
+        }
+        b.blur();
+      };
+    });
+    if (!document.fullscreenEnabled) E.full.style.display = 'none';
+
     const scrub = E.scrub as HTMLInputElement;
     scrub.addEventListener('input', () => { this.scrubbing = true; h.onSeek(+scrub.value); });
     scrub.addEventListener('change', () => { this.scrubbing = false; scrub.blur(); });
@@ -108,6 +145,12 @@ export class Hud {
 
   setMode(m: 'orbit' | 'walk') {
     this.els.mode.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.v === m));
+    this.root.classList.toggle('walking', m === 'walk');
+  }
+
+  setAutoRotate(on: boolean) {
+    this.els.auto.classList.toggle('on', on);
+    this.els.auto.setAttribute('aria-pressed', String(on));
   }
 
   setWalkHint(text: string) {

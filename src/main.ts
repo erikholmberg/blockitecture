@@ -10,7 +10,8 @@ import { loadNeighborhood, NeighborhoodScene } from './scene/neighborhood';
 import { Collision } from './controls/collision';
 import { Walker } from './controls/walk';
 import { attachTouch } from './controls/touch';
-import { Hud } from './ui/hud';
+import { CamAction, Hud } from './ui/hud';
+import { Glide, MAX_DIST, MIN_DIST, rotated, View, VIEWS, zoomed } from './controls/cameraMoves';
 import { CENTER } from './model/layout';
 
 const app = document.getElementById('app')!;
@@ -82,12 +83,48 @@ const orbit = new OrbitControls(camera, renderer.domElement);
 orbit.target.set(CENTER.x, CENTER.y, CENTER.z);
 orbit.enableDamping = true;
 orbit.dampingFactor = 0.07;
-orbit.minDistance = 12;
-orbit.maxDistance = 520;
+orbit.minDistance = MIN_DIST;
+orbit.maxDistance = MAX_DIST; // spec 006 (was 520)
 orbit.maxPolarAngle = Math.PI * 0.53;
 orbit.autoRotate = true;
 orbit.autoRotateSpeed = -0.35;
-orbit.addEventListener('start', () => (orbit.autoRotate = false));
+// grabbing the scene stops auto-rotation and any glide in progress (spec 006)
+orbit.addEventListener('start', () => {
+  orbit.autoRotate = false;
+  glide = null;
+  hud.setAutoRotate(false);
+});
+let glide: Glide | null = null;
+const currentView = (): View => ({
+  pos: { x: camera.position.x, y: camera.position.y, z: camera.position.z },
+  target: { x: orbit.target.x, y: orbit.target.y, z: orbit.target.z },
+});
+
+function camAction(a: CamAction) {
+  if (mode !== 'orbit') return;
+  if (a === 'full') {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen?.();
+    return;
+  }
+  if (a === 'auto') {
+    orbit.autoRotate = !orbit.autoRotate;
+    hud.setAutoRotate(orbit.autoRotate);
+    return;
+  }
+  // repeated clicks build on where the current glide is heading
+  const base = glide ? glide.to : currentView();
+  const to =
+    a === 'in' ? zoomed(base, 1)
+    : a === 'out' ? zoomed(base, -1)
+    : a === 'left' ? rotated(base, -1)
+    : a === 'right' ? rotated(base, 1)
+    : a === 'home' ? VIEWS.overview.view
+    : VIEWS[a.slice(5) as keyof typeof VIEWS].view;
+  glide = new Glide(currentView(), to);
+  orbit.autoRotate = false;
+  hud.setAutoRotate(false);
+}
 orbit.update();
 
 const collision = new Collision(bricks, schedule.start, heightmap);
@@ -111,6 +148,7 @@ const currentPhase = () => {
 function setMode(m: 'orbit' | 'walk') {
   if (m === mode) return;
   mode = m;
+  glide = null;
   hud.setMode(m);
   if (m === 'walk') {
     savedOrbit.pos.copy(camera.position);
@@ -156,6 +194,7 @@ const hud = new Hud(app, {
   onMode: setMode,
   onLight(l) { env.set(l); },
   onRoof(on) { roofCut.value = on ? 0 : 1; },
+  onCam: camAction,
 }, schedule.total, bricks.length);
 hud.setPhaseTicks(schedule.phaseStart, schedule.total);
 
@@ -164,6 +203,17 @@ addEventListener('keydown', (e) => {
   if (e.code === 'KeyP') { playing = !playing; }
   if (e.code === 'KeyF' && mode === 'orbit') t = schedule.total;
   if (e.code === 'Tab') { e.preventDefault(); setMode(mode === 'orbit' ? 'walk' : 'orbit'); }
+  if (mode === 'orbit') {
+    const a: CamAction | null =
+      e.code === 'Equal' || e.code === 'NumpadAdd' ? 'in'
+      : e.code === 'Minus' || e.code === 'NumpadSubtract' ? 'out'
+      : e.code === 'ArrowLeft' ? 'left'
+      : e.code === 'ArrowRight' ? 'right'
+      : e.code === 'KeyH' ? 'home'
+      : e.code === 'KeyR' ? 'auto'
+      : null;
+    if (a) { e.preventDefault(); camAction(a); }
+  }
 });
 
 addEventListener('resize', () => {
@@ -200,7 +250,15 @@ renderer.setAnimationLoop(() => {
   hood?.setNight(env.nightFactor);
 
   if (mode === 'walk') walker.update(dt, t);
-  else orbit.update(dt);
+  else {
+    if (glide) {
+      const v = glide.step(dt);
+      camera.position.set(v.pos.x, v.pos.y, v.pos.z);
+      orbit.target.set(v.target.x, v.target.y, v.target.z);
+      if (glide.done) glide = null;
+    }
+    orbit.update(dt);
+  }
 
   renderer.render(scene, camera);
 
