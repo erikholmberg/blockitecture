@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-08: Q1 yes, Q2 after, Q3 yes)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** c1448e5
 
 ## Goal
 Today the roof and the solid walls are built *before* the furniture, so the most detailed
