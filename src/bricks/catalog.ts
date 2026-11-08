@@ -74,8 +74,9 @@ export const C = {
   asphalt: 0x4a4c4e,
 };
 
-export const PHASES: { name: string; dur: number; order: 'layer' | 'group' }[] = [
-  { name: 'Shaping the hillside', dur: 24, order: 'layer' },
+export const PHASES: { name: string; dur: number; order: 'layer' | 'group' | 'wave' }[] = [
+  // starts at the house pad and spreads outward and down the slope (spec 005)
+  { name: 'Shaping the hillside', dur: 16, order: 'wave' },
   { name: 'Foundations & pool basin', dur: 18, order: 'layer' },
   { name: 'Floor slab & terrace', dur: 18, order: 'layer' },
   { name: 'Steel frame', dur: 24, order: 'layer' },

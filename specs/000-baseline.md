@@ -32,8 +32,9 @@ Visitors can orbit (default, slow auto-rotate) or walk through it in first perso
   glass & walls → roof deck → pool, garden & finishing touches. *(Order changed by spec 002.)*
 - **S3** [unit] Start times never decrease along the order, starting at 0 and ending within the total.
 - **S4** [unit] There is one phase start per phase, strictly increasing (these drive the timeline ticks).
-- **S5** [unit] `layer` phases build bottom-up; `group` phases build object by object. *(Amended by 002: ceiling-hung pieces come last in their phase, top-down.)*
-- **S6** [unit] A full build at 1× takes 220–250 s (currently 236.7 s).
+- **S5** [unit] `layer` phases build bottom-up; `group` phases build object by object. *(Amended by 002: ceiling-hung pieces come last in their phase, top-down.
+  Amended by 005: the hillside is a `wave`, outward and downhill from the house, bottom-up within each spot.)*
+- **S6** [unit] A full build at 1× takes 220–250 s (currently 228.7 s; the hillside went 24 → 16 s in spec 005).
 
 ### Walk mode collision (`src/controls/collision.ts`): `tests/collision.test.ts`
 - **W1** [unit] A piece only blocks the walker once it has landed (start + drop duration).

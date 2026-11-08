@@ -59,10 +59,10 @@ describe('002: interior before enclosure', () => {
     }
   });
 
-  it('A4: phase durations and total time unchanged', () => {
+  it('A4: phase durations and total time (hillside shortened by spec 005)', () => {
     const dur = Object.fromEntries(PHASES.map((p) => [p.name, p.dur]));
     expect(dur).toEqual({
-      'Shaping the hillside': 24,
+      'Shaping the hillside': 16, // spec 005 (was 24)
       'Foundations & pool basin': 18,
       'Floor slab & terrace': 18,
       'Steel frame': 24,
@@ -71,7 +71,7 @@ describe('002: interior before enclosure', () => {
       'Interior & furniture': 52,
       'Pool, garden & finishing touches': 34,
     });
-    expect(s.total).toBeCloseTo(236.7, 5);
+    expect(s.total).toBeCloseTo(228.7, 5); // spec 005 (was 236.7)
   });
 
   it('A5: the house itself is unchanged (fingerprint of phases 1–6; spec 004 moved the paving and reshaped the hillside)', () => {

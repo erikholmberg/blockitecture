@@ -24,3 +24,11 @@ export function houseFingerprint(bricks: Brick[]) {
     hash: fnv1a(house.map((q) => [q.x, q.y, q.z, q.w, q.d, q.h, q.color, q.kind, q.studs, q.thin ?? '', q.phase].join(',')).join('\n')),
   };
 }
+
+/** Every piece, every field that defines the model (not when it lands). */
+export function modelFingerprint(bricks: Brick[]) {
+  return {
+    count: bricks.length,
+    hash: fnv1a(bricks.map((q) => [q.x, q.y, q.z, q.w, q.d, q.h, q.color, q.kind, q.studs, q.thin ?? '', q.phase, q.group, q.hangs ? 1 : 0].join(',')).join('\n')),
+  };
+}
