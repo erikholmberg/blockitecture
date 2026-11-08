@@ -64,3 +64,9 @@ export function sdRoundRect(x: number, z: number, r: Rect, radius: number) {
 
 /** House centre used by cameras. */
 export const CENTER = { x: 32, y: 6, z: 12 };
+
+/**
+ * Where the house is in the real world (spec 009): OSM centroid of "Case Study House No. 22", and the model's
+ * orientation: it is the real house turned 180°, so model +z = real north and model −x = real east (spec 003).
+ */
+export const SITE = { lat: 34.1004395, lon: -118.3702198, rotationDeg: 180 };

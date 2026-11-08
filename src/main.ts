@@ -13,7 +13,8 @@ import { Walker } from './controls/walk';
 import { attachTouch } from './controls/touch';
 import { CamAction, mountHud } from './ui/Hud';
 import { Glide, MAX_DIST, MIN_DIST, rotated, View, VIEWS, zoomed } from './controls/cameraMoves';
-import { CENTER } from './model/layout';
+import { CENTER, SITE } from './model/layout';
+import { dateParam, sunFor } from './scene/sun';
 
 const app = document.getElementById('app')!;
 const loading = document.getElementById('loading')!;
@@ -59,7 +60,11 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.3, 25000);
 camera.position.set(-95, 70, -120);
 
-const env = new Environment(renderer, scene);
+// the real sun for this house on the visitor's today, or ?date=YYYY-MM-DD (spec 009)
+const SUN_DAY = dateParam(params.get('date'));
+const sun = { day: sunFor(SUN_DAY, SITE, 'day'), dusk: sunFor(SUN_DAY, SITE, 'dusk') };
+const env = new Environment(renderer, scene, sun);
+if (DEBUG) console.log(`[stahl] sun on ${SUN_DAY}: day ${sun.day.bearing.toFixed(0)}° / ${sun.day.elevation.toFixed(0)}°, dusk ${sun.dusk.bearing.toFixed(0)}° / ${sun.dusk.elevation.toFixed(1)}°`);
 let city: City | null = null;
 let hood: NeighborhoodScene | null = null;
 {
@@ -246,7 +251,7 @@ if (DEBUG && !CLEAN) {
   fpsEl = document.createElement('div');
   fpsEl.className = 'fps';
   app.appendChild(fpsEl);
-  (window as any).__stahl = { seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood };
+  (window as any).__stahl = { seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood, sun };
 }
 
 // ---------- loop ----------

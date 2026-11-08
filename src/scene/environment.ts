@@ -28,8 +28,10 @@ export class Environment {
   hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
   interiorLights: THREE.PointLight[] = [];
   poolLight = new THREE.PointLight(0x7fe3ff, 0, 30, 1.5);
-  current: Preset = { ...PRESETS.day };
-  private target: Preset = PRESETS.day;
+  /** the presets with the real sun positions for this house and day (spec 009) */
+  private presets: Record<'day' | 'dusk', Preset>;
+  current: Preset;
+  private target: Preset;
   private pmrem: THREE.PMREMGenerator;
   private envRT: THREE.WebGLRenderTarget | null = null;
   private skyScene = new THREE.Scene();
@@ -37,7 +39,17 @@ export class Environment {
   private envTimer = 0;
   nightFactor = 0;
 
-  constructor(private renderer: THREE.WebGLRenderer, private scene: THREE.Scene) {
+  constructor(
+    private renderer: THREE.WebGLRenderer,
+    private scene: THREE.Scene,
+    sun?: Record<'day' | 'dusk', { theta: number; elevation: number }>,
+  ) {
+    this.presets = {
+      day: { ...PRESETS.day, ...(sun && { azimuth: sun.day.theta, elevation: sun.day.elevation }) },
+      dusk: { ...PRESETS.dusk, ...(sun && { azimuth: sun.dusk.theta, elevation: sun.dusk.elevation }) },
+    };
+    this.current = { ...this.presets.day };
+    this.target = this.presets.day;
     this.sky.scale.setScalar(10000);
     scene.add(this.sky);
     this.skyScene.add(new Sky());
@@ -69,7 +81,7 @@ export class Environment {
   }
 
   set(name: 'day' | 'dusk') {
-    this.target = PRESETS[name];
+    this.target = this.presets[name];
   }
 
   private apply(p: Preset) {
