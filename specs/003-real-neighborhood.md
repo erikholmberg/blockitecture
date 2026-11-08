@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-08: all recommendations)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 3127cd8
 
 ## Goal
 Behind the house (to the north) there is an empty, flat, grey plain, because the procedural city
