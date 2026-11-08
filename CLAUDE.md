@@ -30,7 +30,8 @@ dependency bumps, and docs. Say in the commit message which exemption applies.
 npm run dev          # http://localhost:5173 (?debug for the FPS overlay and window.__stahl)
 npm test             # Vitest, once
 npm run test:watch
-npm run check        # tsc + tests: must pass before every commit
+npm run check        # tsc (src + tests) + tests: must pass before every commit
+node scripts/fetch-neighborhood.mjs   # regenerate public/neighborhood.bin (OSM + terrain; cached in scripts/.cache)
 npm run build        # tsc + vite build → dist/
 ```
 
@@ -39,3 +40,5 @@ npm run build        # tsc + vite build → dist/
   are pure (no DOM, no Three.js) and can be tested directly in Node. Keep new logic in pure modules
   like these where possible, so criteria can be `[unit]` and not `[manual]`.
 - Units: x/z in studs, y in plates (`PLATE = 0.4` world units). Generation is deterministic (seeded `rng`).
+- 1 world unit ≈ 1 ft. The brick house is the real house **rotated 180°**: real north = model +z (spec 003).
+- `src/` is browser-only TypeScript; `tests/` has its own tsconfig with Node types.

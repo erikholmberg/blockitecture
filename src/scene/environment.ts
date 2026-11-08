@@ -13,12 +13,12 @@ export const PRESETS: Record<'day' | 'dusk', Preset> = {
   day: {
     elevation: 38, azimuth: 215, turbidity: 2.2, rayleigh: 0.9, mie: 0.003,
     sun: 3.4, sunColor: 0xfff1dc, hemi: 0.75, hemiSky: 0xbcd6f5, hemiGround: 0x6d5f45,
-    exposure: 0.42, fog: 0xa9bfd0, fogNear: 700, fogFar: 3800, lights: 0.2, city: 0, interior: 0, env: 0.3,
+    exposure: 0.42, fog: 0xa9bfd0, fogNear: 1500, fogFar: 20000, lights: 0.2, city: 0, interior: 0, env: 0.3,
   },
   dusk: {
     elevation: 2.2, azimuth: 250, turbidity: 8, rayleigh: 3, mie: 0.01,
     sun: 0.55, sunColor: 0xff9a5a, hemi: 0.42, hemiSky: 0x5a6ea8, hemiGround: 0x3a2a30,
-    exposure: 0.62, fog: 0x3c3a58, fogNear: 600, fogFar: 3400, lights: 3.2, city: 1, interior: 1, env: 0.35,
+    exposure: 0.62, fog: 0x3c3a58, fogNear: 1200, fogFar: 16000, lights: 3.2, city: 1, interior: 1, env: 0.35,
   },
 };
 

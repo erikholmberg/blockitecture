@@ -6,6 +6,7 @@ import { sequence } from './build/sequencer';
 import { BrickSet, roofCut } from './bricks/BrickSet';
 import { Environment } from './scene/environment';
 import { City } from './scene/cityBackdrop';
+import { loadNeighborhood, NeighborhoodScene } from './scene/neighborhood';
 import { Collision } from './controls/collision';
 import { Walker } from './controls/walk';
 import { attachTouch } from './controls/touch';
@@ -17,6 +18,12 @@ const loading = document.getElementById('loading')!;
 const params = new URLSearchParams(location.search);
 const DEBUG = params.has('debug');
 const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+// the real neighborhood (spec 003) downloads while the model is generated
+const neighborhoodData = loadNeighborhood().catch((e) => {
+  console.warn('[stahl] neighborhood unavailable', e);
+  return null;
+});
 
 // ---------- build the model ----------
 // let the loading screen paint before the heavy lifting
@@ -45,8 +52,25 @@ const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.3, 25
 camera.position.set(-95, 70, -120);
 
 const env = new Environment(renderer, scene);
-const city = new City();
-scene.add(city.group);
+let city: City | null = null;
+let hood: NeighborhoodScene | null = null;
+{
+  const t1 = performance.now();
+  const n = await neighborhoodData;
+  if (n) {
+    hood = new NeighborhoodScene(n);
+    city = new City(n);
+    scene.add(hood.group, city.group);
+    if (DEBUG) console.log(`[stahl] neighborhood: ${n.buildings.count} buildings, ${n.roads.count} roads, ready in ${(performance.now() - t1).toFixed(0)} ms`);
+  }
+  const credit = document.createElement('a');
+  credit.className = 'credit';
+  credit.href = 'https://www.openstreetmap.org/copyright';
+  credit.target = '_blank';
+  credit.rel = 'noopener';
+  credit.textContent = '© OpenStreetMap contributors · Terrain: Mapzen / AWS Terrain Tiles';
+  app.appendChild(credit);
+}
 
 const set = new BrickSet(bricks, schedule.order, schedule.start, studs);
 scene.add(set.group);
@@ -152,7 +176,7 @@ if (DEBUG) {
   fpsEl = document.createElement('div');
   fpsEl.className = 'fps';
   app.appendChild(fpsEl);
-  (window as any).__stahl = { seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env };
+  (window as any).__stahl = { seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood };
 }
 
 // ---------- loop ----------
@@ -170,7 +194,8 @@ renderer.setAnimationLoop(() => {
 
   const light = env.update(dt);
   set.setLightLevel(light);
-  city.setNight(env.nightFactor);
+  city?.setNight(env.nightFactor);
+  hood?.setNight(env.nightFactor);
 
   if (mode === 'walk') walker.update(dt, t);
   else orbit.update(dt);

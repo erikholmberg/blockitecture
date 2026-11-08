@@ -17,4 +17,9 @@ npm run dev     # http://localhost:5173  (add ?debug for an FPS overlay)
 npm run build   # static site in dist/
 ```
 
+The surrounding Hollywood Hills and the Sunset Strip are real: buildings and roads from
+[OpenStreetMap](https://www.openstreetmap.org/copyright) (© OpenStreetMap contributors, ODbL) and terrain from the
+Mapzen / AWS Terrain Tiles, baked into `public/neighborhood.bin` by `node scripts/fetch-neighborhood.mjs`.
+Further out, the LA basin is procedural.
+
 This is a fan tribute in a generic toy-brick style and is not affiliated with the LEGO Group.

@@ -58,7 +58,7 @@ Visitors can orbit (default, slow auto-rotate) or walk through it in first perso
 
 ### Performance & build
 - **P1** [manual] Resolution adapts: after sustained < 38 fps, the pixel ratio drops in 0.25 steps down to 0.75.
-- **P2** [unit] `npm run build` type-checks (including `tests/`) and produces a static `dist/` (deployed to Vercel).
+- **P2** [unit] `npm run build` type-checks (`src/` and `tests/`) and produces a static `dist/` (deployed to Vercel), including `neighborhood.bin` (spec 003).
 
 ## Out of scope
 Rendering correctness (shaders, instancing, lighting) has no automated tests. It's checked by eye.
