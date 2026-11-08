@@ -18,12 +18,12 @@ Visitors can orbit (default, slow auto-rotate) or walk through it in first perso
 ## Acceptance criteria
 
 ### Model (`src/model/*`): `tests/model.test.ts`
-- **M1** [unit] The model generates ~17,800 pieces (currently 17,823; the test allows 17,000–18,500).
+- **M1** [unit] The model generates ~27,200 pieces (currently 27,222; the test allows 26,000–28,500). *(Was ~17,800 before spec 004's real hillside.)*
 - **M2** [unit] Generation is deterministic: two builds produce identical brick lists.
 - **M3** [unit] Every piece belongs to one of the 8 phases, and every phase has at least one piece.
 - **M4** [unit] Every piece has integer coordinates and positive integer size (studs × studs × plates).
 - **M5** [unit] No two pieces overlap.
-- **M6** [unit] Generation completes in < 1.5 s in Node (currently ~65 ms).
+- **M6** [unit] Generation completes in < 1.5 s in Node (currently ~150 ms).
 
 ### Build sequence (`src/build/sequencer.ts`): `tests/sequencer.test.ts`
 - **S1** [unit] The build order includes every piece exactly once.
@@ -54,7 +54,7 @@ Visitors can orbit (default, slow auto-rotate) or walk through it in first perso
   Switching back restores the previous orbit camera.
 - **V3** [manual] **No roof** lifts the roof off so you can see inside; **Roof** puts it back.
 - **V4** [manual] **Dusk** lights up the house and the city backdrop; **Day** turns it back.
-- **V5** [manual] `?debug` shows an FPS / DPR / triangle-count overlay and exposes `window.__stahl`.
+- **V5** [manual] `?debug` shows an FPS / DPR / triangle-count overlay and exposes `window.__stahl`. `?dpr=N` pins the pixel ratio (spec 004).
 
 ### Performance & build
 - **P1** [manual] Resolution adapts: after sustained < 38 fps, the pixel ratio drops in 0.25 steps down to 0.75.

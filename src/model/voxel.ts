@@ -1,8 +1,11 @@
 import { Brick, Kind, KIND_STUDS, KIND_UNIT, SIZES } from '../bricks/catalog';
 
 /** Occupancy grid bounds (studs / plates). */
-/** Must contain every piece (tests/model.test.ts, spec 001-A1); pieces outside it skip overlap checks. */
-export const G = { x0: -128, nx: 280, z0: -128, nz: 272, y0: -136, ny: 200 };
+/**
+ * Must contain every piece (tests/model.test.ts, spec 001-A1); pieces outside it skip overlap checks.
+ * y reaches down to −400 plates (−160 ft) for the real hillside (spec 004).
+ */
+export const G = { x0: -128, nx: 280, z0: -128, nz: 272, y0: -400, ny: 464 };
 
 export type ColorArg = number | ((x: number, y: number, z: number) => number);
 export type Mask = (x: number, z: number, y: number) => boolean;
@@ -51,8 +54,8 @@ export function noise2(x: number, z: number) {
 
 export class Builder {
   bricks: Brick[] = [];
-  /** 0 = empty, otherwise phase+1 of occupying brick */
-  occ = new Uint8Array(G.nx * G.nz * G.ny);
+  /** 0 = empty, otherwise phase+1 of the occupying brick; two cells per byte (4 bits each, phase+1 ≤ 8) */
+  occ = new Uint8Array(Math.ceil((G.nx * G.nz * G.ny) / 2));
   phase = 0;
   group = 0;
   /** while true, placed pieces are flagged as ceiling-hung */
@@ -83,7 +86,7 @@ export class Builder {
   }
   occAt(x: number, y: number, z: number) {
     const i = this.idx(x, y, z);
-    return i < 0 ? 0 : this.occ[i];
+    return i < 0 ? 0 : (this.occ[i >> 1] >> ((i & 1) << 2)) & 15;
   }
   free(x: number, z: number, y0: number, y1: number) {
     for (let y = y0; y < y1; y++) if (this.occAt(x, y, z)) return false;
@@ -95,7 +98,10 @@ export class Builder {
       for (let z = b.z; z < b.z + b.d; z++)
         for (let x = b.x; x < b.x + b.w; x++) {
           const i = this.idx(x, y, z);
-          if (i >= 0) this.occ[i] = v;
+          if (i >= 0) {
+            const s = (i & 1) << 2;
+            this.occ[i >> 1] = (this.occ[i >> 1] & ~(15 << s)) | (v << s);
+          }
         }
   }
 

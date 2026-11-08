@@ -16,7 +16,7 @@ export function buildStahlHouse(): { builder: Builder; heightmap: HeightMap } {
   buildCantileverBeams(b);
   const heightmap = buildSite(b);
   buildSlabs(b);
-  buildPaving(b);
+  buildPaving(b, heightmap);
   buildSteel(b);
   buildEnvelope(b);
   buildInterior(b);

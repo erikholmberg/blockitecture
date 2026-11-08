@@ -3,16 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { buildStahlHouse } from '../src/model/stahlHouse';
 import { sequence } from '../src/build/sequencer';
 import { P, PHASES } from '../src/bricks/catalog';
+import { houseFingerprint } from './fingerprint';
 
 const bricks = buildStahlHouse().builder.bricks;
 const s = sequence(bricks);
 const startsOf = (pred: (i: number) => boolean) => bricks.map((_, i) => i).filter(pred).map((i) => s.start[i]);
-/** FNV-1a: small, dependency-free fingerprint */
-const fnv1a = (str: string) => {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 0x01000193) >>> 0;
-  return h.toString(16).padStart(8, '0');
-};
 const min = (a: number[]) => a.reduce((m, v) => Math.min(m, v), Infinity);
 const max = (a: number[]) => a.reduce((m, v) => Math.max(m, v), -Infinity);
 
@@ -79,9 +74,7 @@ describe('002: interior before enclosure', () => {
     expect(s.total).toBeCloseTo(236.7, 5);
   });
 
-  it('A5: the house itself is unchanged (geometry fingerprint from before spec 002)', () => {
-    const str = bricks.map((q) => [q.x, q.y, q.z, q.w, q.d, q.h, q.color, q.kind, q.studs, q.thin ?? ''].join(',')).join('\n');
-    expect(bricks.length).toBe(17_823);
-    expect(fnv1a(str)).toBe('361f4999'); // computed on 404a3f6, before spec 002
+  it('A5: the house itself is unchanged (fingerprint of phases 1–6; spec 004 moved the paving and reshaped the hillside)', () => {
+    expect(houseFingerprint(bricks)).toEqual({ count: 3603, hash: 'e781fb43' });
   });
 });

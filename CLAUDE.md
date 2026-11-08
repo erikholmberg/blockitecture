@@ -27,11 +27,11 @@ dependency bumps, and docs. Say in the commit message which exemption applies.
 
 ## Commands
 ```sh
-npm run dev          # http://localhost:5173 (?debug for the FPS overlay and window.__stahl)
+npm run dev          # http://localhost:5173 (?debug for the FPS overlay and window.__stahl; &dpr=1.75 pins resolution for perf A/B)
 npm test             # Vitest, once
 npm run test:watch
 npm run check        # tsc (src + tests) + tests: must pass before every commit
-node scripts/fetch-neighborhood.mjs   # regenerate public/neighborhood.bin (OSM + terrain; cached in scripts/.cache)
+node scripts/fetch-neighborhood.mjs   # regenerate public/neighborhood.bin and src/model/lotTerrain.ts (OSM + terrain; cached in scripts/.cache)
 npm run build        # tsc + vite build → dist/
 ```
 

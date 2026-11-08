@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { groundHeight, inGrid, lotDistance, Neighborhood, parseNeighborhood, sampleGrid } from './neighborhoodData';
 import { hash2, noise2 } from '../model/voxel';
+import { DRIVE } from '../model/layout';
+import { TERRAIN } from '../model/site';
 
 /**
  * Spec 003: the real Hollywood Hills around the house: terrain, roads and buildings from
@@ -108,18 +110,37 @@ export class NeighborhoodScene {
     const COLOR = [0x77746c, 0x5d5d5a, 0x4f504f, 0x4a4c4e];
     const pos: number[] = [], col: number[] = [];
     const c = new THREE.Color();
+    const paths: { pts: [number, number][]; cls: number }[] = [];
     for (let r = 0; r < count; r++) {
-      const hw = WIDTH[cls[r]] / 2;
-      c.setHex(COLOR[cls[r]]);
+      const pts: [number, number][] = [];
+      for (let p = start[r]; p < start[r + 1]; p++) pts.push([xz[p * 2], xz[p * 2 + 1]]);
+      paths.push({ pts, cls: cls[r] });
+    }
+    // spec 004: join the brick driveway's end to the nearest real street
+    const end: [number, number] = [TERRAIN.x0, (DRIVE[1] + DRIVE[3]) / 2];
+    let best: [number, number] = end, bestD = Infinity;
+    for (const { pts, cls: k } of paths) {
+      if (k === 0) continue; // not service roads
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [ax, az] = pts[i], [bx, bz] = pts[i + 1];
+        const L2 = (bx - ax) ** 2 + (bz - az) ** 2 || 1;
+        const t = Math.max(0, Math.min(1, ((end[0] - ax) * (bx - ax) + (end[1] - az) * (bz - az)) / L2));
+        const px = ax + (bx - ax) * t, pz = az + (bz - az) * t, d = Math.hypot(px - end[0], pz - end[1]);
+        if (d < bestD) { bestD = d; best = [px, pz]; }
+      }
+    }
+    if (bestD < 400) paths.push({ pts: [[end[0] - 1, end[1]], best], cls: 0 });
+    for (const { pts, cls: k } of paths) {
+      const hw = WIDTH[k] / 2;
+      c.setHex(k === 0 && pts.length === 2 && pts[0][0] === end[0] - 1 ? 0xc9c3b5 : COLOR[k]);
       // resample to ≤ 16 ft segments so the ribbon follows the ground
       const line: [number, number][] = [];
-      for (let p = start[r]; p < start[r + 1] - 1; p++) {
-        const ax = xz[p * 2], az = xz[p * 2 + 1], bx = xz[p * 2 + 2], bz = xz[p * 2 + 3];
+      for (let p = 0; p < pts.length - 1; p++) {
+        const [ax, az] = pts[p], [bx, bz] = pts[p + 1];
         const steps = Math.max(1, Math.ceil(Math.hypot(bx - ax, bz - az) / 16));
         for (let s = 0; s < steps; s++) line.push([ax + ((bx - ax) * s) / steps, az + ((bz - az) * s) / steps]);
       }
-      const last = start[r + 1] - 1;
-      line.push([xz[last * 2], xz[last * 2 + 1]]);
+      line.push(pts[pts.length - 1]);
       for (let i = 0; i < line.length - 1; i++) {
         const [ax, az] = line[i], [bx, bz] = line[i + 1];
         if (lotDistance(ax, az) < 2 || lotDistance(bx, bz) < 2) continue; // the brick lot has its own road

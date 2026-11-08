@@ -9,9 +9,9 @@ const { builder, heightmap } = buildStahlHouse();
 const bricks = builder.bricks;
 
 describe('model', () => {
-  it('M1: generates ~17,800 pieces', () => {
-    expect(bricks.length).toBeGreaterThan(17_000);
-    expect(bricks.length).toBeLessThan(18_500);
+  it('M1: generates ~27,200 pieces (real hillside since spec 004; was ~17,800)', () => {
+    expect(bricks.length).toBeGreaterThan(26_000);
+    expect(bricks.length).toBeLessThan(28_500);
   });
 
   it('M2: is deterministic — every visitor sees the same house', () => {

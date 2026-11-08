@@ -5,8 +5,7 @@
  * Model coordinates: x/z in ft (1 unit = 1 stud ≈ 1 ft), y up in ft, y = 0 is the brick lot.
  * The real world is rotated 180° to match the brick model (see the script header).
  */
-import { CITY_Y } from '../model/layout';
-import { TERRAIN } from '../model/site';
+import { surfaceFt, TERRAIN } from '../model/site';
 
 export interface Grid {
   x0: number; z0: number; step: number; nx: number; nz: number;
@@ -105,10 +104,6 @@ export function sampleGrid(g: Grid, x: number, z: number): number {
 export const inGrid = (g: Grid, x: number, z: number) =>
   x >= g.x0 && z >= g.z0 && x <= g.x0 + (g.nx - 1) * g.step && z <= g.z0 + (g.nz - 1) * g.step;
 
-/** Height of the brick lot's outer edge (its columns stop at CITY_Y). */
-export const LOT_EDGE_Y = CITY_Y;
-/** Width of the band over which the terrain blends from the brick lot edge to the real ground. */
-export const LOT_BLEND = 160;
 /** Width of the band at the edge of the near grid that blends into the far grid. */
 export const FAR_BLEND = 500;
 
@@ -121,14 +116,24 @@ export function lotDistance(x: number, z: number) {
   return Math.hypot(dx, dz);
 }
 
+/** How far the terrain mesh sits under the real ground inside the brick lot, hidden by the bricks. */
+export const UNDER_LOT = 3;
+
 /**
- * Ground height outside the brick lot: real terrain, blended down/up to meet the brick lot's
- * edge (LOT_EDGE_Y) next to it, and blended into the coarse far grid at the edge of the near grid.
- * Inside the lot it returns LOT_EDGE_Y − 2, just under the bricks' lowest course.
+ * Ground height for the terrain mesh: the real ground, blended into the coarse far grid at the edge of the
+ * near grid. Inside the brick lot it sits UNDER_LOT ft below the lowest real or designed surface (pad, driveway,
+ * pool floor) within one mesh cell, so the bricks hide it.
  */
 export function groundHeight(n: Neighborhood, x: number, z: number): number {
   const d = lotDistance(x, z);
-  if (d === 0) return LOT_EDGE_Y - 2;
+  if (d === 0) {
+    // lowest surface within one mesh cell in every direction, so the interpolated mesh stays under the bricks
+    const s = n.near.step;
+    let m = Infinity;
+    for (let dz = -s; dz <= s; dz += s / 4)
+      for (let dx = -s; dx <= s; dx += s / 4) m = Math.min(m, sampleGrid(n.near, x + dx, z + dz), surfaceFt(x + dx, z + dz));
+    return m - UNDER_LOT;
+  }
   const far = sampleGrid(n.far, x, z);
   let real = far;
   if (inGrid(n.near, x, z)) {
@@ -136,6 +141,5 @@ export function groundHeight(n: Neighborhood, x: number, z: number): number {
     const edge = Math.min(x - g.x0, z - g.z0, g.x0 + (g.nx - 1) * g.step - x, g.z0 + (g.nz - 1) * g.step - z);
     real = sampleGrid(g, x, z) * smooth(edge / FAR_BLEND) + far * (1 - smooth(edge / FAR_BLEND));
   }
-  const t = smooth(d / LOT_BLEND);
-  return LOT_EDGE_Y * (1 - t) + real * t;
+  return real;
 }

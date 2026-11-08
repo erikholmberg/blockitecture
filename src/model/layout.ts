@@ -31,7 +31,6 @@ export const ROOF: Rect[] = [
 
 export const CLIFF_X = 56; // plateau ends here on the east; living wing cantilevers beyond
 export const PLATEAU: Rect = [-34, -64, CLIFF_X, 53];
-export const ROAD: Rect = [-122, -78, 26, -64];
 
 export const POOL_MAIN: Rect = [30, 2, 54, 22];
 export const POOL_INLETS: Rect[] = [
@@ -40,7 +39,8 @@ export const POOL_INLETS: Rect[] = [
 ];
 export const TERRACE: Rect = [20, -14, CLIFF_X, 30];
 export const CARPORT: Rect = [-2, -38, 26, -10];
-export const DRIVEWAY: Rect = [0, -64, 24, -38];
+/** Driveway from the carport west to the lot edge, where it meets the real Woods Drive (spec 004). */
+export const DRIVE: Rect = [-112, -30, -2, -14];
 
 export function inRect(x: number, z: number, r: Rect) {
   return x >= r[0] && x < r[2] && z >= r[1] && z < r[3];
@@ -64,4 +64,3 @@ export function sdRoundRect(x: number, z: number, r: Rect, radius: number) {
 
 /** House centre used by cameras. */
 export const CENTER = { x: 32, y: 6, z: 12 };
-export const CITY_Y = -48; // world units

@@ -1,7 +1,7 @@
 import { C, P } from '../bricks/catalog';
 import { Builder, hash2, rng } from './voxel';
 import { HeightMap, TERRAIN } from './site';
-import { inAny, inRect, PLATEAU, ROAD, ROOF, Y } from './layout';
+import { DRIVE, inAny, inRect, PLATEAU, ROOF, Y } from './layout';
 import { buildPoolWater } from './pool';
 
 export function palm(b: Builder, x: number, z: number, y: number, height: number) {
@@ -113,6 +113,7 @@ export function buildLandscape(b: Builder, hm: HeightMap) {
   b.newGroup();
   b.box(-30, -62, -26, 48, 0, 6, {
     kind: 'brick',
+    mask: (_x, z) => z < DRIVE[1] - 2 || z >= DRIVE[3] + 2, // gap for the driveway (spec 004)
     color: (x, y, z) => (hash2(x * 3 + y, z >> 2) < 0.3 ? C.green : C.darkGreen),
   });
   b.box(-26, -64, 0, -60, 0, 6, { kind: 'brick', color: C.darkGreen, mask: (x) => x < -4 });
@@ -128,7 +129,7 @@ export function buildLandscape(b: Builder, hm: HeightMap) {
 
   // palms & cypresses on the lot
   const palms: [number, number, number][] = [
-    [-14, 14, 42], [-20, -22, 48], [36, -40, 36], [-10, 44, 36], [50, -50, 44], [-16, -50, 30],
+    [-14, 14, 42], [-20, -44, 48], [36, -40, 36], [-10, 44, 36], [50, -50, 44], [-16, -50, 30],
   ];
   for (const [x, z, h] of palms) palm(b, x, z, 0, h);
   for (const [x, z] of [[-24, -10], [-24, 0], [-24, 10], [-24, 20], [30, -56], [40, -56]]) cypress(b, x, z, 0, 9);
@@ -139,10 +140,10 @@ export function buildLandscape(b: Builder, hm: HeightMap) {
     const x = Math.floor(TERRAIN.x0 + 4 + r() * (TERRAIN.x1 - TERRAIN.x0 - 8));
     const z = Math.floor(TERRAIN.z0 + 4 + r() * (TERRAIN.z1 - TERRAIN.z0 - 8));
     if (inRect(x, z, [PLATEAU[0] - 2, PLATEAU[1] - 2, PLATEAU[2] + 2, PLATEAU[3] + 2])) continue;
-    if (inRect(x, z, [ROAD[0], ROAD[1] - 2, ROAD[2], ROAD[3] + 2])) continue;
+    if (inRect(x, z, [DRIVE[0], DRIVE[1] - 3, DRIVE[2], DRIVE[3] + 3])) continue;
     if (inAny(x, z, ROOF)) continue;
     const y = hm.at(x, z);
-    if (y < -110) continue;
+    if (y < -390) continue;
     // stay on flat-ish terraces
     if (hm.at(x + 3, z) !== y || hm.at(x, z + 3) !== y) continue;
     if (r() < 0.06) palm(b, x, z, y, 30 + Math.floor(r() * 4) * 3);

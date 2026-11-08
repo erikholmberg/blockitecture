@@ -38,7 +38,9 @@ if (DEBUG) console.log(`[stahl] ${bricks.length} pieces, ${studs.length} studs, 
 
 // ---------- renderer & scene ----------
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-let dpr = Math.min(devicePixelRatio, isTouch ? 1.5 : 1.75);
+// ?dpr=1.75 pins the pixel ratio and turns off adaptive resolution (for like-for-like performance checks)
+const FIXED_DPR = params.has('dpr') ? Number(params.get('dpr')) : 0;
+let dpr = FIXED_DPR || Math.min(devicePixelRatio, isTouch ? 1.5 : 1.75);
 renderer.setPixelRatio(dpr);
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -207,7 +209,7 @@ renderer.setAnimationLoop(() => {
   if (fpsAcc > 1) {
     const fps = fpsFrames / fpsAcc;
     if (fpsEl) fpsEl.textContent = `${fps.toFixed(0)} fps · dpr ${dpr.toFixed(2)} · ${renderer.info.render.triangles.toLocaleString()} tris · ${renderer.info.render.calls} calls`;
-    if (fps < 38 && dpr > 0.75) { slowTime++; if (slowTime >= 2) { dpr = Math.max(0.75, dpr - 0.25); renderer.setPixelRatio(dpr); slowTime = 0; } }
+    if (!FIXED_DPR && fps < 38 && dpr > 0.75) { slowTime++; if (slowTime >= 2) { dpr = Math.max(0.75, dpr - 0.25); renderer.setPixelRatio(dpr); slowTime = 0; } }
     else slowTime = 0;
     fpsAcc = 0; fpsFrames = 0;
   }

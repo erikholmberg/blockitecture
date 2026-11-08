@@ -74,7 +74,7 @@ buildings on the real terrain**, so that the view from the house looks like the 
       Is a committed generated file OK? *Recommended: yes.* It's deterministic, works offline, and doesn't depend on map servers at runtime.
 
 ## Known issues
-- **KI-3** The brick lot's edges all stop at a flat −48 ft (the old compressed `CITY_Y`). Real ground at the lot edge ranges from
+- **KI-3** *(Fixed in 004.)* The brick lot's edges all stop at a flat −48 ft (the old compressed `CITY_Y`). Real ground at the lot edge ranges from
   −154 ft (model north/east, downhill: blends naturally) to +22 ft (model south/west, uphill). On the uphill sides the
   terrain dips by up to ~70 ft over 160 ft to meet the bricks. The real fix is to shape the brick hillside from the
   real terrain, which changes the brick model, so it belongs in its own spec.

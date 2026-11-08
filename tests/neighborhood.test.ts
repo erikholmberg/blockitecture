@@ -1,7 +1,7 @@
 // Spec: specs/003-real-neighborhood.md (A1–A4, A6; A5 is covered by tests/phaseOrder.test.ts)
 import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
-import { groundHeight, LOT_EDGE_Y, parseNeighborhood, sampleGrid } from '../src/scene/neighborhoodData';
+import { groundHeight, parseNeighborhood, sampleGrid } from '../src/scene/neighborhoodData';
 import { TERRAIN } from '../src/model/site';
 
 const file = readFileSync('public/neighborhood.bin');
@@ -40,9 +40,9 @@ describe('003: real neighborhood data', () => {
     // real south (the LA basin) is model −z after the 180° rotation
     expect(sampleGrid(n.near, 32, 12 - 3000)).toBeLessThan(-350);
     expect(n.near.h.reduce((m, v) => Math.max(m, v), -Infinity)).toBeGreaterThan(200);
-    // the blended ground meets the brick lot edge
-    expect(groundHeight(n, TERRAIN.x1 + 0.5, 0)).toBeCloseTo(LOT_EDGE_Y, 0);
-    expect(groundHeight(n, 0, TERRAIN.z0 - 0.5)).toBeCloseTo(LOT_EDGE_Y, 0);
+    // outside the lot the ground is the real ground (spec 004-A4 removed the blend to the old −48 ft lot edge)
+    expect(groundHeight(n, TERRAIN.x1 + 0.5, 0)).toBeCloseTo(sampleGrid(n.near, TERRAIN.x1 + 0.5, 0), 3);
+    expect(groundHeight(n, 0, TERRAIN.z0 - 0.5)).toBeCloseTo(sampleGrid(n.near, 0, TERRAIN.z0 - 0.5), 3);
   });
 
   it('A3: decoded terrain is continuous (no decoding glitches)', () => {

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { Brick, Kind, PLATE } from './catalog';
 import { Stud } from '../model/voxel';
 import { DROP_DUR } from '../build/sequencer';
@@ -182,7 +183,10 @@ export class BrickSet {
 
     const box = new THREE.BoxGeometry(1, 1, 1);
     const cyl = new THREE.CylinderGeometry(0.5, 0.5, 1, 14);
-    const stud = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 10);
+    // studs: an open 8-sided tube with a top cap only. The bottom always sits on a brick, so it's never seen
+    // (24 triangles instead of 40; the real hillside of spec 004 has ~69k studs)
+    const studTop = new THREE.CircleGeometry(0.3, 8).rotateX(-Math.PI / 2).translate(0, 0.1, 0);
+    const stud = mergeGeometries([new THREE.CylinderGeometry(0.3, 0.3, 0.2, 8, 1, true), studTop])!;
     const sphere = new THREE.SphereGeometry(0.5, 14, 10);
 
     this.layers = {
