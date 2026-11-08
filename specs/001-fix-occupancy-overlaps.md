@@ -3,7 +3,7 @@
 - **Status:** Done (A5 manual check pending)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 404a3f6
 
 ## Goal
 Every piece in the model gets an overlap check, so no two pieces ever share space.
