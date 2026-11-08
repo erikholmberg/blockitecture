@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-08: Q1 wave, Q2 16 s, Q3 keep name)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 309af6f
 
 ## Goal
 The build opens with "Shaping the hillside" (24 s), and it's the least interesting part of the show. It builds strictly in layers,
