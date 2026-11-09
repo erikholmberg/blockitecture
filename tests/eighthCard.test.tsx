@@ -8,17 +8,17 @@ import { HOUSES } from '../src/houses/index';
 describe('020: an eighth card', () => {
   it('A1: the Kaufmann Desert House joins the coming-soon cards, last, as data only', () => {
     const soon = HOUSES.filter((h) => h.status === 'coming-soon');
-    expect(soon.map((h) => h.slug)).toEqual(['ennis-house', 'casa-malaparte', 'kaufmann-desert-house']);
-    const k = soon[2]; // (spec 022 made the Farnsworth House live)
+    expect(soon.map((h) => h.slug)).toEqual(['casa-malaparte', 'kaufmann-desert-house']);
+    const k = soon[1]; // (specs 022 and 025 made Farnsworth and Ennis live)
     expect(k.title && k.architect && k.location && k.blurb).toBeTruthy();
     expect(k.year).toBe(1946);
     expect(k.thumbnail).toBeUndefined();
     expect(k.pieces).toBeUndefined();
   });
 
-  it('A2: the home page renders 8 cards (spec 022: now 5 live, 3 coming soon)', () => {
+  it('A2: the home page renders 8 cards (specs 022, 025: now 6 live, 2 coming soon)', () => {
     const doc = new DOMParser().parseFromString(renderToString(<HomePage houses={HOUSES} />), 'text/html');
     expect(doc.querySelectorAll('[data-house]').length).toBe(8);
-    expect(HOUSES.filter((h) => h.status === 'live').length).toBe(5);
+    expect(HOUSES.filter((h) => h.status === 'live').length).toBe(6);
   });
 });

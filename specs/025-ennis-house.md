@@ -1,6 +1,7 @@
 # 025 — The Ennis House
 
-- **Status:** Approved (approved by Erik 2026-11-09: "build it", all recommendations)
+- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations). Built; walking itself and the phone
+  controls couldn't be checked here, as for specs 017–022
 - **Owner:** Erik
 - **House:** ennis-house
 - **Created:** 2026-11-09
@@ -124,4 +125,56 @@ About 4 minutes, like the larger houses.
       the Frank Lloyd Wright Foundation or the LEGO Group." The credits page picks it up.
 
 ## Implementation notes
-Filled in after approval.
+- **Correction to the research:**
+  - The footprint I first named (way 426658118) is not the house. Wikidata's point (Q578184: 34.11611, −118.29278) sits on way
+    **426658114**: 1924, 1,469 m², with a curved court on the north. That's the Ennis House, and the fit uses it.
+  - 426658118 (1924, 77 m east) is probably the chauffeur's quarters. It lies outside the lot, so the neighbourhood renderer draws it
+    rather than blocks, a deviation from Q4.
+- **Data** (opt-in options; the other houses use neither):
+  - `fit.osmIds` fits by way id (A2).
+  - `exportSelf` writes the house's own outline as `LOT_SELF`, so the podium follows it exactly.
+  - Rotation **−23°**, IoU 0.834.
+  - y = 0 is pinned to the main floor, 6 ft above the terrain's reading at the centre (`lotElevationM`).
+  - `lotFeatures` is on, but no neighbour's centre falls in the final lot (x −50…290, z −70…130), so the renderer draws them all.
+- **Heights:** read off HABS CA-1942's long elevation at 6 px/ft from the floor line:
+  - tiers at about 11, 19 and 24 ft;
+  - the tower at about 24½ ft;
+  - the court wall at 8 ft;
+  - the west end's podium about 18–21 ft.
+
+  Which mass sits where across the house, and the rooms, are assumed. Masses are snapped to the 4-ft module (A4) and kept inside the
+  outline (A3).
+- **Model:** `src/houses/ennis-house/`, 31,820 pieces.
+  - The podium: a textile-block retaining wall along the outline, from the slope up to the floor.
+  - The floors: marble inside the masses, block-paved terraces outside them.
+  - The walls of eight masses, with the art-glass window openings left in them.
+  - The motor court, with the wrought-iron gates.
+  - The roofs, with teak ceilings.
+  - The pool in the north court.
+  - The interior: the wisteria mosaic fireplace, the living room, the dining room, the loggia's benches, the bedrooms, the kitchen,
+    a piano.
+  - Outside: chaparral, cypresses and palms.
+  - Blocks are drawn on the 4-ft, three-block repeat (Q3). Patterned bands alternate with plain ones, and the plain blocks vary by
+    module, so the walls pack into long pieces.
+- **Performance fixes:**
+  - Block-to-block colour variation and the first, wider lot came to 92k pieces. Varying by module and shrinking the lot brought it
+    to 31.8k.
+  - The fire sat inside the hearth and was dropped; it's moved onto it.
+- **Tests:**
+  - `tests/ennis.test.ts` covers A1–A9 plus the home card. A1 pins all five other models: Farnsworth's is 13,052 / `ca43acd9`.
+  - The house is added to `tests/buildOrder.test.ts` and `tests/credits.test.tsx`.
+  - The registry tests now list it as live (6 live, 2 coming soon).
+  - 187 tests in all.
+- **Manual checks** (Chrome, 2026-11-09):
+  - **A10 pass** (16×): the ridge; the podium and floors; then the patterned walls rising around the furniture; then the glass,
+    roofs and planting.
+  - **A11 pass:** *From below* shows the stepped temple-like mass on its podium, with patterned bands and rows of slot windows. It's
+    the thumbnail.
+  - **A12 pass:** at dusk, *Over the city* shows the house against Los Angeles's lights to the horizon.
+  - **A13 partial:**
+    - All views and No roof work.
+    - Walk now starts in the motor court facing the house. It first started in a hollow in the slope.
+    - **Not checked:** walking itself, and the phone controls.
+  - **A14 pass:** 60 fps at `?dpr=1.75` (4.0M triangles).
+  - **A15 pass:** the home card is live with its thumbnail and 31,820 pieces, and the credits page has its section.
+- **Thumbnail:** `/ennis-house/?view=below&clean&date=2026-06-21`, cropped to 1200 × 675.

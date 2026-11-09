@@ -175,8 +175,11 @@ const roadsRaw = await overpass(
   `[out:json][timeout:180];way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|service)$"](around:${R + 200},${LAT0},${LON0});out tags geom;`,
 );
 
-const selves = buildingsRaw.filter((e) => e.tags?.wikidata === H.fit.wikidata);
-if (!selves.length) throw new Error(`${SLUG}: the house (wikidata ${H.fit.wikidata}) was not found in the OSM data`);
+// the house's own outline(s): by wikidata, or (spec 025, opt-in) by OSM way id when the footprint carries no tags
+const selves = H.fit.osmIds
+  ? buildingsRaw.filter((e) => H.fit.osmIds.includes(e.id))
+  : buildingsRaw.filter((e) => e.tags?.wikidata === H.fit.wikidata);
+if (!selves.length) throw new Error(`${SLUG}: the house (${H.fit.osmIds ? `ways ${H.fit.osmIds}` : `wikidata ${H.fit.wikidata}`}) was not found in the OSM data`);
 const rings = selves.map((e) => e.geometry.map((g) => [g.lat, g.lon]));
 let fit = fitHouse(rings);
 if (H.fit.rotationSearch) {
@@ -342,6 +345,17 @@ export const LOT_WATERWAYS: { name: string; kind: string; pts: [number, number][
 ${lines.join('\n')}
 ];
 export const LOT_WATERFALLS: [number, number][] = [${falls.join(', ')}];
+`;
+  }
+  if (H.exportSelf) {
+    // spec 025: the house's own OSM outline(s) in model ft, so the model can follow them exactly
+    const r1 = (v) => Math.round(v * 10) / 10;
+    const rings = selves.map((e) => `[${e.geometry.slice(0, -1).map((g) => `[${toModel(g.lat, g.lon).map(r1).join(', ')}]`).join(', ')}]`);
+    extra += `
+// The house's own OSM outline(s), in model ft. © OpenStreetMap contributors (ODbL). Spec 025.
+export const LOT_SELF: [number, number][][] = [
+  ${rings.join(',\n  ')},
+];
 `;
   }
   if (H.lotFeatures) {

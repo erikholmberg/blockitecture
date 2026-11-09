@@ -13,6 +13,7 @@ export const PAGES = {
   fallingwater: r('./fallingwater/index.html'),
   'rietveld-schroder-house': r('./rietveld-schroder-house/index.html'),
   'farnsworth-house': r('./farnsworth-house/index.html'),
+  'ennis-house': r('./ennis-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

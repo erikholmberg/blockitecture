@@ -113,8 +113,16 @@ export const HOUSES: House[] = [
     architect: 'Frank Lloyd Wright',
     year: 1924,
     location: 'Los Feliz, Los Angeles',
-    status: 'coming-soon',
+    status: 'live',
+    pieces: 31_820,
+    thumbnail: '/ennis-house/thumbnail.jpg',
     blurb: 'Thousands of patterned concrete textile blocks on a ridge above Los Angeles.',
+    affiliations: ['the Ennis House Foundation', 'the Frank Lloyd Wright Foundation'],
+    sources: [
+      'Measured drawing: Historic American Buildings Survey, HABS CA-1942 (1969), Library of Congress',
+      'Its outline and the neighbourhood: OpenStreetMap (Los Angeles County building outlines)',
+      'Published photographs of the house',
+    ],
   },
   {
     slug: 'casa-malaparte',
