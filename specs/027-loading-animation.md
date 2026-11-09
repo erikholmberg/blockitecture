@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09: C, the spinning brick, from 23 candidates on the preview)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 75cb57b
 
 ## Goal
 The loading screen every house page shows while the model is generated is a small moment of delight, on brand with toy blocks,
