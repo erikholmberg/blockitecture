@@ -84,6 +84,8 @@ export interface Scenery {
   city?: { maxY?: number; minY?: number } | false;
   /** the real terrain reads as hardwood forest (greens on every slope but the steepest rock; no built-up flats). Spec 017 */
   forest?: boolean;
+  /** the real terrain reads as Dutch lowland: green grass and fields, grey-brown where it's built up; no rock. Spec 019 */
+  lowlands?: boolean;
   /** water pieces shimmer and flow, and `falls` pieces stream downward (spec 017); default: still water (the Stahl pool) */
   flowingWater?: boolean;
 }

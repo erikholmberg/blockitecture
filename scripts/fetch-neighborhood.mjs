@@ -344,6 +344,36 @@ ${lines.join('\n')}
 export const LOT_WATERFALLS: [number, number][] = [${falls.join(', ')}];
 `;
   }
+  if (H.lotFeatures) {
+    // spec 019: the real buildings and streets that overlap the lot (the neighbourhood renderer leaves them out), in model ft
+    const inLot = (pts) => pts.some(([x, z]) => x > TERRAIN.x0 - 5 && x < TERRAIN.x1 + 5 && z > TERRAIN.z0 - 5 && z < TERRAIN.z1 + 5);
+    const r1 = (v) => Math.round(v * 10) / 10;
+    const bl = [];
+    for (const e of buildingsRaw) {
+      if (selves.includes(e) || !e.geometry) continue;
+      const ring = e.geometry.slice(0, -1).map((g) => toModel(g.lat, g.lon));
+      const cx = ring.reduce((a, p) => a + p[0], 0) / ring.length, cz = ring.reduce((a, p) => a + p[1], 0) / ring.length;
+      if (!(cx > TERRAIN.x0 && cx < TERRAIN.x1 && cz > TERRAIN.z0 && cz < TERRAIN.z1)) continue; // its centre in the lot
+      const t = e.tags ?? {};
+      bl.push(`  { id: ${e.id}, levels: ${parseFloat(t['building:levels']) || 0}, kind: ${JSON.stringify(t.building ?? 'yes')}, ring: [${ring.map((p) => `[${p.map(r1).join(', ')}]`).join(', ')}] },`);
+    }
+    const rl = [];
+    for (const e of roadsRaw) {
+      if (!e.geometry) continue;
+      const pts = e.geometry.map((g) => toModel(g.lat, g.lon));
+      if (!inLot(pts)) continue;
+      rl.push(`  { name: ${JSON.stringify(e.tags.name ?? '')}, highway: ${JSON.stringify(e.tags.highway)}, bridge: ${!!e.tags.bridge}, pts: [${pts.map((p) => `[${p.map(r1).join(', ')}]`).join(', ')}] },`);
+    }
+    extra += `
+// OSM buildings and streets overlapping the lot (model ft); the neighbourhood renderer leaves these out. © OpenStreetMap contributors (ODbL). Spec 019.
+export const LOT_BUILDINGS: { id: number; levels: number; kind: string; ring: [number, number][] }[] = [
+${bl.join('\n')}
+];
+export const LOT_ROADS: { name: string; highway: string; bridge: boolean; pts: [number, number][] }[] = [
+${rl.join('\n')}
+];
+`;
+  }
   fs.writeFileSync(H.out.lot, src + extra);
   console.log(`wrote ${H.out.lot}: ${(i1 - i0 + 1) * (j1 - j0 + 1)} samples`);
 }
@@ -363,7 +393,10 @@ for (const e of buildingsRaw) {
   const cx = xs.reduce((a, b) => a + b) / xs.length, cz = zs.reduce((a, b) => a + b) / zs.length;
   if (Math.hypot(cx - OX, cz - OZ) > RADIUS_M / FT) { skipped.far++; continue; }
   // the brick model owns its lot (spec 003, A4)
-  if (Math.max(...xs) > TERRAIN.x0 && Math.min(...xs) < TERRAIN.x1 && Math.max(...zs) > TERRAIN.z0 && Math.min(...zs) < TERRAIN.z1) {
+  // the lot's own buildings are bricks; with lotFeatures (spec 019) only those whose centre is in the lot
+  const overlaps = Math.max(...xs) > TERRAIN.x0 && Math.min(...xs) < TERRAIN.x1 && Math.max(...zs) > TERRAIN.z0 && Math.min(...zs) < TERRAIN.z1;
+  const centred = cx > TERRAIN.x0 && cx < TERRAIN.x1 && cz > TERRAIN.z0 && cz < TERRAIN.z1;
+  if (H.lotFeatures ? centred : overlaps) {
     skipped.lot++; continue;
   }
   const t = e.tags;

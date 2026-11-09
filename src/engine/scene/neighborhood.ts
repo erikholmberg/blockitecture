@@ -17,12 +17,14 @@ export class NeighborhoodScene {
   private flatsBelow: number;
   private chaparral: boolean;
   private forest: boolean;
+  private lowlands: boolean;
 
   constructor(private n: Neighborhood, private lot: Lot, scenery: Scenery = {}) {
     this.seaY = scenery.sea ? -n.anchor.lotElevationM / 0.3048 : null;
     this.flatsBelow = scenery.flatsBelow ?? -330;
     this.chaparral = scenery.chaparral ?? false;
     this.forest = scenery.forest ?? false;
+    this.lowlands = scenery.lowlands ?? false;
     const ground = (x: number, z: number) => groundHeight(n, lot, x, z);
     if (this.seaY !== null) this.group.add(this.sea(this.seaY));
     this.group.add(this.terrain(ground));
@@ -51,6 +53,7 @@ export class NeighborhoodScene {
   private terrainColor(x: number, z: number, y: number, slope: number, c: THREE.Color) {
     const nz = noise2(x * 0.012, z * 0.012), r = hash2(Math.floor(x / 40), Math.floor(z / 40));
     if (this.seaY !== null && y < this.seaY + 6) return c.setHex(y < this.seaY ? 0xbfae86 : 0xd8c9a0); // beach and sea floor
+    if (this.lowlands) return c.setHex(lowlandColor(x, z));
     if (this.forest) {
       // spec 017: hardwood forest on every slope (oak, maple, hemlock), bare rock only on the steepest faces, and a few
       // clearings and fields on the flattest ground
@@ -300,3 +303,15 @@ export async function loadNeighborhood(path: string): Promise<Neighborhood> {
   if (!res.ok) throw new Error(`neighborhood.bin: ${res.status}`);
   return parseNeighborhood(await res.arrayBuffer());
 }
+
+/**
+ * Spec 019: Dutch lowland colours for the real terrain: mostly grass and fields in a few greens, with grey-brown patches for
+ * built-up ground and paving. Pure, so it can be tested.
+ */
+export function lowlandColor(x: number, z: number): number {
+  const n = noise2(x * 0.006, z * 0.006), r = hash2(Math.floor(x / 60), Math.floor(z / 60));
+  if (n > 0.68) return r < 0.5 ? 0x8d8a80 : 0x9a9488; // built-up and paved
+  if (n < 0.25) return r < 0.5 ? 0x5e8a45 : 0x6b9650; // pasture
+  return r < 0.33 ? 0x739a52 : r < 0.66 ? 0x7fa35a : 0x688f4a; // grass and fields
+}
+
