@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09: Q1 yes, Q2 yes)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** ee94e19
 
 ## Goal
 All the "not affiliated with…" information moves to its own page, `/credits/`, linked from the home page footer. The footer stays
