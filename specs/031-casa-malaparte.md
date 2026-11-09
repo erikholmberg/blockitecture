@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** casa-malaparte
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** a9d96f5 (spec), 758aaa3 (build)
 
 ## Goal
 The seventh rendering: Casa Malaparte (Adalberto Libera, and its owner Curzio Malaparte, 1938–42) on Punta Massullo, Capri. A long
@@ -153,4 +153,5 @@ About 3 minutes; the house is long but simple.
     - **Not checked:** walking itself, and the phone controls.
   - **A14 pass:** 60 fps at `?dpr=1.75` (3.4M triangles).
   - **A15 pass:** the home card is live with its thumbnail and 59,758 pieces, and the credits page has its section.
+- **Claude usage** (spec 018): 75 replies; 69.1k output, 153.9k cache-write and 25.6M cache-read tokens; 4.9% of all tokens so far.
 - **Thumbnail:** `/casa-malaparte/?view=sea&clean&date=2026-06-21`, cropped to 1200 × 675.
