@@ -11,7 +11,7 @@ export function HomePage({ houses }: { houses: House[] }) {
             Blockitecture
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-            Famous houses, built block by block
+            Famous buildings, built block by block
           </h1>
           <p className="mt-3 text-base text-muted-foreground text-pretty">
             Landmark buildings rebuilt from toy blocks in your browser. Watch each one go up piece by piece

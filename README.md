@@ -1,6 +1,6 @@
 # Blockitecture
 
-Famous houses, built block by block in your browser. The home page (`/`) lists the renderings; each one is its own page.
+Famous buildings, built block by block in your browser. The home page (`/`) lists the renderings; each one is its own page.
 
 ## Houses
 
