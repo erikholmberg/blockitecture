@@ -3,7 +3,7 @@
 - **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's iPhone check, A5)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 4ffc9a9 (spec), ed5fcad (fix)
 
 ## Goal
 On an iPhone, while the intro card is showing and the scene turns behind it, the whole screen flashes. It stops once the visitor taps
