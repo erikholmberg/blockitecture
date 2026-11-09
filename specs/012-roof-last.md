@@ -4,7 +4,7 @@
   behavior on new builds")
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 491d035
 
 ## Goal
 Like the Stahl House since spec 002, every house is furnished while it's still an open frame: interior → walls/glass → roof.

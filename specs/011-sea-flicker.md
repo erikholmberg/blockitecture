@@ -4,7 +4,7 @@
   fully specified by its symptom)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 491d035
 
 ## Goal
 No flickering surfaces while the camera moves.
