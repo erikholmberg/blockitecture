@@ -27,6 +27,7 @@ describe('013: "block", not "brick", in what visitors read', () => {
   for (const house of [STAHL, EAMES]) {
     it(`A1/A2: ${house.slug}: intro text says "block by block" and never "brick"`, () => {
       expect(JSON.stringify(house.text)).not.toMatch(/brick/i);
+      // spec 026: the intro card now shows only the house's name; the stored headline (and the page titles) keep the line
       expect(house.text.headline.join(' ')).toMatch(/block by block/);
     });
   }

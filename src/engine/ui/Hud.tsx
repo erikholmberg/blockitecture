@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import type { HouseDefinition } from '@/engine/house';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup,
   DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger,
@@ -19,6 +18,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { createHudStore, HudSnapshot, HudStore } from '@/engine/ui/hudStore';
+import { IntroCard } from '@/engine/ui/IntroCard';
 
 export type CamAction = 'in' | 'out' | 'left' | 'right' | 'home' | 'auto' | 'full' | `view:${string}`;
 
@@ -196,40 +196,13 @@ export function Hud({ store, h, house, compact: compactProp }: {
         {/* intro */}
         {!started && (
           <div className="pointer-events-auto absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-black/15 to-black/45 p-5">
-            <Card className="w-full max-w-md shadow-2xl">
-              <CardHeader>
-                <CardDescription className="text-[11px] tracking-[0.14em] uppercase">
-                  {text.eyebrow}
-                </CardDescription>
-                <CardTitle className="text-3xl leading-tight font-bold tracking-tight">
-                  {text.headline[0]}
-                  <br />
-                  {text.headline[1]}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-5">
-                <p className="text-[15px] leading-relaxed text-muted-foreground">
-                  {text.intro[0]}{' '}
-                  <b className="text-foreground">{s.pieces.toLocaleString('en-US')}</b> {text.intro[1]}
-                </p>
-                <Button size="lg" className="h-11 w-fit px-5 text-[15px]" onClick={() => { setStarted(true); h.onStart(); }}>
-                  Start building
-                </Button>
-                {text.disclaimer && <p className="text-[11px] leading-snug text-muted-foreground">{text.disclaimer}</p>}
-                {compact ? (
-                  <>
-                    <p className="text-xs text-muted-foreground">
-                      Drag to orbit · pinch to zoom · tap the scene to hide the controls · <b>Walk</b> mode is in Settings
-                    </p>
-                    <a href={OSM_URL} target="_blank" rel="noopener" className="text-[11px] text-muted-foreground underline">{CREDIT}</a>
-                  </>
-                ) : (
-                  <p className="text-xs text-muted-foreground">
-                    Drag to orbit · scroll to zoom · camera buttons on the right · <b>Walk</b> mode for first person
-                  </p>
-                )}
-              </CardContent>
-            </Card>
+            <IntroCard
+              text={text}
+              pieces={s.pieces}
+              compact={compact}
+              onStart={() => { setStarted(true); h.onStart(); }}
+              credit={<a href={OSM_URL} target="_blank" rel="noopener" className="text-[11px] text-muted-foreground underline">{CREDIT}</a>}
+            />
           </div>
         )}
 
