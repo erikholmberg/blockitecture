@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** ennis-house
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 4a01f3b (spec), c6dc7ca (build)
 
 ## Goal
 The sixth rendering: Frank Lloyd Wright's house for Charles and Mabel Ennis (1924) at 2607 Glendower Avenue, Los Feliz. The largest
@@ -177,4 +177,5 @@ About 4 minutes, like the larger houses.
     - **Not checked:** walking itself, and the phone controls.
   - **A14 pass:** 60 fps at `?dpr=1.75` (4.0M triangles).
   - **A15 pass:** the home card is live with its thumbnail and 31,820 pieces, and the credits page has its section.
+- **Claude usage** (spec 018): 33 replies; 62.5k output, 757.9k cache-write and 23.2M cache-read tokens; 6.2% of all tokens so far.
 - **Thumbnail:** `/ennis-house/?view=below&clean&date=2026-06-21`, cropped to 1200 × 675.

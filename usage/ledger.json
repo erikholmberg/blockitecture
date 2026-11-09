@@ -490,5 +490,33 @@
       "cacheRead": 4091440,
       "output": 3675
     }
+  },
+  {
+    "hash": "4a01f3b",
+    "date": "2026-11-09",
+    "specs": [
+      "025"
+    ],
+    "messages": 6,
+    "usage": {
+      "input": 14,
+      "cacheWrite": 687519,
+      "cacheRead": 3478239,
+      "output": 9646
+    }
+  },
+  {
+    "hash": "c6dc7ca",
+    "date": "2026-11-09",
+    "specs": [
+      "025"
+    ],
+    "messages": 27,
+    "usage": {
+      "input": 54,
+      "cacheWrite": 70374,
+      "cacheRead": 19717013,
+      "output": 52837
+    }
   }
 ]
