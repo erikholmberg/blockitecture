@@ -1,6 +1,7 @@
 # 034 — The Lovell Health House
 
-- **Status:** Approved (approved by Erik 2026-11-09: "build it", all recommendations)
+- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's acceptance of the
+  manual checks that couldn't be run here: walking itself and the phone controls)
 - **Owner:** Erik
 - **House:** lovell-health-house
 - **Created:** 2026-11-09
@@ -111,4 +112,44 @@ About 4 minutes, like the larger houses: it's three storeys.
 - [x] **Q5: Timing.** *Recommended: about 4 minutes*, like the larger houses.
 
 ## Implementation notes
-Filled in after approval.
+- **HABS CA-1936, read** (the Library of Congress's master scans, 1/8″ = 1′-0″ at 50 px/ft):
+  - **Sheets 3–5:** the plans of the pool floor, the living room floor and the third floor. They're registered on the sheets, so one
+    frame serves all three. The note gives the **5′-1½″ unit grid** the frame stands on.
+  - **Sheet 8:** the levels. The living room floor is 781′-5″, the third floor 792′, the top of the parapet 804′ and the pool's south
+    walk 769′.
+  - The levels are true elevations above sea level, so `lotElevationM` pins y = 0 to 781′-5″ (238.2 m).
+  - **Sheet 9:** the **garage-studio** (Q3). The second 1929 outline (way 426659348) is taken to be it [assumed: its date and HABS's
+    sheet 9]. It's drawn as one of the lot's plain blocks, not modelled in detail.
+- **Data:** fitted to way 426658941 by its Wikidata tag at **−24°**, IoU **0.862**. With `lotFeatures` on, the lot's four other OSM
+  buildings, the garage-studio among them, are plain white blocks clipped to the lot.
+- **Model:** `src/houses/lovell-health-house/`, 23,428 pieces.
+  - **The site:** two pads cut into the real slope, the pool floor's walk (−12′-5″) and the living floor's level against the hill.
+  - **The pool:** in its concrete cradle, half under the house.
+  - **The frame:** steel columns on the unit grid round every storey, and white stilts over the pool floor. In the window bands
+    the steel shows dark; above and below them it's white, wrapped in gunite.
+  - **The envelope:** white bands with ribbon windows on each storey, and the entrance terrace out to the street on columns.
+  - **The roofs:** the main roof with its parapet, the low roofs over the guest wing and library, and the south and north balconies.
+    The balconies are hung from the roof frame on steel rods (`bar` pieces) and go in with the roof (A3).
+  - **The interior:** the built-ins HABS draws (the kitchen, the living room's long seat, the fireplace, the stair, the library's
+    shelves) and the rooms' furniture.
+  - **Outside:** live oaks and chaparral on the slope.
+- **Tests:**
+  - `tests/lovell.test.ts` covers A1–A9 plus the home card. A1 pins all eight other models; the Kaufmann house's is
+    20,326 / `7d7eade4`.
+  - The house is added to `tests/buildOrder.test.ts`, `tests/credits.test.tsx` and `tests/cameraGround.test.ts`.
+  - Spec 020's test, which expected exactly eight cards, now checks for at least eight and the Kaufmann house in eighth place.
+  - 239 tests in all.
+  - Deviation from the flow: the tests were written after the model, not before.
+- **Manual checks** (Chrome, 2026-11-09):
+  - **A10 pass** (16×): the slope, the cradle and the floors, then the bare frame standing complete, then the furniture, the white
+    bands and windows, the roofs and hung balconies, the garden.
+  - **A11 pass:** *From below* shows the three white bands and ribbon windows stepping out over the pool. It's the thumbnail.
+    It first sat too low in the canyon, behind the slope, and then behind a neighbour's house; it now looks across the canyon.
+  - **A12 pass:** at dusk, *Over the city* shows the house with the city's lights beyond (60 fps, 1.26M triangles).
+  - **A13 partial:**
+    - All views and No roof work.
+    - Walk starts on the patio under the entrance terrace, facing the library.
+    - **Not checked:** walking itself, and the phone controls.
+  - **A14 pass:** 60 fps at `?dpr=1.75`.
+  - **A15 pass:** the home page shows the ninth card live with its thumbnail, and the credits page has its section.
+- **Thumbnail:** `/lovell-health-house/?view=below&clean&date=2026-06-21`, cropped to 1200 × 675.

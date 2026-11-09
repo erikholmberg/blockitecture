@@ -158,6 +158,23 @@ export const HOUSES: House[] = [
       'Published plans and photographs of the house',
     ],
   },
+  {
+    slug: 'lovell-health-house',
+    title: 'Lovell Health House',
+    architect: 'Richard Neutra',
+    year: 1929,
+    location: 'Los Feliz, Los Angeles',
+    status: 'live',
+    pieces: 23_428,
+    thumbnail: '/lovell-health-house/thumbnail.jpg',
+    blurb: 'America\'s first steel-framed house: white bands and ribbon windows stepping down a canyon, the pool beneath.',
+    affiliations: ['the owners of the Lovell House', 'the Neutra estate'],
+    sources: [
+      'Measured drawings: Historic American Buildings Survey, HABS CA-1936 (1969), Library of Congress',
+      'Its outline and the neighbourhood: OpenStreetMap (Los Angeles County building outlines)',
+      'Published photographs of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

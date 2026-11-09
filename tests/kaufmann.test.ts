@@ -146,14 +146,13 @@ describe('033: the Kaufmann Desert House', () => {
     }
   });
 
-  it('home card: live, with the real piece count and its credits; all eight cards live', async () => {
+  it('home card: live, with the real piece count and its credits; every card live', async () => {
     const { HOUSES } = await import('../src/houses');
     const card = HOUSES.find((h) => h.slug === 'kaufmann-desert-house')!;
     expect(card.status).toBe('live');
     expect(card.pieces).toBe(bricks.length);
     expect(card.affiliations).toEqual(['the owners of the Kaufmann House', 'the Neutra estate']);
     expect(card.sources?.some((s) => /LCCN 2013631255/.test(s))).toBe(true);
-    expect(HOUSES.length).toBe(8);
     expect(HOUSES.every((h) => h.status === 'live')).toBe(true);
   });
 });
