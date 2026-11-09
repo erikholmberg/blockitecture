@@ -41,7 +41,8 @@ A compact vertical control stack on the right edge, map-style, visible in Orbit 
 - **A4** [manual] Using any control (or gesture) turns auto-rotate off, and the **↻** button shows that. **↻** turns it back on.
 - **A5** [manual] The controls hide in Walk mode and come back in Orbit mode. Camera keys don't fire in Walk mode, where the arrows walk.
 - **A6** [manual] On a phone-sized window (390 × 844) the stack fits between the toggles and the bar without covering either, and the buttons
-  are at least 40 × 40 px.
+  are at least 40 × 40 px. *Since spec 014, phones (< 768 px) have no camera column: drag and pinch, with Views, Default view and
+  Auto-rotate in the top-right buttons and the Settings menu.*
 - **A7** [manual] Every button has a tooltip naming it and its key, and an `aria-label`.
 - **A8** [manual] (Q3) Zooming all the way out shows the house, the hills behind it and the basin below in one view.
 

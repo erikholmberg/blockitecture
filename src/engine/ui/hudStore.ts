@@ -13,6 +13,8 @@ export interface HudSnapshot {
   phaseStart: number[];
   light: 'day' | 'dusk';
   hidden: boolean;
+  /** spec 014: the visitor tapped the scene to hide the controls (phones only; ignored on wide screens) */
+  chromeHidden: boolean;
 }
 
 export function createHudStore(initial: HudSnapshot) {

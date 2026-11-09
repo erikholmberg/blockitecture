@@ -20,6 +20,7 @@ around it, or walk through it while it goes up.
 - **Camera controls**: zoom (+/−), rotate (←/→), home (H), auto-rotate (R), fullscreen, and named views:
   Overview, The famous view, Pool, Hills & basin
 - **No roof**: lift the roof off to see inside · **Day / Dusk**: dusk lights up the house over the city
+- **On phones**: a slim layout (Views and Settings top right, one-row timeline); tap the scene to hide the controls, tap again to bring them back
 - **Links to a view**: `/stahl-house/?view=famous&light=dusk` (add `&clean` to hide the controls, for screenshots)
 
 ### Eames House

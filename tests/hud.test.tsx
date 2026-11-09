@@ -24,10 +24,10 @@ const handlers = (): HudHandlers => ({
 const setup = () => {
   const store = createHudStore({
     t: 10, total: 228.7, playing: false, speed: 1, placed: 100, pieces: 27222, phase: 0,
-    mode: 'orbit', walkHint: '', autoRotate: true, phaseStart: [0, 17.5], light: 'day', hidden: false,
+    mode: 'orbit', walkHint: '', autoRotate: true, phaseStart: [0, 17.5], light: 'day', hidden: false, chromeHidden: false,
   });
   const h = handlers();
-  render(<Hud store={store} h={h} house={{ text: STAHL.text, views: STAHL.views, phaseNames: STAHL.phases.map((p) => p.name) }} />);
+  render(<Hud compact={false} store={store} h={h} house={{ text: STAHL.text, views: STAHL.views, phaseNames: STAHL.phases.map((p) => p.name) }} />);
   return { store, h, user: userEvent.setup() };
 };
 

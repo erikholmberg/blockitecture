@@ -10,6 +10,7 @@ import { loadNeighborhood, NeighborhoodScene } from '@/engine/scene/neighborhood
 import { Collision } from '@/engine/controls/collision';
 import { Walker } from '@/engine/controls/walk';
 import { attachTouch } from '@/engine/controls/touch';
+import { isTap } from '@/engine/controls/tap';
 import { CamAction, mountHud } from '@/engine/ui/Hud';
 import { Glide, MAX_DIST, MIN_DIST, orbitNear, rotated, View, WALK_NEAR, zoomed } from '@/engine/controls/cameraMoves';
 import type { HouseDefinition } from '@/engine/house';
@@ -191,6 +192,24 @@ export async function startViewer(house: HouseDefinition) {
   renderer.domElement.addEventListener('click', () => {
     if (mode === 'walk' && !walker.locked) walker.lock();
   });
+
+  // spec 014: a tap on the scene (not a drag, pinch or long press) hides or shows the controls; the HUD only applies it on phones
+  const downs = new Map<number, { x: number; y: number; t: number }>();
+  let maxPointers = 0;
+  renderer.domElement.addEventListener('pointerdown', (e) => {
+    downs.set(e.pointerId, { x: e.clientX, y: e.clientY, t: performance.now() });
+    maxPointers = Math.max(maxPointers, downs.size);
+  });
+  const lift = (e: PointerEvent, cancelled: boolean) => {
+    const d = downs.get(e.pointerId);
+    downs.delete(e.pointerId);
+    const pointers = maxPointers;
+    if (downs.size === 0) maxPointers = 0;
+    if (!d || cancelled || mode !== 'orbit') return;
+    if (isTap({ dx: e.clientX - d.x, dy: e.clientY - d.y, dt: performance.now() - d.t, pointers })) hud.toggleChrome();
+  };
+  renderer.domElement.addEventListener('pointerup', (e) => lift(e, false));
+  renderer.domElement.addEventListener('pointercancel', (e) => lift(e, true));
 
   const hud = mountHud(app, {
     onStart() { playing = true; },

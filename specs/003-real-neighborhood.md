@@ -53,7 +53,8 @@ buildings on the real terrain**, so that the view from the house looks like the 
   the slope drops to the flats, and the Sunset Strip's street grid is recognizable.
 - **A9** [manual] Performance: on this Mac, with `?debug`, the fps stays at roughly today's level (±10%) during the build, and the adaptive resolution doesn't drop further.
 - **A10** [manual] Dusk mode lights the neighborhood consistently with the city.
-- **A11** [manual] The OSM credit is visible and links to openstreetmap.org/copyright.
+- **A11** [manual] The OSM credit is visible and links to openstreetmap.org/copyright. *Since spec 014, on phones (< 768 px) it is on the
+  intro card and in the Settings menu instead of on screen, as OSM's attribution guidelines allow for small screens.*
 
 ## Out of scope
 - Building the neighborhood out of bricks.
