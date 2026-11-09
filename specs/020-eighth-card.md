@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09: "kaufmann")
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 2609a3b
 
 ## Goal
 The home page shows 8 cards, 2 across, so the grid ends on a full row: 4 live houses and 4 coming soon.
