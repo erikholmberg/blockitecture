@@ -19,7 +19,8 @@ export function IntroCard({ text, pieces, compact, onStart, credit }: {
     ? [[<Hand key="o" />, 'Drag to orbit'], [<ZoomIn key="z" />, 'Pinch to zoom'], [<EyeOff key="h" />, 'Tap to hide controls']]
     : [[<Move3d key="o" />, 'Drag to orbit'], [<ZoomIn key="z" />, 'Scroll to zoom'], [<Footprints key="w" />, 'Walk to explore']];
   return (
-    <div data-intro className="w-full max-w-[400px] overflow-hidden rounded-xl border bg-card text-card-foreground shadow-2xl">
+    // spec 036: its own compositing layer, and a smaller shadow, so the browser doesn't repaint it as the scene redraws
+    <div data-intro className="w-full max-w-[400px] transform-gpu overflow-hidden rounded-xl border bg-card text-card-foreground shadow-lg">
       <div className="flex flex-col gap-4 p-6">
         <div>
           <div className="text-[10.5px] font-medium tracking-[0.14em] text-muted-foreground uppercase">{text.eyebrow}</div>

@@ -107,6 +107,7 @@ export class Environment {
     this.hemi.intensity = p.hemi;
     this.hemi.color.setHex(p.hemiSky);
     this.hemi.groundColor.setHex(p.hemiGround);
+    this.exposure = p.exposure;
     this.renderer.toneMappingExposure = p.exposure;
     const fog = this.scene.fog as THREE.Fog;
     fog.color.setHex(p.fog);
@@ -116,6 +117,9 @@ export class Environment {
     this.scene.environmentIntensity = p.env;
     this.nightFactor = p.city;
   }
+
+  /** the day/dusk exposure last applied; the viewer multiplies the intro's dimming into it (spec 036) */
+  exposure = 1;
 
   /** Smoothly blend toward target preset. Returns light level for emissive bricks. */
   update(dt: number) {

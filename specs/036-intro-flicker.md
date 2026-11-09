@@ -1,6 +1,6 @@
 # 036 — No flicker behind the intro card on iPhone
 
-- **Status:** Approved (approved by Erik 2026-11-09: "build it", all recommendations)
+- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's iPhone check, A5)
 - **Owner:** Erik
 - **Created:** 2026-11-09
 - **Commits:** <!-- filled in when Done -->
@@ -45,4 +45,16 @@ Start (reported by Erik, 2026-11-09). The intro should sit calmly over the turni
       stays In progress until you confirm.
 
 ## Implementation notes
-Filled in after approval.
+- **`src/engine/introDim.ts`** (new, pure): `exposureAt(sinceStart)` is 0.7 before Start, then eases to 1 over 0.5 s.
+- **`viewer.ts`:** counts the seconds since Start. Each frame the exposure is the environment's day/dusk exposure × `exposureAt`.
+  The environment's exposure is kept in `env.exposure`, so the intro's dimming and dusk combine rather than overwrite each other.
+- **`Hud.tsx`:** the intro's backdrop no longer has the `from-black/15 to-black/45` gradient. It's a transparent flex container that
+  centres the card and still catches taps.
+- **`IntroCard.tsx`:** `transform-gpu` gives the card its own compositing layer, and `shadow-2xl` became `shadow-lg`.
+- **Tests:** `tests/introFlicker.test.tsx` covers A1–A3, on both the desktop and the phone layout.
+  - They were written first. A1 and A3 failed against the old intro (the gradient backdrop, no `transform-gpu`), and A2 failed on
+    the missing module.
+  - 257 tests in all.
+- **Manual checks** (Chrome, 2026-11-09):
+  - **A4 pass:** the Stahl House's intro shows over a dimmed scene; after Start it brightens to normal; dusk still darkens as before.
+  - **A5 not checked:** iOS Safari can't be run here. Erik checks it on his iPhone after the push.

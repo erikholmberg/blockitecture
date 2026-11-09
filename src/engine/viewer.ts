@@ -16,6 +16,7 @@ import { CamAction, mountHud } from '@/engine/ui/Hud';
 import { Glide, MAX_DIST, MIN_DIST, orbitNear, rotated, View, WALK_NEAR, zoomed } from '@/engine/controls/cameraMoves';
 import { wantsCity, type HouseDefinition } from '@/engine/house';
 import { dateParam, sunFor } from '@/engine/scene/sun';
+import { exposureAt } from '@/engine/introDim';
 
 /**
  * Spec 010a: the viewer for one house. Each house page calls this with its HouseDefinition;
@@ -153,6 +154,8 @@ export async function startViewer(house: HouseDefinition) {
   // ---------- state ----------
   let t = 0;
   let playing = false;
+  /** spec 036: seconds since Start (null before it), for the intro's exposure dimming */
+  let sinceStart: number | null = null;
   let speed = 1;
   let mode: 'orbit' | 'walk' = 'orbit';
   const savedOrbit = { pos: new THREE.Vector3(), target: new THREE.Vector3() };
@@ -221,7 +224,7 @@ export async function startViewer(house: HouseDefinition) {
   renderer.domElement.addEventListener('pointercancel', (e) => lift(e, true));
 
   const hud = mountHud(app, {
-    onStart() { playing = true; },
+    onStart() { playing = true; sinceStart = 0; },
     onPlayPause() { playing = !playing; if (t >= schedule.total) { t = 0; playing = true; } },
     onSpeed(s) { speed = s; },
     onSeek(v) { t = v; },
@@ -326,6 +329,9 @@ export async function startViewer(house: HouseDefinition) {
       camera.updateProjectionMatrix();
     }
 
+    // spec 036: the scene is dimmed by exposure while the intro shows, brightening after Start
+    if (sinceStart !== null) sinceStart += dt;
+    renderer.toneMappingExposure = env.exposure * exposureAt(sinceStart);
     renderer.render(scene, camera);
 
     // adaptive resolution

@@ -193,9 +193,9 @@ export function Hud({ store, h, house, compact: compactProp }: {
   return (
     <TooltipProvider delayDuration={300}>
       <div className="pointer-events-none fixed inset-0 font-sans text-foreground select-none" data-mode={s.mode}>
-        {/* intro */}
+        {/* intro: no translucent backdrop over the canvas (iOS Safari flashes those); the viewer dims the scene itself (spec 036) */}
         {!started && (
-          <div className="pointer-events-auto absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-black/15 to-black/45 p-5">
+          <div className="pointer-events-auto absolute inset-0 z-10 flex items-center justify-center p-5">
             <IntroCard
               text={text}
               pieces={s.pieces}
