@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** kaufmann-desert-house
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** e6fd5ff (spec), ae09b59 (build)
 
 ## Goal
 The eighth rendering: Richard Neutra's winter house for Edgar J. Kaufmann (1946), the same client as Fallingwater, at 470 West Vista
@@ -185,4 +185,5 @@ About 3 minutes, like the Farnsworth House: it's a one-storey house plus the glo
     - **Not checked:** walking itself, and the phone controls.
   - **A14 pass:** 60 fps at `?dpr=1.75` (1.06M triangles).
   - **A15 pass:** the home page shows all eight houses live, and the credits page has this one's section.
+- **Claude usage** (spec 018): 70 replies; 79.8k output, 138.6k cache-write and 13.7M cache-read tokens; 2.6% of all tokens so far.
 - **Thumbnail:** `/kaufmann-desert-house/?view=pool&clean&date=2026-06-21`, cropped to 1200 × 675.
