@@ -7,10 +7,34 @@
     <meta name="description" content="Watch Frank Lloyd Wright's Fallingwater being built from toy blocks over the falls of Bear Run, and walk around it in 3D." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <style>
+      /* Spec 027: the loading screen, inline so it shows styled with the first paint. Only transform and opacity animate,
+         so it keeps turning while the model is generated on the main thread. Identical on every house page (tested). */
+      #loading { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; gap: 16px; align-items: center;
+        justify-content: center; background: #e9e4d8; font: 15px/1 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: 0.04em; color: #1d1f22; }
+      .lb-scene { width: 120px; height: 72px; perspective: 400px; display: flex; align-items: center; justify-content: center; }
+      .lb { position: relative; width: 64px; height: 32px; transform-style: preserve-3d; animation: lb-spin 3s linear infinite; }
+      .lb-f { position: absolute; border-radius: 2px; }
+      .lb-top { width: 64px; height: 32px; transform: rotateX(90deg) translateZ(12px); background-color: #f09a45;
+        background-image: radial-gradient(circle at 25% 30%, #f6b06a 0 4px, transparent 4.5px), radial-gradient(circle at 75% 30%, #f6b06a 0 4px, transparent 4.5px),
+          radial-gradient(circle at 25% 75%, #f6b06a 0 4px, transparent 4.5px), radial-gradient(circle at 75% 75%, #f6b06a 0 4px, transparent 4.5px);
+        background-size: 50% 100%; }
+      .lb-front, .lb-back { width: 64px; height: 24px; top: 4px; background: #e8892c; }
+      .lb-front { transform: translateZ(16px); }
+      .lb-back { transform: rotateY(180deg) translateZ(16px); background: #c96f1f; }
+      .lb-left, .lb-right { width: 32px; height: 24px; top: 4px; left: 16px; background: #d97d27; }
+      .lb-left { transform: rotateY(-90deg) translateZ(32px); }
+      .lb-right { transform: rotateY(90deg) translateZ(32px); }
+      .lb-shadow { width: 70px; height: 10px; margin-top: -14px; border-radius: 50%; background: rgba(0, 0, 0, 0.12); animation: lb-breathe 3s ease-in-out infinite; }
+      @keyframes lb-spin { from { transform: rotateX(-24deg) rotateY(0deg); } to { transform: rotateX(-24deg) rotateY(360deg); } }
+      @keyframes lb-breathe { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.8); } }
+      @media (prefers-reduced-motion: reduce) { .lb, .lb-shadow { animation: none; } .lb { transform: rotateX(-24deg) rotateY(-30deg); } }
+    </style>
   </head>
   <body>
     <div id="app"></div>
-    <div id="loading"><div class="spinner"></div><span>Sorting blocks…</span></div>
+    <div id="loading"><div class="lb-scene"><div class="lb"><div class="lb-f lb-top"></div><div class="lb-f lb-front"></div><div class="lb-f lb-back"></div><div class="lb-f lb-left"></div><div class="lb-f lb-right"></div></div></div><div class="lb-shadow"></div><span>Sorting blocks…</span></div>
     <script type="module" src="/src/houses/fallingwater/main.ts"></script>
   </body>
 </html>
