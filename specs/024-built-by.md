@@ -3,7 +3,7 @@
 - **Status:** Done (requested by Erik 2026-11-09, with the exact wording and link)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 13d6efd
 
 ## Goal
 The home page footer credits the site's author, linked to his website.
