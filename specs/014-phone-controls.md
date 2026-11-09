@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09 via the plan: phones only, tap to toggle)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** d5afb0c
 
 ## Goal
 On a phone (390 × 844) the viewer's controls covered about half the screen: the title chip, three toggle groups, an 8-button camera
