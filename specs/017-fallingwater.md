@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** fallingwater
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 258c87d (spec), 0b32450 (build)
 
 ## Goal
 The third rendering: Frank Lloyd Wright's Fallingwater (1937, guest wing 1939) at Mill Run, Pennsylvania, built block by block over
@@ -212,3 +212,5 @@ About 4 minutes in all, timed like the other two houses.
   - **A18 pass:** 60 fps at `?dpr=1.75` (4.5M triangles), as the Stahl House.
   - **A19 pass:** the home card is live, with the thumbnail and 58,425 pieces.
 - **Thumbnail:** `/fallingwater/?view=classic&clean&date=2026-06-21`, cropped to 1200 × 675.
+- **Claude usage** (spec 018, through 0b32450): 116 replies; 181.6k output, 623.2k cache-write and 26.3M cache-read tokens; 10.2% of all
+  tokens so far. The Eames House took 188.8k output tokens.
