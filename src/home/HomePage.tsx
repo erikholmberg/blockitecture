@@ -14,7 +14,7 @@ export function HomePage({ houses }: { houses: House[] }) {
             Famous houses, built block by block
           </h1>
           <p className="mt-3 text-base text-muted-foreground text-pretty">
-            Landmark modernist houses rebuilt from toy blocks in your browser. Watch each one go up piece by piece
+            Landmark buildings rebuilt from toy blocks in your browser. Watch each one go up piece by piece
             on its real site, then orbit around it or walk inside.
           </p>
         </header>
