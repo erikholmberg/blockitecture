@@ -66,6 +66,38 @@ function addEdgeShading(mat: THREE.Material, strength: number, width: number) {
   mat.customProgramCacheKey = () => 'edge' + strength + width;
 }
 
+/** Seconds since start, for flowing water (spec 017). */
+export const waterTime = { value: 0 };
+
+/**
+ * Spec 017: moving water. `flow`: a still surface gets slow drifting ripples (brighter and darker bands moving along
+ * the stream, which runs toward −x in Fallingwater's model). `falls`: a sheet streaked with white, streaming downward.
+ */
+function withWaterMotion(mat: THREE.Material, kind: 'flow' | 'falls') {
+  mat.onBeforeCompile = (shader) => {
+    withRoofCut(shader);
+    shader.uniforms.uWaterTime = waterTime;
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform float uWaterTime;')
+      .replace(
+        '#include <color_fragment>',
+        kind === 'flow'
+          ? `#include <color_fragment>
+        float w1 = sin(vCutPos.x * 0.9 + uWaterTime * 1.7 + sin(vCutPos.z * 0.6) * 1.5);
+        float w2 = sin(vCutPos.z * 1.3 - uWaterTime * 1.1 + vCutPos.x * 0.35);
+        diffuseColor.rgb *= 0.9 + 0.1 * w1 + 0.06 * w2;`
+          : `#include <color_fragment>
+        float lane = floor(vCutPos.x * 2.0 + vCutPos.z * 2.0);
+        float h = fract(sin(lane * 12.9898) * 43758.5453);
+        float s = fract(vCutPos.y * (0.35 + 0.25 * h) + uWaterTime * (1.4 + h) + h * 7.0);
+        float streak = smoothstep(0.55, 0.95, s);
+        diffuseColor.rgb = mix(diffuseColor.rgb, vec3(1.0), 0.35 + 0.55 * streak);
+        diffuseColor.a *= 0.75 + 0.25 * streak;`,
+      );
+  };
+  mat.customProgramCacheKey = () => 'water-' + kind;
+}
+
 /** Make emissive follow the per-instance colour. */
 function emissiveFromInstanceColor(mat: THREE.MeshStandardMaterial) {
   mat.onBeforeCompile = (shader) => {
@@ -151,10 +183,10 @@ class Layer {
   }
 }
 
-type LayerName = 'box' | 'round' | 'stud' | 'glass' | 'water' | 'light' | 'lamp';
+type LayerName = 'box' | 'round' | 'stud' | 'glass' | 'water' | 'falls' | 'light' | 'lamp';
 const LAYER_OF: Record<Kind, LayerName> = {
   brick: 'box', plate: 'box', tile: 'box', round: 'round', bar: 'round',
-  glass: 'glass', water: 'water', light: 'light', lamp: 'lamp',
+  glass: 'glass', water: 'water', falls: 'falls', light: 'light', lamp: 'lamp',
 };
 
 export class BrickSet {
@@ -163,10 +195,13 @@ export class BrickSet {
   lightMaterials: THREE.MeshStandardMaterial[] = [];
   total: number;
 
-  constructor(bricks: Brick[], order: number[], start: Float32Array, studs: Stud[], cut: HouseDefinition['roofCut']) {
+  constructor(
+    bricks: Brick[], order: number[], start: Float32Array, studs: Stud[], cut: HouseDefinition['roofCut'],
+    opts: { flowingWater?: boolean } = {},
+  ) {
     CUT_FRAG = roofCutGlsl(cut);
     this.total = order.length;
-    const counts: Record<LayerName, number> = { box: 0, round: 0, stud: studs.length, glass: 0, water: 0, light: 0, lamp: 0 };
+    const counts: Record<LayerName, number> = { box: 0, round: 0, stud: studs.length, glass: 0, water: 0, falls: 0, light: 0, lamp: 0 };
     for (const b of bricks) counts[LAYER_OF[b.kind]]++;
 
     const plastic = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.0 });
@@ -182,6 +217,11 @@ export class BrickSet {
       color: 0xffffff, roughness: 0.03, metalness: 0.1, transparent: true, opacity: 0.55,
       depthWrite: false, envMapIntensity: 1.2,
     });
+    if (opts.flowingWater) withWaterMotion(waterMat, 'flow');
+    const fallsMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff, roughness: 0.2, metalness: 0.0, transparent: true, opacity: 0.8, depthWrite: false,
+    });
+    withWaterMotion(fallsMat, 'falls');
     const lightMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4, emissive: 0xffffff, emissiveIntensity: 0.25 });
     emissiveFromInstanceColor(lightMat);
     const lampMat = lightMat.clone();
@@ -202,6 +242,7 @@ export class BrickSet {
       stud: new Layer(stud, roundMat, counts.stud),
       glass: new Layer(box, glassMat, counts.glass),
       water: new Layer(box, waterMat, counts.water),
+      falls: new Layer(box, fallsMat, counts.falls),
       light: new Layer(box, lightMat, counts.light),
       lamp: new Layer(sphere, lampMat, counts.lamp),
     };
@@ -212,6 +253,7 @@ export class BrickSet {
     L.glass.mesh.renderOrder = 2;
     L.water.mesh.renderOrder = 1;
     L.water.mesh.receiveShadow = true;
+    L.falls.mesh.renderOrder = 1;
 
     const col = new THREE.Color();
     const G = 0.03; // gap between pieces
@@ -238,6 +280,9 @@ export class BrickSet {
         }
         case 'water':
           L.water.push(t, px, py, pz, b.w, h, b.d, col);
+          break;
+        case 'falls':
+          L.falls.push(t, px, py, pz, b.w, h, b.d, col);
           break;
         case 'light':
           L.light.push(t, px, py, pz, b.w - G, h - 0.01, b.d - G, col);

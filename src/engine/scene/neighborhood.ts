@@ -16,11 +16,13 @@ export class NeighborhoodScene {
   private seaY: number | null;
   private flatsBelow: number;
   private chaparral: boolean;
+  private forest: boolean;
 
   constructor(private n: Neighborhood, private lot: Lot, scenery: Scenery = {}) {
     this.seaY = scenery.sea ? -n.anchor.lotElevationM / 0.3048 : null;
     this.flatsBelow = scenery.flatsBelow ?? -330;
     this.chaparral = scenery.chaparral ?? false;
+    this.forest = scenery.forest ?? false;
     const ground = (x: number, z: number) => groundHeight(n, lot, x, z);
     if (this.seaY !== null) this.group.add(this.sea(this.seaY));
     this.group.add(this.terrain(ground));
@@ -49,6 +51,13 @@ export class NeighborhoodScene {
   private terrainColor(x: number, z: number, y: number, slope: number, c: THREE.Color) {
     const nz = noise2(x * 0.012, z * 0.012), r = hash2(Math.floor(x / 40), Math.floor(z / 40));
     if (this.seaY !== null && y < this.seaY + 6) return c.setHex(y < this.seaY ? 0xbfae86 : 0xd8c9a0); // beach and sea floor
+    if (this.forest) {
+      // spec 017: hardwood forest on every slope (oak, maple, hemlock), bare rock only on the steepest faces, and a few
+      // clearings and fields on the flattest ground
+      if (slope > 2.4) return c.setHex(r < 0.5 ? 0x7d776c : 0x8b8378);
+      if (slope < 0.06 && nz > 0.62) return c.setHex(r < 0.5 ? 0x8a9a5a : 0x7d8f50);
+      return c.setHex(nz < 0.3 ? 0x2f4f2a : nz < 0.5 ? (r < 0.5 ? 0x3b5a30 : 0x355a3a) : r < 0.4 ? 0x46663a : 0x3f5f34);
+    }
     if (y < this.flatsBelow && slope < 0.12) return c.setHex(nz < 0.5 ? 0x9a948a : 0xa39d90); // the flats: built-up
     if (this.chaparral && slope > 0.9 && slope < 2.2) return c.setHex(nz < 0.5 ? 0x4f6b44 : r < 0.5 ? 0x6b7550 : 0x5c6f4a); // chaparral
     if (slope > 0.9) return c.setHex(r < 0.5 ? 0x8b8378 : 0x958a73); // cut rock / bare slope

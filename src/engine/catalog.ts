@@ -9,6 +9,7 @@ export type Kind =
   | 'bar' // thin cylinder, no stud
   | 'glass' // transparent panel
   | 'water' // transparent block
+  | 'falls' // falling water: a translucent sheet that streams downward (spec 017)
   | 'light' // emissive box
   | 'lamp'; // emissive sphere
 
@@ -105,15 +106,16 @@ export const SIZES: Record<Kind, number[][]> = {
   bar: [[1, 1]],
   glass: [[4, 1], [3, 1], [2, 1], [1, 1]],
   water: BIG_SIZES,
+  falls: BIG_SIZES,
   light: TILE_SIZES,
   lamp: [[1, 1]],
 };
 
 export const KIND_UNIT: Record<Kind, number> = {
-  brick: 3, plate: 1, tile: 1, round: 3, bar: 3, glass: 6, water: 1, light: 1, lamp: 3,
+  brick: 3, plate: 1, tile: 1, round: 3, bar: 3, glass: 6, water: 1, falls: 3, light: 1, lamp: 3,
 };
 
 export const KIND_STUDS: Record<Kind, boolean> = {
   brick: true, plate: true, tile: false, round: true, bar: false,
-  glass: false, water: false, light: false, lamp: false,
+  glass: false, water: false, falls: false, light: false, lamp: false,
 };

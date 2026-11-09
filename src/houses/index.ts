@@ -49,8 +49,10 @@ export const HOUSES: House[] = [
     architect: 'Frank Lloyd Wright',
     year: 1939,
     location: 'Mill Run, Pennsylvania',
-    status: 'coming-soon',
-    blurb: 'Concrete terraces cantilevered over a waterfall on Bear Run.',
+    status: 'live',
+    pieces: 58_425,
+    thumbnail: '/fallingwater/thumbnail.jpg',
+    blurb: 'Ochre concrete terraces cantilevered over the falls of Bear Run, in a ravine of rhododendron and hemlock.',
   },
   // spec 016: the next houses, picked from a shortlist of 20
   {

@@ -16,7 +16,8 @@ export class City {
 
   /** `downtownDir`: model-space direction from the house toward downtown */
   constructor(n: Neighborhood, downtownDir: [number, number], scenery: Scenery = {}) {
-    const maxY = scenery.city?.maxY ?? -300, minY = scenery.city?.minY ?? -Infinity;
+    const opts = scenery.city || {};
+    const maxY = opts.maxY ?? -300, minY = opts.minY ?? -Infinity;
     const r = rng(1960);
     const cx = n.anchor.offsetX, cz = n.anchor.offsetZ;
     const R0 = 1200 / 0.3048 + 150; // real data covers everything inside this

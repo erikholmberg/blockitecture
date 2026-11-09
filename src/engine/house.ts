@@ -80,6 +80,13 @@ export interface Scenery {
   chaparral?: boolean;
   /** flat ground below this reads as built-up flats (default −330) */
   flatsBelow?: number;
-  /** the procedural city fills flat far ground between these heights (default below −300, any depth) */
-  city?: { maxY?: number; minY?: number };
+  /** the procedural city fills flat far ground between these heights (default below −300, any depth); false: no city (spec 017) */
+  city?: { maxY?: number; minY?: number } | false;
+  /** the real terrain reads as hardwood forest (greens on every slope but the steepest rock; no built-up flats). Spec 017 */
+  forest?: boolean;
+  /** water pieces shimmer and flow, and `falls` pieces stream downward (spec 017); default: still water (the Stahl pool) */
+  flowingWater?: boolean;
 }
+
+/** Spec 017: whether a house gets the procedural city (on unless its scenery turns it off). */
+export const wantsCity = (s: Scenery = {}) => s.city !== false;

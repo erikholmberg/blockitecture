@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import '@/styles/globals.css';
 import '@/engine/ui/styles.css';
 import { sequence } from '@/engine/sequencer';
-import { BrickSet, roofCut } from '@/engine/BrickSet';
+import { BrickSet, roofCut, waterTime } from '@/engine/BrickSet';
 import { Environment } from '@/engine/scene/environment';
 import { City } from '@/engine/scene/cityBackdrop';
 import { loadNeighborhood, NeighborhoodScene } from '@/engine/scene/neighborhood';
@@ -13,7 +13,7 @@ import { attachTouch } from '@/engine/controls/touch';
 import { isTap } from '@/engine/controls/tap';
 import { CamAction, mountHud } from '@/engine/ui/Hud';
 import { Glide, MAX_DIST, MIN_DIST, orbitNear, rotated, View, WALK_NEAR, zoomed } from '@/engine/controls/cameraMoves';
-import type { HouseDefinition } from '@/engine/house';
+import { wantsCity, type HouseDefinition } from '@/engine/house';
 import { dateParam, sunFor } from '@/engine/scene/sun';
 
 /**
@@ -77,14 +77,19 @@ export async function startViewer(house: HouseDefinition) {
     const n = await neighborhoodData;
     if (n) {
       hood = new NeighborhoodScene(n, house.lot, house.scenery);
-      city = new City(n, house.downtownDir, house.scenery);
-      scene.add(hood.group, city.group);
+      scene.add(hood.group);
+      if (wantsCity(house.scenery)) {
+        city = new City(n, house.downtownDir, house.scenery);
+        scene.add(city.group);
+      }
       if (DEBUG) console.log(`[${house.slug}] neighborhood: ${n.buildings.count} buildings, ${n.roads.count} roads, ready in ${(performance.now() - t1).toFixed(0)} ms`);
     }
     // the OSM credit is rendered by the HUD (src/ui/Hud.tsx)
   }
 
-  const set = new BrickSet(bricks, schedule.order, schedule.start, studs, house.roofCut);
+  const set = new BrickSet(bricks, schedule.order, schedule.start, studs, house.roofCut, {
+    flowingWater: house.scenery?.flowingWater,
+  });
   scene.add(set.group);
 
   // ---------- controls ----------
@@ -291,6 +296,7 @@ export async function startViewer(house: HouseDefinition) {
       if (t >= schedule.total) { t = schedule.total; playing = false; }
     }
     const placed = set.update(t);
+    waterTime.value = (waterTime.value + dt) % 3600;
 
     const light = env.update(dt);
     set.setLightLevel(light);

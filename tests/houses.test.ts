@@ -29,10 +29,10 @@ describe('007: house registry', () => {
   });
 
   it('A1: the planned coming-soon houses are listed', () => {
-    // spec 010 made the Eames House live; Fallingwater is still to come, and spec 016 added four more
+    // spec 010 made the Eames House live, spec 017 Fallingwater; spec 016 added four more to come
     expect(HOUSES.filter((h) => h.status === 'coming-soon').map((h) => h.slug)).toEqual([
-      'fallingwater', 'rietveld-schroder-house', 'farnsworth-house', 'ennis-house', 'casa-malaparte',
+      'rietveld-schroder-house', 'farnsworth-house', 'ennis-house', 'casa-malaparte',
     ]);
-    expect(HOUSES.filter((h) => h.status === 'live').map((h) => h.slug)).toEqual(['stahl-house', 'eames-house']);
+    expect(HOUSES.filter((h) => h.status === 'live').map((h) => h.slug)).toEqual(['stahl-house', 'eames-house', 'fallingwater']);
   });
 });

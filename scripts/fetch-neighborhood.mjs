@@ -196,7 +196,9 @@ console.log(`house fit: offset (${OX}, ${OZ}) ft, IoU ${fit.score.toFixed(3)}, O
 
 // y = 0 is the brick lot: the terrain elevation at the house
 const [hLat, hLon] = toLatLon(CX, CZ);
-const E0 = await elevation(hLat, hLon, NEAR.zoom);
+// spec 017: a house can pin y = 0 to a known elevation (Fallingwater: its main floor, from the documented stream level),
+// where the terrain tiles are too coarse to resolve the site (a ravine). Opt-in, so other houses stay byte-identical.
+const E0 = H.lotElevationM ?? (await elevation(hLat, hLon, NEAR.zoom));
 console.log(`lot elevation ${E0.toFixed(1)} m`);
 const toY = (m) => (m - E0) / FT;
 
@@ -249,7 +251,51 @@ function despike(h, n, limitFt, label) {
   console.log(`despike ${label}: ${total} samples fixed (worst ${worst.toFixed(0)} ft off its neighbours)`);
 }
 const near = await grid(NEAR, H.despike?.near);
+if (H.carveStream) await carveStream(near, H.carveStream);
 const far = await grid(FAR, H.despike?.far);
+
+/**
+ * Spec 017: carve a stream into the near grid along its OSM line. The terrain tiles (10–30 m) smooth a narrow ravine away,
+ * leaving the stream bed 20–30 ft too high. The water level is pinned at the waterfall (above and below it) and falls off
+ * along the stream with `slope`; the bed sits `bedFt` below it, and the banks rise at `bank` ft per ft. Opt-in.
+ */
+async function carveStream(g, c) {
+  const ww = await overpass(
+    `${SLUG}-waterways-${R}.json`,
+    `[out:json][timeout:120];(way["waterway"](around:${H.waterways.radiusM},${LAT0},${LON0});node["waterway"="waterfall"](around:${H.waterways.radiusM},${LAT0},${LON0}););out tags geom;`,
+  );
+  const way = ww.filter((e) => e.type === 'way' && e.tags?.name === c.name).sort((a, b) => b.geometry.length - a.geometry.length)[0];
+  const pts = way.geometry.map((q) => toModel(q.lat, q.lon));
+  const acc = [0];
+  for (let i = 1; i < pts.length; i++) acc.push(acc[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  /** nearest point on the line: [distance, arc length] */
+  const nearest = (x, z) => {
+    let best = [Infinity, 0];
+    for (let i = 1; i < pts.length; i++) {
+      const [ax, az] = pts[i - 1], [bx, bz] = pts[i], dx = bx - ax, dz = bz - az, L2 = dx * dx + dz * dz || 1;
+      const t = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / L2));
+      const d = Math.hypot(x - ax - t * dx, z - az - t * dz);
+      if (d < best[0]) best = [d, acc[i - 1] + t * Math.sqrt(L2)];
+    }
+    return best;
+  };
+  const sFalls = nearest(c.fallsAt[0], c.fallsAt[1])[1];
+  const up = c.flowsAlongLine ? 1 : -1; // sign of (s − sFalls) that is downstream
+  let carved = 0;
+  for (let j = 0; j < g.nz; j++)
+    for (let i = 0; i < g.nx; i++) {
+      const x = g.x0 + i * g.step, z = g.z0 + j * g.step;
+      if (Math.hypot(x - c.fallsAt[0], z - c.fallsAt[1]) > c.reach) continue;
+      const [d, sArc] = nearest(x, z);
+      if (d > c.halfWidth + c.bankWidth) continue;
+      const along = (sArc - sFalls) * up; // > 0 downstream
+      const level = along > 0 ? c.downFt - along * c.slope : c.upFt - along * c.slope;
+      const bed = level - c.bedFt + Math.max(0, d - c.halfWidth) * c.bank;
+      const k = j * g.nx + i, cur = g.h[k] / 4;
+      if (bed < cur) { g.h[k] = Math.round(bed * 4); carved++; }
+    }
+  console.log(`carved ${c.name}: ${carved} near-grid samples lowered`);
+}
 const nearAt = (x, z) => {
   const fx = (x - near.x0) / near.step, fz = (z - near.z0) / near.step;
   const i = Math.max(0, Math.min(near.nx - 2, Math.floor(fx))), j = Math.max(0, Math.min(near.nz - 2, Math.floor(fz)));
@@ -279,7 +325,26 @@ ${rows.join('\n')}
   ],
 };
 `;
-  fs.writeFileSync(H.out.lot, src);
+  let extra = '';
+  if (H.waterways) {
+    // spec 017: the OSM stream line(s) and waterfalls near the lot, in model ft, so the block stream meets the real one
+    const ww = await overpass(
+      `${SLUG}-waterways-${R}.json`,
+      `[out:json][timeout:120];(way["waterway"](around:${H.waterways.radiusM},${LAT0},${LON0});node["waterway"="waterfall"](around:${H.waterways.radiusM},${LAT0},${LON0}););out tags geom;`,
+    );
+    const r1 = (v) => Math.round(v * 10) / 10;
+    const lines = ww.filter((e) => e.type === 'way' && e.geometry).map((e) =>
+      `  { name: ${JSON.stringify(e.tags?.name ?? '')}, kind: ${JSON.stringify(e.tags.waterway)}, pts: [${e.geometry.map((g) => toModel(g.lat, g.lon).map(r1).join(', ')).map((p) => `[${p}]`).join(', ')}] },`);
+    const falls = ww.filter((e) => e.type === 'node').map((e) => `[${toModel(e.lat, e.lon).map(r1).join(', ')}]`);
+    extra = `
+// OSM waterways near the lot (model ft) and waterfall points. © OpenStreetMap contributors (ODbL). Spec 017.
+export const LOT_WATERWAYS: { name: string; kind: string; pts: [number, number][] }[] = [
+${lines.join('\n')}
+];
+export const LOT_WATERFALLS: [number, number][] = [${falls.join(', ')}];
+`;
+  }
+  fs.writeFileSync(H.out.lot, src + extra);
   console.log(`wrote ${H.out.lot}: ${(i1 - i0 + 1) * (j1 - j0 + 1)} samples`);
 }
 
