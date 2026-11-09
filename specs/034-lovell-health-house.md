@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** lovell-health-house
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 9931b82 (spec), 96f4200 (build)
 
 ## Goal
 The ninth rendering: Richard Neutra's house for Philip and Leah Lovell (1927–29) at 4616 Dundee Drive, Los Feliz. It was the first
@@ -152,4 +152,5 @@ About 4 minutes, like the larger houses: it's three storeys.
     - **Not checked:** walking itself, and the phone controls.
   - **A14 pass:** 60 fps at `?dpr=1.75`.
   - **A15 pass:** the home page shows the ninth card live with its thumbnail, and the credits page has its section.
+- **Claude usage** (spec 018): 46 replies; 61.8k output, 102.4k cache-write and 16.7M cache-read tokens; 3.0% of all tokens so far.
 - **Thumbnail:** `/lovell-health-house/?view=below&clean&date=2026-06-21`, cropped to 1200 × 675.
