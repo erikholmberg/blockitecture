@@ -1,9 +1,9 @@
 # 018 — Claude usage per house
 
-- **Status:** Approved (approved by Erik 2026-11-09: all recommendations; transcripts kept for 365 days)
+- **Status:** Done (approved by Erik 2026-11-09: all recommendations; transcripts kept for 365 days)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 258c87d
 
 ## Goal
 Erik can see how much of his Claude usage each house took to build (and how much went to shared work like the engine and the home page),
@@ -64,4 +64,22 @@ and the numbers outlive Claude Code's local logs. A developer tool only: nothing
       hardly any more accurate.
 
 ## Implementation notes
-Filled in after approval.
+- **Files:**
+  - `scripts/usage/core.ts`: pure; parsing, dedupe, matching, the house and spec split, the ledger.
+  - `scripts/usage.ts`: the CLI, run as TypeScript by Node 24 (`npm run usage`).
+  - `usage/ledger.json`: the recorded totals.
+- **House lines:**
+  - stahl-house: specs 001–005 and 009.
+  - eames-house: specs 010 and 011.
+  - fallingwater: spec 017.
+  - Shared, with no line: 006–008 and 012–016 (they changed the engine, the home page or every house) and 018.
+  - The template gained the line, and CLAUDE.md's close-out step now records usage.
+- **Settings:** `cleanupPeriodDays: 365` in `~/.claude/settings.json` (Q1).
+- **Matching:** a message counts toward the first commit at or after its timestamp. "Record commit" commits share a timestamp with their main
+  commit, which comes first in the log, so they get nothing.
+- **Results:**
+  - `tests/usage.test.ts` (A1–A5, 5 tests). 119 tests in all.
+  - A6 passed: the table's total (578 replies, 741.0k output, 234.9M cache-read tokens) matches an independent Python recount of the same
+    transcripts.
+  - The ledger was backfilled with every commit since 8e419c1.
+  - The commit that approved spec 017 also carried this spec, so the usage before it splits evenly between Fallingwater and shared.

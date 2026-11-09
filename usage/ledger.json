@@ -1,0 +1,242 @@
+[
+  {
+    "hash": "8e419c1",
+    "date": "2026-11-08",
+    "specs": [],
+    "messages": 18,
+    "usage": {
+      "input": 40,
+      "cacheWrite": 47578,
+      "cacheRead": 979169,
+      "output": 14761
+    }
+  },
+  {
+    "hash": "ec96bbc",
+    "date": "2026-11-08",
+    "specs": [
+      "001"
+    ],
+    "messages": 7,
+    "usage": {
+      "input": 14,
+      "cacheWrite": 8059,
+      "cacheRead": 525400,
+      "output": 6745
+    }
+  },
+  {
+    "hash": "f4c51dc",
+    "date": "2026-11-08",
+    "specs": [
+      "002"
+    ],
+    "messages": 31,
+    "usage": {
+      "input": 74,
+      "cacheWrite": 137310,
+      "cacheRead": 3100225,
+      "output": 25628
+    }
+  },
+  {
+    "hash": "b0d7cc3",
+    "date": "2026-11-08",
+    "specs": [
+      "003"
+    ],
+    "messages": 42,
+    "usage": {
+      "input": 92,
+      "cacheWrite": 102263,
+      "cacheRead": 7497496,
+      "output": 74676
+    }
+  },
+  {
+    "hash": "ea17490",
+    "date": "2026-11-08",
+    "specs": [
+      "004"
+    ],
+    "messages": 33,
+    "usage": {
+      "input": 70,
+      "cacheWrite": 372191,
+      "cacheRead": 8910711,
+      "output": 60706
+    }
+  },
+  {
+    "hash": "5f09912",
+    "date": "2026-11-08",
+    "specs": [
+      "005"
+    ],
+    "messages": 19,
+    "usage": {
+      "input": 44,
+      "cacheWrite": 33787,
+      "cacheRead": 6273547,
+      "output": 23036
+    }
+  },
+  {
+    "hash": "681e649",
+    "date": "2026-11-08",
+    "specs": [
+      "006"
+    ],
+    "messages": 19,
+    "usage": {
+      "input": 42,
+      "cacheWrite": 39839,
+      "cacheRead": 7035441,
+      "output": 27905
+    }
+  },
+  {
+    "hash": "403d2aa",
+    "date": "2026-11-08",
+    "specs": [
+      "007"
+    ],
+    "messages": 90,
+    "usage": {
+      "input": 184,
+      "cacheWrite": 132211,
+      "cacheRead": 41385561,
+      "output": 81920
+    }
+  },
+  {
+    "hash": "09d1548",
+    "date": "2026-11-08",
+    "specs": [
+      "008"
+    ],
+    "messages": 16,
+    "usage": {
+      "input": 38,
+      "cacheWrite": 15466,
+      "cacheRead": 8520999,
+      "output": 11849
+    }
+  },
+  {
+    "hash": "4318deb",
+    "date": "2026-11-08",
+    "specs": [
+      "009"
+    ],
+    "messages": 26,
+    "usage": {
+      "input": 58,
+      "cacheWrite": 42604,
+      "cacheRead": 14559836,
+      "output": 35838
+    }
+  },
+  {
+    "hash": "b12db08",
+    "date": "2026-11-08",
+    "specs": [
+      "010"
+    ],
+    "messages": 3,
+    "usage": {
+      "input": 6,
+      "cacheWrite": 3708,
+      "cacheRead": 1755167,
+      "output": 5101
+    }
+  },
+  {
+    "hash": "901b188",
+    "date": "2026-11-08",
+    "specs": [
+      "010"
+    ],
+    "messages": 35,
+    "usage": {
+      "input": 70,
+      "cacheWrite": 69696,
+      "cacheRead": 21862669,
+      "output": 41285
+    }
+  },
+  {
+    "hash": "30b3e24",
+    "date": "2026-11-09",
+    "specs": [
+      "010",
+      "011",
+      "012"
+    ],
+    "messages": 110,
+    "usage": {
+      "input": 230,
+      "cacheWrite": 1201774,
+      "cacheRead": 87848270,
+      "output": 213582
+    }
+  },
+  {
+    "hash": "fd20e14",
+    "date": "2026-11-09",
+    "specs": [
+      "013"
+    ],
+    "messages": 17,
+    "usage": {
+      "input": 40,
+      "cacheWrite": 56969,
+      "cacheRead": 10031233,
+      "output": 9921
+    }
+  },
+  {
+    "hash": "f6589e9",
+    "date": "2026-11-09",
+    "specs": [
+      "014"
+    ],
+    "messages": 35,
+    "usage": {
+      "input": 74,
+      "cacheWrite": 70362,
+      "cacheRead": 3857538,
+      "output": 34634
+    }
+  },
+  {
+    "hash": "95657f5",
+    "date": "2026-11-09",
+    "specs": [
+      "015",
+      "016"
+    ],
+    "messages": 46,
+    "usage": {
+      "input": 104,
+      "cacheWrite": 80860,
+      "cacheRead": 8383070,
+      "output": 40998
+    }
+  },
+  {
+    "hash": "258c87d",
+    "date": "2026-11-09",
+    "specs": [
+      "017",
+      "018"
+    ],
+    "messages": 32,
+    "usage": {
+      "input": 72,
+      "cacheWrite": 77946,
+      "cacheRead": 2510938,
+      "output": 33649
+    }
+  }
+]
