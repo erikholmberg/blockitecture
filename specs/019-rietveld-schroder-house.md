@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** rietveld-schroder-house
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** ef1defa (spec), 2daf310 (work in progress), 8c58571 (build)
 
 ## Goal
 The fourth rendering: Gerrit Rietveld's house for Truus Schröder-Schräder (1924) at Prins Hendriklaan 50, Utrecht, built block by block
@@ -171,4 +171,6 @@ About 3 minutes in all, since this house is much smaller than the others (Q6).
     - **Not checked:** walking itself (pointer lock can't be driven here) and the phone controls (no touch device).
   - **A15 pass:** 60 fps at `?dpr=1.75` (2.1M triangles).
   - **A16 pass:** the home card is live, with the thumbnail and 10,668 pieces.
+- **Claude usage** (spec 018, through 8c58571): 52 replies; 83.0k output, 114.3k cache-write and 22.0M cache-read tokens; 7.7% of all
+  tokens so far. That's under half of Fallingwater's 184.8k output tokens.
 - **Thumbnail:** `/rietveld-schroder-house/?view=corner&clean&date=2026-06-21`, cropped to 1200 × 675.
