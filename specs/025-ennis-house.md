@@ -1,7 +1,7 @@
 # 025 — The Ennis House
 
-- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations). Built; walking itself and the phone
-  controls couldn't be checked here, as for specs 017–022
+- **Status:** Done (approved by Erik 2026-11-09: "build it", all recommendations. Closed by Erik 2026-11-09, accepting the two manual checks that couldn't be run here:
+  walking itself and the phone controls)
 - **Owner:** Erik
 - **House:** ennis-house
 - **Created:** 2026-11-09
