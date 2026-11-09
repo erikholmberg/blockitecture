@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** farnsworth-house
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 2794d94 (spec), b071e21 (build)
 
 ## Goal
 The fifth rendering: Mies van der Rohe's house for Dr. Edith Farnsworth (1945–51), at 14520 River Road, Plano, Illinois. A white steel
@@ -175,4 +175,6 @@ About 3 minutes; this house is about the Schröder House's size.
     - **Not checked:** walking itself, and the phone controls.
   - **A15 pass:** 60 fps at `?dpr=1.75` (2.2M triangles).
   - **A16 pass:** the home card is live with its thumbnail and 13,052 pieces, and the credits page has its section.
+- **Claude usage** (spec 018): 52 replies; 68.2k output, 101.9k cache-write and 30.9M cache-read tokens; 8.9% of all tokens so far.
+  The least output of the five houses.
 - **Thumbnail:** `/farnsworth-house/?view=meadow&clean&date=2026-06-21`, cropped to 1200 × 675.
