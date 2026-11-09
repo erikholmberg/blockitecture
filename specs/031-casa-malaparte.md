@@ -1,7 +1,7 @@
 # 031 — Casa Malaparte
 
-- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's acceptance of the
-  manual checks that couldn't be run here: walking itself and the phone controls, and the Faraglioni view, see below)
+- **Status:** Done (approved by Erik 2026-11-09: "build it", all recommendations. Closed by Erik 2026-11-09: "approved", accepting
+  the manual checks that couldn't be run here (walking itself and the phone controls) and the Faraglioni view as it is)
 - **Owner:** Erik
 - **House:** casa-malaparte
 - **Created:** 2026-11-09
