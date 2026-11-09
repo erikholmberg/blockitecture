@@ -3,7 +3,7 @@
 - **Status:** Done (requested by Erik 2026-11-09, with a screenshot)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** b319fc6
 
 ## Goal
 The viewer's controls look like one set: their corners match, and they're a little less chunky.
