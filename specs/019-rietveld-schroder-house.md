@@ -1,7 +1,7 @@
 # 019 — The Rietveld Schröder House
 
-- **Status:** In progress (approved by Erik 2026-11-09: "looks good", all recommendations). Built; two manual checks couldn't
-  be run here (see Implementation notes)
+- **Status:** Done (approved by Erik 2026-11-09: "looks good", all recommendations. Closed by Erik 2026-11-09, accepting
+  the two manual checks that couldn't be run here: walking itself and the phone controls)
 - **Owner:** Erik
 - **House:** rietveld-schroder-house
 - **Created:** 2026-11-09
