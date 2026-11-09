@@ -114,10 +114,10 @@ export function buildSite(b: Builder): HeightMap {
       bottom[k] = Math.min(m, hm.top[k] - 3);
     }
   const topColor = (x: number, z: number) => {
-    const s = streetAt(x, z), r = hash2(Math.floor(x / 2), Math.floor(z / 2));
+    const s = streetAt(x, z), r = hash2(Math.floor(x / 6), Math.floor(z / 6));
     if (s === 'road') return r < 0.5 ? 0x4a4c4e : 0x525456;
     if (s === 'pavement') return r < 0.5 ? 0x9c9a94 : 0xa8a59e; // Dutch brick pavers, grey
-    const n = noise2(x * 0.09, z * 0.09);
+    const n = noise2(x * 0.05, z * 0.05);
     return n < 0.35 ? 0x5f8a45 : r < 0.5 ? 0x6f9a50 : 0x78a257; // grass
   };
   let minY = 0, maxY = -Infinity;
@@ -159,21 +159,25 @@ function buildRow(b: Builder, hm: HeightMap) {
     };
     // the walls: brick, with windows on the faces toward the street and the gardens (the ±z sides)
     const facing = (x: number, z: number) => mine(x, z) && (!mine(x, z + 1) || !mine(x, z - 1)) && mine(x - 1, z) && mine(x + 1, z);
+    // a shell: the walls are one stud thick (nothing inside shows), with a floor of plates under the roof
     b.box(x0, z0, x1, z1, base, top, {
       kind: 'brick',
-      mask: (x, z) => mine(x, z),
+      mask: (x, z) => mine(x, z) && inset(x, z) === 1,
       color: (x, y, z) => {
         const storey = (y - base) % 19;
         if (row && facing(x, z) && ((x % 5) + 5) % 5 >= 1 && ((x % 5) + 5) % 5 <= 3 && storey >= 7 && storey < 16) return storey === 7 || storey === 15 ? 0xf0efe9 : 0x2b3238;
-        return BRICK[Math.floor(hash2(Math.floor(x / 2) + y * 3, z) * BRICK.length)];
+        return BRICK[Math.floor(hash2(Math.floor(x / 8) + Math.floor(y / 9) * 3, Math.floor(z / 8)) * BRICK.length)];
       },
     });
-    if (!row) return;
-    // the mansard: each course steps in by a stud
+    if (!row) {
+      b.box(x0, z0, x1, z1, top, top + 1, { kind: 'plate', color: 0x6c6a66, mask: (x, z) => mine(x, z) });
+      return;
+    }
+    // the mansard: each course steps in by a stud (a ring of tiles), closed by a flat top
+    const tile = (x: number, _y: number, z: number) => TILE[Math.floor(hash2(Math.floor(x / 6), Math.floor(z / 6)) * TILE.length)];
     for (let k = 1; k <= ROW_MANSARD; k++)
-      b.box(x0, z0, x1, z1, top + (k - 1) * 3, top + k * 3, {
-        kind: 'brick', mask: (x, z) => mine(x, z) && inset(x, z) >= k, color: (x, _y, z) => TILE[Math.floor(hash2(x, z * 3) * TILE.length)],
-      });
+      b.box(x0, z0, x1, z1, top + (k - 1) * 3, top + k * 3, { kind: 'brick', mask: (x, z) => mine(x, z) && inset(x, z) === k, color: tile });
+    b.box(x0, z0, x1, z1, top + ROW_MANSARD * 3 - 1, top + ROW_MANSARD * 3, { kind: 'plate', mask: (x, z) => mine(x, z) && inset(x, z) > ROW_MANSARD, color: tile });
   });
 }
 

@@ -3,10 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { HOUSES } from '../src/houses/index';
 
 describe('016: the next houses', () => {
-  it('A1: coming-soon cards for the four picks, in order, data only (spec 017 made Fallingwater live)', () => {
+  it('A1: coming-soon cards for the picks, in order, data only (specs 017 and 019 made Fallingwater and Schröder live)', () => {
     const soon = HOUSES.filter((h) => h.status === 'coming-soon');
-    expect(soon.map((h) => h.slug)).toEqual([
-      'rietveld-schroder-house', 'farnsworth-house', 'ennis-house', 'casa-malaparte',
+    expect(soon.map((h) => h.slug)).toEqual([ 'farnsworth-house', 'ennis-house', 'casa-malaparte',
     ]);
     for (const h of soon) {
       expect(h.title && h.architect && h.location && h.blurb).toBeTruthy();

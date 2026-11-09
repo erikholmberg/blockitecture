@@ -1,6 +1,7 @@
 # 019 — The Rietveld Schröder House
 
-- **Status:** Approved (approved by Erik 2026-11-09: "looks good", all recommendations)
+- **Status:** In progress (approved by Erik 2026-11-09: "looks good", all recommendations). Built; two manual checks couldn't
+  be run here (see Implementation notes)
 - **Owner:** Erik
 - **House:** rietveld-schroder-house
 - **Created:** 2026-11-09
@@ -132,4 +133,42 @@ About 3 minutes in all, since this house is much smaller than the others (Q6).
       Schröderhuis, Cassina or the LEGO Group." Cassina makes the licensed Rietveld furniture.
 
 ## Implementation notes
-Filled in after approval.
+- **Sources:**
+  - **Footprint:** OSM way 191005050 (10 × 7.6 m). The rotation search fits it with IoU 0.964 at **−28°**, against the footprint's own axis of −29.5°.
+  - **The shared wall:** way 261140744 shares the house's 10 m west edge. That's the house's depth, so the front faces SSW.
+  - **Everything else:** read from photographs on Wikimedia Commons ("Casa Rietveld Schröder" 01–10, CC BY 3.0; RCE 20339897 and
+    20323960, CC BY-SA 4.0). That covers the colours and where they go, the planes, the balconies and the roof light.
+    Heights are assumed: 9.6 ft to the upper floor and 19.2 ft to the roof.
+- **Data script** (opt-in `lotFeatures`; the other houses don't use it):
+  - It writes the OSM buildings and streets whose centre is in the lot to `lotTerrain.ts`, and the renderer leaves those buildings
+    out. Without the option, the old rule stands: any building that overlaps the lot is left out.
+  - The lot's edges cross three larger apartment blocks; the renderer still draws them.
+- **Engine:** `scenery.lowlands` with a pure `lowlandColor()` (greens, with grey-brown for built-up ground). The other houses don't use it.
+  A1 pins all three other models: Stahl 27,233 / `116d7826`, Eames 21,657 / `74053447`, Fallingwater 58,425 / `af03e3c7`.
+- **Model:** `src/houses/rietveld-schroder-house/`, 10,668 pieces; the house itself is about 1,300 of them.
+  - The row: four row houses and three sheds from their OSM outlines, as hollow brick shells. White-framed windows on the ±z faces,
+    three storeys under a stepped tile mansard [assumed]. Built solid at first they came to 52k pieces; as shells, 8.4k.
+  - The neighbour is built right up to the party wall (A7).
+  - Streets are painted into the top course of the ground: carriageway, pavement, garden.
+  - The upper floor's painted floor, the stowed sliding panels, the Red and Blue chair, the hanging lamp (hung with the roof), beds,
+    a tub, a Berlin chair, the kitchen.
+  - Each element is marked [documented] or [assumed].
+- **Tests:**
+  - `tests/schroder.test.ts` covers A1–A10 plus the home card.
+  - `tests/buildOrder.test.ts` now includes the house: nothing floats and nothing is dropped.
+  - The 007/016 registry tests list the house as live.
+  - 149 tests in all.
+- **Manual checks** (Chrome, 2026-11-09):
+  - **A11 pass** (16×): the street and the row; the frame, upper floor and balconies; the furniture in the open frame; then the
+    planes, lines and glass; the roof; the garden.
+  - **A12 pass:** *The corner* shows the white and grey planes, black frames, the yellow post, the red posts, the red and blue lines
+    on the east windows, and the corner glass. It's also the thumbnail.
+  - **A13 pass:** green lowland with grey streets, Utrecht's real buildings around it, no procedural city.
+  - **A14 partial:**
+    - All five views work, and No roof opens the upper floor.
+    - Walk starts on the pavement of Prins Hendriklaan, facing the house. It faced away at first: the yaw was wrong, and Fallingwater's
+      had the same bug, fixed under spec 017.
+    - **Not checked:** walking itself (pointer lock can't be driven here) and the phone controls (no touch device).
+  - **A15 pass:** 60 fps at `?dpr=1.75` (2.1M triangles).
+  - **A16 pass:** the home card is live, with the thumbnail and 10,668 pieces.
+- **Thumbnail:** `/rietveld-schroder-house/?view=corner&clean&date=2026-06-21`, cropped to 1200 × 675.

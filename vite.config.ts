@@ -11,6 +11,7 @@ export const PAGES = {
   'stahl-house': r('./stahl-house/index.html'),
   'eames-house': r('./eames-house/index.html'),
   fallingwater: r('./fallingwater/index.html'),
+  'rietveld-schroder-house': r('./rietveld-schroder-house/index.html'),
 };
 
 /** /stahl-house → /stahl-house/ in dev and preview, like vercel.json's trailingSlash in production. */

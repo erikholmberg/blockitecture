@@ -61,7 +61,9 @@ export const HOUSES: House[] = [
     architect: 'Gerrit Rietveld',
     year: 1924,
     location: 'Utrecht, Netherlands',
-    status: 'coming-soon',
+    status: 'live',
+    pieces: 10_668,
+    thumbnail: '/rietveld-schroder-house/thumbnail.jpg',
     blurb: 'De Stijl planes in red, blue, yellow, black and white, at the end of an ordinary row of houses.',
   },
   {

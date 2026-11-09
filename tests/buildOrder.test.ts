@@ -6,9 +6,10 @@ import { HOUSES } from '../src/houses';
 import { STAHL } from '../src/houses/stahl-house/definition';
 import { EAMES } from '../src/houses/eames-house/definition';
 import { FALLINGWATER } from '../src/houses/fallingwater/definition';
+import { SCHRODER } from '../src/houses/rietveld-schroder-house/definition';
 
 /** every house definition; adding a live house without adding it here fails A2 */
-const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER];
+const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER, SCHRODER];
 
 describe('012: roof last, on every house', () => {
   it('A2: every live house is covered', () => {
