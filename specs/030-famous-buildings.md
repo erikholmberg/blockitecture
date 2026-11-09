@@ -3,7 +3,7 @@
 - **Status:** Done (requested by Erik 2026-11-09)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 4414e26
 
 ## Goal
 Following spec 029, the site's headline and titles say "buildings", so it can take in landmarks that aren't houses.
