@@ -93,6 +93,16 @@ export const HOUSES: House[] = [
     status: 'coming-soon',
     blurb: 'A red box on a cliff above the sea, with a wedge-shaped stair rising to the roof.',
   },
+  // spec 020: an eighth card, so the grid ends on a full row
+  {
+    slug: 'kaufmann-desert-house',
+    title: 'Kaufmann Desert House',
+    architect: 'Richard Neutra',
+    year: 1946,
+    location: 'Palm Springs, California',
+    status: 'coming-soon',
+    blurb: 'A pinwheel of glass and steel around a pool, with the San Jacinto Mountains rising behind.',
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
