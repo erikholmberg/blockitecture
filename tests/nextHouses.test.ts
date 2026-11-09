@@ -5,7 +5,7 @@ import { HOUSES } from '../src/houses/index';
 describe('016: the next houses', () => {
   it('A1: coming-soon cards for the picks, in order, data only (specs 017 and 019 made Fallingwater and Schröder live)', () => {
     const soon = HOUSES.filter((h) => h.status === 'coming-soon');
-    expect(soon.map((h) => h.slug)).toEqual([ 'farnsworth-house', 'ennis-house', 'casa-malaparte', 'kaufmann-desert-house', // + spec 020
+    expect(soon.map((h) => h.slug)).toEqual([ 'ennis-house', 'casa-malaparte', 'kaufmann-desert-house', // + spec 020
     ]);
     for (const h of soon) {
       expect(h.title && h.architect && h.location && h.blurb).toBeTruthy();

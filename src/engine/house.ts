@@ -72,6 +72,14 @@ export interface HouseDefinition {
   scenery?: Scenery;
 }
 
+/** Spec 022: a lake, pond or river from OSM: flat water at `level` ft over its rings (outer first, then holes), model ft. */
+export interface WaterArea {
+  name: string;
+  kind: string;
+  level: number;
+  rings: [number, number][][];
+}
+
 /** Heights are ft relative to the house (y = 0). */
 export interface Scenery {
   /** water at true sea level, with a sandy shoreline (default: none) */
@@ -84,6 +92,8 @@ export interface Scenery {
   city?: { maxY?: number; minY?: number } | false;
   /** the real terrain reads as hardwood forest (greens on every slope but the steepest rock; no built-up flats). Spec 017 */
   forest?: boolean;
+  /** rivers, lakes and ponds drawn as flat water on the real terrain, which sinks beneath them (spec 022) */
+  waterAreas?: WaterArea[];
   /** the real terrain reads as Dutch lowland: green grass and fields, grey-brown where it's built up; no rock. Spec 019 */
   lowlands?: boolean;
   /** water pieces shimmer and flow, and `falls` pieces stream downward (spec 017); default: still water (the Stahl pool) */

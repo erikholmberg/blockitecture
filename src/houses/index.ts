@@ -97,8 +97,15 @@ export const HOUSES: House[] = [
     architect: 'Ludwig Mies van der Rohe',
     year: 1951,
     location: 'Plano, Illinois',
-    status: 'coming-soon',
+    status: 'live',
+    pieces: 13_052,
+    thumbnail: '/farnsworth-house/thumbnail.jpg',
     blurb: 'A white steel and glass box floating on stilts above the Fox River floodplain.',
+    affiliations: ['the National Trust for Historic Preservation', 'the Farnsworth House'],
+    sources: [
+      'Measured drawings: Historic American Buildings Survey, HABS IL-1105 (2009), Library of Congress',
+      'Its outline, the Fox River and the neighbourhood: OpenStreetMap',
+    ],
   },
   {
     slug: 'ennis-house',

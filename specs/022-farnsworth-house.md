@@ -1,6 +1,7 @@
 # 022 — The Farnsworth House
 
-- **Status:** Approved (approved by Erik 2026-11-09: "build it", all recommendations)
+- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations). Built; walking itself and the phone
+  controls couldn't be checked here, as for specs 017 and 019
 - **Owner:** Erik
 - **House:** farnsworth-house
 - **Created:** 2026-11-09
@@ -128,4 +129,50 @@ About 3 minutes; this house is about the Schröder House's size.
 - [x] **Q4: Timing.** *Recommended: about 3 minutes*, as the Schröder House.
 
 ## Implementation notes
-Filled in after approval.
+- **Sources:**
+  - HABS IL-1105, sheets 3–8, read at 50 px/ft. The 22′-0″ bays measure 1,104 px.
+  - **Corrections from the drawings:**
+    - The lower terrace is **55′-3″** from its west edge to its east edge (x 8–63): the drawn outline at x 63 matches the dimension
+      chain, so my first reading of x 55 was wrong.
+    - The floor is **2′-4″** above the terrace, and the ground at the stair 2′-2″ below it: the floor stands 4′-6″ above the
+      ground, not the 5′-3″ often quoted.
+- **Placement:**
+  - OSM's way 184780920 fits with IoU 0.884 at **10.5°**. The sheet's north arrow reads about 18°.
+  - y = 0 is pinned to the floor, 4′-6″ above the terrain's own reading at the house (`lotElevationM`, as spec 017), so the meadow
+    is the real ground with no digging.
+- **Engine and data, opt-in:**
+  - `scenery.waterAreas` draws OSM's water polygons (rivers, lakes, ponds) as flat water at their level, and sinks the terrain mesh
+    `UNDER_WATER_AREA` ft under them.
+  - Pure helpers `waterAreaAt()` and `waterAreaLevels()` support it (tested in A2).
+  - The data script's `waterAreas` option assembles the multipolygons, takes each area's level as the median of the near-grid samples
+    inside it, and leaves out areas with none (beyond the near grid). It wrote 17 areas.
+  - The lot ends at the Fox River's north bank (z = 150); the river runs beyond it as a water area.
+  - A1 pins all four other models; Schröder's is 10,668 / `501f28e6`.
+- **Model:** `src/houses/farnsworth-house/`, 13,052 pieces.
+  - The structure: eight white columns from their footings to the cornice; the floor slab and roof slab with white fascias and
+    travertine floors; the lower terrace on four short columns.
+  - The steps: floating travertine treads, porch to terrace and terrace to meadow.
+  - The glass room, with white mullions every 11 ft.
+  - Inside:
+    - the primavera core (kitchen counter, fireplace) and the teak wardrobe [documented];
+    - Barcelona chairs, the dining table, the bed and the desk [assumed: photographs; the areas are labelled on sheet 3].
+  - Outside: the black sugar maple [documented: HABS photo caption 27], and trees thickening toward the river.
+- **Tests:**
+  - `tests/farnsworth.test.ts` covers A1–A10 plus the home card. The house is added to `tests/buildOrder.test.ts` and
+    `tests/credits.test.tsx`.
+  - The registry tests now list it as live (5 live, 3 coming soon).
+  - 169 tests in all.
+- **Manual checks** (Chrome, 2026-11-09):
+  - **A11 pass** (16×): the columns and the floor slab float over the meadow, with the terrace, before any glass. Then the
+    furniture, the glass, the roof and the trees.
+  - **A12 pass:** *From the meadow* shows the terrace, the porch, and the white frame and glass between two floating planes. It's
+    the thumbnail.
+  - **A13 pass:** the Fox River runs along the meadow's south edge and on out of view, with Illinois green around it and no city.
+  - **A14 partial:**
+    - All views work: Overview, From the meadow, Inside, From the river, Under the maple.
+    - No roof works, and at dusk the glass box glows.
+    - Walk starts on the meadow, facing the terrace.
+    - **Not checked:** walking itself, and the phone controls.
+  - **A15 pass:** 60 fps at `?dpr=1.75` (2.2M triangles).
+  - **A16 pass:** the home card is live with its thumbnail and 13,052 pieces, and the credits page has its section.
+- **Thumbnail:** `/farnsworth-house/?view=meadow&clean&date=2026-06-21`, cropped to 1200 × 675.

@@ -12,6 +12,7 @@ export const PAGES = {
   'eames-house': r('./eames-house/index.html'),
   fallingwater: r('./fallingwater/index.html'),
   'rietveld-schroder-house': r('./rietveld-schroder-house/index.html'),
+  'farnsworth-house': r('./farnsworth-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

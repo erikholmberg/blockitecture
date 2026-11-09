@@ -5,7 +5,7 @@
  * Model coordinates: x/z in ft (1 unit = 1 stud ≈ 1 ft), y up in ft, y = 0 is the brick lot.
  * The real world is rotated 180° to match the brick model (see the script header).
  */
-import type { Lot } from '@/engine/house';
+import type { Lot, WaterArea } from '@/engine/house';
 
 export interface Grid {
   x0: number; z0: number; step: number; nx: number; nz: number;
@@ -190,3 +190,46 @@ export function groundHeight(n: Neighborhood, lot: Lot, x: number, z: number): n
   }
   return real;
 }
+
+/** even-odd point in polygon */
+function inRing(x: number, z: number, ring: [number, number][]) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, zi] = ring[i], [xj, zj] = ring[j];
+    if (zi > z !== zj > z && x < ((xj - xi) * (z - zi)) / (zj - zi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+/** Spec 022: the level of the water area at (x, z), or null on land (inside an outer ring and none of its holes). */
+export function waterAreaAt(areas: WaterArea[], x: number, z: number): number | null {
+  for (const a of areas) {
+    const [outer, ...holes] = a.rings;
+    if (inRing(x, z, outer) && !holes.some((h) => inRing(x, z, h))) return a.level;
+  }
+  return null;
+}
+
+/** Spec 022: how far the terrain mesh sinks under a water area's surface, so the two never z-fight. */
+export const UNDER_WATER_AREA = 4;
+
+/**
+ * Spec 022: per grid sample, the water level above it (NaN on land), for sinking the terrain mesh under water areas.
+ * Rings are tested only where their bounding box covers the sample.
+ */
+export function waterAreaLevels(g: Grid, areas: WaterArea[]): Float32Array {
+  const out = new Float32Array(g.nx * g.nz).fill(NaN);
+  for (const a of areas) {
+    const [outer, ...holes] = a.rings;
+    const xs = outer.map((p) => p[0]), zs = outer.map((p) => p[1]);
+    const i0 = Math.max(0, Math.floor((Math.min(...xs) - g.x0) / g.step)), i1 = Math.min(g.nx - 1, Math.ceil((Math.max(...xs) - g.x0) / g.step));
+    const j0 = Math.max(0, Math.floor((Math.min(...zs) - g.z0) / g.step)), j1 = Math.min(g.nz - 1, Math.ceil((Math.max(...zs) - g.z0) / g.step));
+    for (let j = j0; j <= j1; j++)
+      for (let i = i0; i <= i1; i++) {
+        const x = g.x0 + i * g.step, z = g.z0 + j * g.step;
+        if (inRing(x, z, outer) && !holes.some((h) => inRing(x, z, h))) out[j * g.nx + i] = a.level;
+      }
+  }
+  return out;
+}
+

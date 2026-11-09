@@ -1,7 +1,9 @@
 import * as THREE from 'three';
-import { groundHeight, inGrid, isWater, lotDistance, Neighborhood, parseNeighborhood, sampleGrid, seaMeshHeight, waterMask } from '@/engine/scene/neighborhoodData';
+import {
+  groundHeight, inGrid, isWater, lotDistance, Neighborhood, parseNeighborhood, sampleGrid, seaMeshHeight, UNDER_WATER_AREA, waterAreaLevels, waterMask,
+} from '@/engine/scene/neighborhoodData';
 import { hash2, noise2 } from '@/engine/voxel';
-import type { Lot, Scenery } from '@/engine/house';
+import type { Lot, Scenery, WaterArea } from '@/engine/house';
 
 /**
  * Spec 003: the real Hollywood Hills around the house: terrain, roads and buildings from
@@ -18,6 +20,7 @@ export class NeighborhoodScene {
   private chaparral: boolean;
   private forest: boolean;
   private lowlands: boolean;
+  private waterAreas: WaterArea[];
 
   constructor(private n: Neighborhood, private lot: Lot, scenery: Scenery = {}) {
     this.seaY = scenery.sea ? -n.anchor.lotElevationM / 0.3048 : null;
@@ -25,8 +28,10 @@ export class NeighborhoodScene {
     this.chaparral = scenery.chaparral ?? false;
     this.forest = scenery.forest ?? false;
     this.lowlands = scenery.lowlands ?? false;
+    this.waterAreas = scenery.waterAreas ?? [];
     const ground = (x: number, z: number) => groundHeight(n, lot, x, z);
     if (this.seaY !== null) this.group.add(this.sea(this.seaY));
+    for (const a of this.waterAreas) this.group.add(this.waterArea(a));
     this.group.add(this.terrain(ground));
     this.group.add(this.farTerrain());
     this.group.add(this.roads(ground));
@@ -81,6 +86,28 @@ export class NeighborhoodScene {
     return new THREE.Mesh(g, this.material({ roughness: 0.18, metalness: 0.15, polygonOffset: true, polygonOffsetFactor: 4, polygonOffsetUnits: 4 }));
   }
 
+  /** Spec 022: a lake, pond or river: one flat sheet over its outline, holes cut out (vertex-coloured for dusk) */
+  private waterArea(a: WaterArea) {
+    const [outer, ...holes] = a.rings;
+    // shapes are drawn in x/y; y = −z, so that rotating −90° about x lays them face-up on the ground
+    const shape = new THREE.Shape(outer.map(([x, z]) => new THREE.Vector2(x, -z)));
+    for (const h of holes) shape.holes.push(new THREE.Path(h.map(([x, z]) => new THREE.Vector2(x, -z))));
+    const g = new THREE.ShapeGeometry(shape).rotateX(-Math.PI / 2).translate(0, a.level, 0);
+    const c = new THREE.Color(0x3f6f7a);
+    const n = g.getAttribute('position').count;
+    g.setAttribute('color', new THREE.Float32BufferAttribute(Array.from({ length: n }, () => [c.r, c.g, c.b]).flat(), 3));
+    return new THREE.Mesh(g, this.material({ roughness: 0.15, metalness: 0.1, polygonOffset: true, polygonOffsetFactor: 2, polygonOffsetUnits: 2 }));
+  }
+
+  /** Spec 022: the terrain under water areas sinks below their surface (NaN levels: land) */
+  private sinkUnderWater(g: { x0: number; z0: number; step: number; nx: number; nz: number }, levels: Float32Array | null, x: number, z: number, y: number) {
+    if (!levels) return y;
+    const i = Math.round((x - g.x0) / g.step), j = Math.round((z - g.z0) / g.step);
+    if (i < 0 || j < 0 || i >= g.nx || j >= g.nz) return y;
+    const l = levels[j * g.nx + i];
+    return Number.isNaN(l) ? y : Math.min(y, l - UNDER_WATER_AREA);
+  }
+
   private gridMesh(
     x0: number, z0: number, step: number, nx: number, nz: number,
     height: (x: number, z: number) => number,
@@ -123,7 +150,9 @@ export class NeighborhoodScene {
     // no hole under the brick lot: there the ground sits just below the bricks' lowest course
     // under the sea, rendered terrain drops well below it so the two never z-fight (spec 011)
     const water = this.seaY !== null ? waterMask(g, this.seaY) : null;
-    const h = (x: number, z: number) => seaMeshHeight(ground(x, z), this.seaY, !!water && isWater(g, water, x, z));
+    const levels = this.waterAreas.length ? waterAreaLevels(g, this.waterAreas) : null;
+    const h = (x: number, z: number) =>
+      this.sinkUnderWater(g, levels, x, z, seaMeshHeight(ground(x, z), this.seaY, !!water && isWater(g, water, x, z)));
     const geo = this.gridMesh(g.x0, g.z0, g.step, g.nx, g.nz, h, () => false);
     const m = new THREE.Mesh(geo, this.material());
     m.receiveShadow = true;
@@ -134,7 +163,9 @@ export class NeighborhoodScene {
     const f = this.n.far, near = this.n.near;
     const water = this.seaY !== null ? waterMask(f, this.seaY) : null;
     // just under the near terrain where they overlap; under the sea, well below it (spec 011)
-    const h = (x: number, z: number) => seaMeshHeight(sampleGrid(f, x, z) - 4, this.seaY, !!water && isWater(f, water, x, z));
+    const levels = this.waterAreas.length ? waterAreaLevels(f, this.waterAreas) : null;
+    const h = (x: number, z: number) =>
+      this.sinkUnderWater(f, levels, x, z, seaMeshHeight(sampleGrid(f, x, z) - 4, this.seaY, !!water && isWater(f, water, x, z)));
     const inside = (x: number, z: number) =>
       inGrid(near, x - f.step, z - f.step) && inGrid(near, x + f.step, z + f.step);
     return new THREE.Mesh(this.gridMesh(f.x0, f.z0, f.step, f.nx, f.nz, h, inside), this.material());
