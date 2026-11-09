@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09: "approved, go with your recommendations")
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 58392c6
 
 ## Goal
 The thumbnails are the best advertisement for each house, but at three across on a wide screen each card is only about 345 px wide.

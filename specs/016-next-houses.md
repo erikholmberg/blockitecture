@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09: picked all four recommended houses, with coming-soon cards now)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 58392c6
 
 ## Goal
 A shortlist of 20 famous houses to build next, and Erik's picks from it, shown on the home page as coming-soon cards so visitors can see
