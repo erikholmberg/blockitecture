@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09: 3 ft)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 9195050
 
 ## Goal
 In orbit mode you can no longer zoom, rotate or glide the camera below the ground and end up looking at the underside of the
