@@ -3,7 +3,7 @@
 - **Status:** Done (requested by Erik 2026-11-09)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 6755cb2
 
 ## Goal
 The home page's description doesn't limit the site to modernist houses, so it can take in older and non-modern buildings.
