@@ -96,6 +96,8 @@ export interface Scenery {
   waterAreas?: WaterArea[];
   /** the real terrain reads as Dutch lowland: green grass and fields, grey-brown where it's built up; no rock. Spec 019 */
   lowlands?: boolean;
+  /** the real terrain reads as desert: sand on the flats, watered greens in town, bare rock on the mountains. Spec 033 */
+  desert?: boolean;
   /** water pieces shimmer and flow, and `falls` pieces stream downward (spec 017); default: still water (the Stahl pool) */
   flowingWater?: boolean;
 }

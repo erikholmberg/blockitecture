@@ -10,9 +10,10 @@ import { SCHRODER } from '../src/houses/rietveld-schroder-house/definition';
 import { FARNSWORTH } from '../src/houses/farnsworth-house/definition';
 import { ENNIS } from '../src/houses/ennis-house/definition';
 import { MALAPARTE } from '../src/houses/casa-malaparte/definition';
+import { KAUFMANN } from '../src/houses/kaufmann-desert-house/definition';
 
 /** every house definition; adding a live house without adding it here fails A2 */
-const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE];
+const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN];
 
 describe('012: roof last, on every house', () => {
   it('A2: every live house is covered', () => {

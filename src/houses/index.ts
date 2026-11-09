@@ -147,8 +147,16 @@ export const HOUSES: House[] = [
     architect: 'Richard Neutra',
     year: 1946,
     location: 'Palm Springs, California',
-    status: 'coming-soon',
+    status: 'live',
+    pieces: 20_326,
+    thumbnail: '/kaufmann-desert-house/thumbnail.jpg',
     blurb: 'A pinwheel of glass and steel around a pool, with the San Jacinto Mountains rising behind.',
+    affiliations: ['the owners of the Kaufmann House', 'the Neutra estate'],
+    sources: [
+      'Its outline, its pool and the neighbourhood: OpenStreetMap',
+      'Photograph: The Kaufmann House, Palm Springs, California, Library of Congress (LCCN 2013631255), public domain',
+      'Published plans and photographs of the house',
+    ],
   },
 ];
 

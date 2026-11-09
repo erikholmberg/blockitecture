@@ -40,7 +40,7 @@ describe('031: Casa Malaparte', () => {
       expect(modelFingerprint(b), h.slug).toEqual(fp);
       expect(sequence(b, h.phases, h.center).total).toBeCloseTo(total, 5);
     }
-  });
+  }, 60_000);
 
   it('A2: the footprint fits OSM\'s (IoU ≥ 0.75); the house and stair dimensions within ±2 ft of those recorded', () => {
     expect(n.anchor.houseIoU).toBeGreaterThanOrEqual(0.75);

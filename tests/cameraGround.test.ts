@@ -7,6 +7,8 @@ import type { HouseDefinition } from '../src/engine/house';
 import { parseNeighborhood } from '../src/engine/scene/neighborhoodData';
 import { EAMES } from '../src/houses/eames-house/definition';
 import { ENNIS } from '../src/houses/ennis-house/definition';
+import { MALAPARTE } from '../src/houses/casa-malaparte/definition';
+import { KAUFMANN } from '../src/houses/kaufmann-desert-house/definition';
 import { FALLINGWATER } from '../src/houses/fallingwater/definition';
 import { FARNSWORTH } from '../src/houses/farnsworth-house/definition';
 import { SCHRODER } from '../src/houses/rietveld-schroder-house/definition';
@@ -46,12 +48,12 @@ describe('028: the camera stays above the ground', () => {
   });
 
   it('A3: every house\'s named views start above the ground (the clamp leaves them alone)', () => {
-    for (const h of [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS]) {
+    for (const h of [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN]) {
       const { ground } = load(h);
       for (const [name, v] of Object.entries(h.views)) {
         const p = v.view.pos;
         expect(p.y, `${h.slug} ${name}: ground ${ground(p.x, p.z).toFixed(1)}`).toBeGreaterThanOrEqual(ground(p.x, p.z) + CAMERA_MARGIN);
       }
     }
-  });
+  }, 60_000);
 });

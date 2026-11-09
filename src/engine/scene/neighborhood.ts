@@ -20,6 +20,7 @@ export class NeighborhoodScene {
   private chaparral: boolean;
   private forest: boolean;
   private lowlands: boolean;
+  private desert: boolean;
   private waterAreas: WaterArea[];
 
   constructor(private n: Neighborhood, private lot: Lot, scenery: Scenery = {}) {
@@ -28,6 +29,7 @@ export class NeighborhoodScene {
     this.chaparral = scenery.chaparral ?? false;
     this.forest = scenery.forest ?? false;
     this.lowlands = scenery.lowlands ?? false;
+    this.desert = scenery.desert ?? false;
     this.waterAreas = scenery.waterAreas ?? [];
     const ground = (x: number, z: number) => groundHeight(n, lot, x, z);
     if (this.seaY !== null) this.group.add(this.sea(this.seaY));
@@ -59,6 +61,7 @@ export class NeighborhoodScene {
     const nz = noise2(x * 0.012, z * 0.012), r = hash2(Math.floor(x / 40), Math.floor(z / 40));
     if (this.seaY !== null && y < this.seaY + 6) return c.setHex(y < this.seaY ? 0xbfae86 : 0xd8c9a0); // beach and sea floor
     if (this.lowlands) return c.setHex(lowlandColor(x, z));
+    if (this.desert) return c.setHex(desertColor(x, z, y, slope));
     if (this.forest) {
       // spec 017: hardwood forest on every slope (oak, maple, hemlock), bare rock only on the steepest faces, and a few
       // clearings and fields on the flattest ground
@@ -333,6 +336,20 @@ export async function loadNeighborhood(path: string): Promise<Neighborhood> {
   const res = await fetch(`${import.meta.env.BASE_URL}${path}`);
   if (!res.ok) throw new Error(`neighborhood.bin: ${res.status}`);
   return parseNeighborhood(await res.arrayBuffer());
+}
+
+/**
+ * Spec 033: desert colours for the real terrain (Palm Springs): sand and pale gravel on the flats, with green patches where
+ * the town is watered (gardens, golf courses); tan gravel on the fans; bare brown-grey rock on the mountains; pines high up
+ * on the San Jacinto Mountains. Pure, so it can be tested. y in ft relative to the house, slope as rise over run.
+ */
+export function desertColor(x: number, z: number, y: number, slope: number): number {
+  const n = noise2(x * 0.008, z * 0.008), r = hash2(Math.floor(x / 50), Math.floor(z / 50));
+  if (y > 5000 && slope < 1.6) return r < 0.5 ? 0x4a5a3c : 0x55644a; // the pines on the high slopes
+  if (slope > 1.1) return r < 0.33 ? 0x8a7a66 : r < 0.66 ? 0x7a6c5c : 0x968670; // bare rock
+  if (slope > 0.3) return r < 0.5 ? 0xb8a582 : 0xa8987a; // the fans: tan gravel, sparse scrub
+  if (n > 0.7) return r < 0.5 ? 0x6f8f4f : 0x7d9a56; // watered: gardens, lawns, golf courses
+  return n < 0.4 ? 0xd6c4a0 : r < 0.5 ? 0xcdb994 : 0xdccdaa; // sand and pale gravel
 }
 
 /**

@@ -1,6 +1,7 @@
 # 033 — The Kaufmann Desert House
 
-- **Status:** Approved (approved by Erik 2026-11-09: "build it", all recommendations)
+- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's acceptance of the
+  manual checks that couldn't be run here: walking itself and the phone controls)
 - **Owner:** Erik
 - **House:** kaufmann-desert-house
 - **Created:** 2026-11-09
@@ -134,4 +135,54 @@ About 3 minutes, like the Farnsworth House: it's a one-storey house plus the glo
 - [x] **Q5: Timing.** *Recommended: about 3 minutes*, like the Farnsworth House and Casa Malaparte.
 
 ## Implementation notes
-Filled in after approval.
+- **Data** (`scripts/houses/kaufmann-desert-house.mjs`):
+  - Fitted to OSM's "Kaufmann Desert House" (Q6378695) by its Wikidata tag. Its walls run within a degree of north–south, so the
+    rotation is **0°** (search −6…6°), IoU **0.915**. Model frame: x east, z south, in ft.
+  - `exportSelf` and `lotFeatures` are on. The lot's two other OSM buildings (ways 566015554 and 566015555) are built as plain
+    low white blocks.
+  - y = 0 is the floor, at the terrain's reading for the house (188.1 m). The real ground falls about 25 ft across the lot to the
+    south-east. It's levelled into a pad under the house and the pool's terrace, and blends back to the real ground within 24 ft
+    of the lot's edges.
+- **Engine:** `scenery.desert`, opt-in (A2): `desertColor()` in `src/engine/scene/neighborhood.ts`, a pure function.
+  - sand and pale gravel on the flats;
+  - green patches where the town is watered;
+  - tan gravel on the alluvial fans;
+  - bare brown-grey rock on the steep slopes;
+  - pines above 5,000 ft on the San Jacinto Mountains.
+- **Model:** `src/houses/kaufmann-desert-house/`, 20,326 pieces.
+  - The wings come straight from OSM's outline:
+    - the living room at the centre;
+    - the master wing to the east, by the pool (OSM way 1459410894);
+    - a covered walk north to the guest wing;
+    - the service wing to the west;
+    - the garage to the south, with the covered entry beside it.
+
+    Which wing holds which rooms is [assumed].
+  - Walls stand 3 ft in from the roofs' edges (the deep overhangs). Stone where a wall faces west or north, sliding glass with white
+    steel posts where it faces south or east [assumed]. The service wing and the garage are stone all round, with a window band.
+  - The gloriette on the living room's roof: tall aluminium louvres on its west and north sides, a stone fireplace, a thin canopy on
+    posts, and an outside stair up from the court.
+  - Thin flat roofs with white fascias; the pool with a white coping; a lawn around it; palms, boulders, barrel cactus and creosote.
+- **Tests:** `tests/kaufmann.test.ts` covers A1–A9 plus the home card.
+  - A1 pins all seven other models; Casa Malaparte's is 59,758 / `c84ca868`.
+  - The house is added to `tests/buildOrder.test.ts`, `tests/credits.test.tsx` and `tests/cameraGround.test.ts`. Casa Malaparte
+    is added to the last one too: it wasn't in it.
+  - The registry tests now expect all eight live and none coming soon.
+  - The tests that rebuild every other house got a 60-second timeout: with eight houses, they passed 5 s under the full suite's load.
+  - 226 tests in all.
+  - Deviation from the flow: the tests were written after the model, not before.
+- **Manual checks** (Chrome, 2026-11-09):
+  - **A10 pass** (16×): the desert, the pool's shell and the floors, the walls and posts with the gloriette's deck, the furniture,
+    the glass and louvres, then the roofs, then the garden.
+  - **A11 pass:** at dusk, *Across the pool* shows the lit house low behind the pool with the dark mountains above, like the
+    famous photographs. Its daytime version is the thumbnail.
+  - **A12 pass:** sand-coloured flats with the town's green patches; bare brown mountains rising to the west.
+  - **A13 partial:**
+    - All views and No roof work.
+    - The gloriette view first sat inside the gloriette, and the camera clamp (spec 028) lifted it above the canopy. It now looks
+      in from the open roof beside it, through to the louvres.
+    - Walk starts on the lawn beyond the pool, facing the house.
+    - **Not checked:** walking itself, and the phone controls.
+  - **A14 pass:** 60 fps at `?dpr=1.75` (1.06M triangles).
+  - **A15 pass:** the home page shows all eight houses live, and the credits page has this one's section.
+- **Thumbnail:** `/kaufmann-desert-house/?view=pool&clean&date=2026-06-21`, cropped to 1200 × 675.

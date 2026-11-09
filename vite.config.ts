@@ -15,6 +15,7 @@ export const PAGES = {
   'farnsworth-house': r('./farnsworth-house/index.html'),
   'ennis-house': r('./ennis-house/index.html'),
   'casa-malaparte': r('./casa-malaparte/index.html'),
+  'kaufmann-desert-house': r('./kaufmann-desert-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 
