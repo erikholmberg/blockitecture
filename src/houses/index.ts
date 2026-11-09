@@ -52,6 +52,43 @@ export const HOUSES: House[] = [
     status: 'coming-soon',
     blurb: 'Concrete terraces cantilevered over a waterfall on Bear Run.',
   },
+  // spec 016: the next houses, picked from a shortlist of 20
+  {
+    slug: 'rietveld-schroder-house',
+    title: 'Rietveld Schröder House',
+    architect: 'Gerrit Rietveld',
+    year: 1924,
+    location: 'Utrecht, Netherlands',
+    status: 'coming-soon',
+    blurb: 'De Stijl planes in red, blue, yellow, black and white, at the end of an ordinary row of houses.',
+  },
+  {
+    slug: 'farnsworth-house',
+    title: 'Farnsworth House',
+    architect: 'Ludwig Mies van der Rohe',
+    year: 1951,
+    location: 'Plano, Illinois',
+    status: 'coming-soon',
+    blurb: 'A white steel and glass box floating on stilts above the Fox River floodplain.',
+  },
+  {
+    slug: 'ennis-house',
+    title: 'Ennis House',
+    architect: 'Frank Lloyd Wright',
+    year: 1924,
+    location: 'Los Feliz, Los Angeles',
+    status: 'coming-soon',
+    blurb: 'Thousands of patterned concrete textile blocks on a ridge above Los Angeles.',
+  },
+  {
+    slug: 'casa-malaparte',
+    title: 'Casa Malaparte',
+    architect: 'Adalberto Libera / Curzio Malaparte',
+    year: 1938,
+    location: 'Capri, Italy',
+    status: 'coming-soon',
+    blurb: 'A red box on a cliff above the sea, with a wedge-shaped stair rising to the roof.',
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

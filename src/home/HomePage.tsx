@@ -18,7 +18,7 @@ export function HomePage({ houses }: { houses: House[] }) {
         </p>
       </header>
 
-      <main className="grid flex-1 grid-cols-1 content-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <main className="grid flex-1 grid-cols-1 content-start gap-6 sm:grid-cols-2">
         {houses.map((h) => (
           <HouseCard key={h.slug} house={h} />
         ))}

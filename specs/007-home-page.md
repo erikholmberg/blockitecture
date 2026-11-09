@@ -47,7 +47,7 @@ Per `CLAUDE.md` this is spec-driven: step 1 writes `specs/007-home-page.md` from
 Adding a house later = one registry entry + `<slug>/index.html` + `public/<slug>/` assets (documented in `CLAUDE.md`).
 
 ### 4. Home page (`src/home/main.tsx`, `HomePage.tsx`, `HouseCard.tsx`)
-- Header: "Blockitecture" wordmark and a one-line tagline. A responsive grid of shadcn `Card`s: 1 column on phones, 2 on tablets, 3 on desktop.
+- Header: "Blockitecture" wordmark and a one-line tagline. A responsive grid of shadcn `Card`s: 1 column on phones, 2 on tablets, 3 on desktop (2 on desktop too since spec 015).
 - **Live card:** the whole card is an `<a href="/stahl-house/">`. 16:9 thumbnail, title, subtitle, "architect · year", location, and a `Badge` with the piece count.
   Hover lift and a visible focus ring.
 - **Coming-soon card:** not a link (`aria-disabled`), dimmed, with a brick-pattern placeholder instead of a thumbnail and a "Coming soon" `Badge`.

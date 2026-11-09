@@ -12,6 +12,7 @@ pages and the viewer HUD are React + shadcn/ui + Tailwind v4 + Inter (spec 007).
 - `src/houses/<slug>/` — one house: `model/` (its bricks), `phases.ts`, `definition.ts` (texts, site, views, lights, roof cut,
   lot, data path…), `main.ts` (page entry). Page HTML at `<slug>/index.html`, listed in `PAGES` (`vite.config.ts`).
 - `public/<slug>/` — per-house static files (thumbnail, `neighborhood.bin`). `scripts/houses/<slug>.mjs` — its real-world data settings.
+- `dev/` + `src/dev/` — dev-only pages (e.g. `/dev/shortlist/`, photos of candidate houses). Not in `PAGES`, so never built or deployed.
 - `src/components/ui/` — shadcn components (ours to edit; add more with `npx shadcn@latest add <name>`).
 - Don't use `backdrop-blur` on anything over the 3D canvas: it re-blurs the scene every frame (−22% fps, spec 007).
 - House definitions can opt into `scenery` (sea, chaparral, flats, city band). Coastal terrain tiles can be corrupt:
