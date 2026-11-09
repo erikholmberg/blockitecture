@@ -130,8 +130,15 @@ export const HOUSES: House[] = [
     architect: 'Adalberto Libera / Curzio Malaparte',
     year: 1938,
     location: 'Capri, Italy',
-    status: 'coming-soon',
+    status: 'live',
+    pieces: 59_758,
+    thumbnail: '/casa-malaparte/thumbnail.jpg',
     blurb: 'A red box on a cliff above the sea, with a wedge-shaped stair rising to the roof.',
+    affiliations: ['the Fondazione Giorgio Ronchi'],
+    sources: [
+      'Its outline, the coastline and the neighbourhood: OpenStreetMap',
+      'Photographs on Wikimedia Commons by Eoghanacht (CC0), Jerzy Strzelecki and Wolfgang Moroder (CC BY-SA 3.0), FriedrichFrisch (CC BY-SA 4.0) and Ernest Delaville (CC BY 2.0)',
+    ],
   },
   // spec 020: an eighth card, so the grid ends on a full row
   {

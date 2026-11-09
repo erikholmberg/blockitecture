@@ -1,6 +1,7 @@
 # 031 — Casa Malaparte
 
-- **Status:** Approved (approved by Erik 2026-11-09: "build it", all recommendations)
+- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's acceptance of the
+  manual checks that couldn't be run here: walking itself and the phone controls, and the Faraglioni view, see below)
 - **Owner:** Erik
 - **House:** casa-malaparte
 - **Created:** 2026-11-09
@@ -26,8 +27,8 @@ home-page card goes from "Coming soon" to live.
 - **Dates:** built 1938–42 on Punta Massullo, on Capri's east coast, about 32 m above the sea.
 - **The house:**
   - A long rectangular volume of masonry rendered in **Pompeian red**, two storeys on the cliff side.
-  - Its roof is a flat terrace, reached by a **wedge-shaped stair** that widens as it descends from the roof to the land: the
-    famous "inverted pyramid".
+  - Its roof is a flat terrace, reached by a **wedge-shaped stair**, the famous "inverted pyramid". It is narrow at its foot on
+    the land and widens as it rises to the roof (corrected from OSM's outline: 2.8 m at the foot, 9 m at the top).
   - A low, curving **white wall** stands free on the roof terrace.
   - Large windows frame views of the sea, Capri's cliffs and the Faraglioni rocks.
   - The living room's fireplace has a glass back looking out to the sea.
@@ -79,7 +80,8 @@ About 3 minutes; the house is long but simple.
 **House**
 - **A2** [unit] The footprint matches OSM's way 752097981 (IoU ≥ 0.75), and the house's documented proportions hold. Its length,
   width and the stair's span are taken from the photographs and OSM and recorded in layout.ts; within ±2 ft of what's recorded there.
-- **A3** [unit] The stair is a wedge: each step is wider than the one above it, from the land to the roof terrace.
+- **A3** [unit] The stair is an inverted pyramid: each step is wider than the one below it, from its narrow foot on the land to
+  the roof terrace (corrected after OSM's outline).
 - **A4** [unit] The walls are Pompeian red, the roof wall white; no other paint colours on the house.
 - **A5** [unit] The model invariants hold: no overlaps, inside the grid, deterministic.
 - **A6** [unit] `tests/buildOrder.test.ts` covers the house: phases in role order, nothing floats, nothing dropped.
@@ -112,4 +114,43 @@ About 3 minutes; the house is long but simple.
 - [x] **Q4: Timing.** *Recommended: about 3 minutes*, like the Schröder and Farnsworth houses.
 
 ## Implementation notes
-Filled in after approval.
+- **Corrections to the research:**
+  - The stair: OSM's outline shows it **narrow at its foot and widening to the roof** (2.8 m → 9 m over 20 m). The Behavior and A3
+    were corrected to match before building.
+  - "No engine change" held for the viewer, but the data script gained one opt-in option: `coastline` (writes `LOT_COAST`, OSM's
+    `natural=coastline` ways). The other houses don't use it; A1 shows their models unchanged.
+- **Data** (`scripts/houses/casa-malaparte.mjs`):
+  - Fitted to OSM's "Casa Malaparte" (Wikidata Q2165447) at **−28°**, IoU 0.878.
+  - **The terrain tiles have no heights for Punta Massullo**: they read sea level over the headland at every zoom. So the lot is
+    shaped in `site.ts` from OSM's coastline: land on the left of each way, sheer limestone cliffs within 14 ft of the shore, the top
+    level with the lower floor (32 m above the sea, `lotElevationM`) and rising gently inland, the sea floor shelving away under the
+    water. One OSM "coastline" that traces the house's own outline is ignored.
+  - At the lot's edges on land the ground blends into the real terrain; at sea the floor stays under the water (A8 checks both).
+- **Model:** `src/houses/casa-malaparte/`, 59,758 pieces (about 50k of them the promontory's cliffs, built only down to just under
+  the waterline).
+  - The house: 34 × 9 m of Pompeian red walls, two storeys, with the great framed windows on the upper floor and small ones below.
+  - The stair: 21 steps, each a stud or more wider than the one below (9 → 30 ft), hollow inside (only the risers, sides and treads
+    show).
+  - The roof terrace in terracotta tiles, with the curving white wall.
+  - Inside: the living room with the fireplace and its glass back, Malaparte's long tables and benches [documented]; sofa, desk,
+    beds, kitchen and dining table [assumed].
+  - Outside: umbrella pines (thinned after the first look; it read as a forest) and scrub, kept back from the cliff edge.
+- **Tests:** `tests/malaparte.test.ts` covers A1–A9 plus the home card. A1 pins all six other models; the Ennis House's is
+  31,820 / `0b6ef15e`. The house is added to `tests/buildOrder.test.ts` and `tests/credits.test.tsx`, and the registry tests now list
+  7 live and 1 coming soon. 213 tests in all. Deviation from the flow: the tests were written after the model, not before.
+- **Manual checks** (Chrome, 2026-11-09):
+  - **A10 pass** (16×): the promontory, the footings and floors, the red walls rising, then the windows, then the roof, the stair
+    and the white wall, then the pines and scrub.
+  - **A11 pass:** *From the sea* shows the red box along the clifftop with the stair rising to its roof and the white wall. It's
+    the thumbnail. (The camera was moved to look at the long side; it first looked at the tip end-on.)
+  - **A12 pass:** the sea surrounds the promontory with no gaps; Capri's slopes rise beyond.
+  - **A13 partial:**
+    - All views and No roof work; at dusk the windows glow over the dark sea.
+    - Walk now starts at the foot of the stair, facing up it. It first started inside the ground (the land rose above the walker's
+      reach); the land now rises only from 10 ft back of the stair. A gap under the first step's riser was fixed.
+    - **The Faraglioni view** points at them, but the rocks don't show: like the headland, the terrain tiles give them no height,
+      and they lie outside the lot. It shows the house with Capri's slopes and the sea. Raising them would need a scenery change.
+    - **Not checked:** walking itself, and the phone controls.
+  - **A14 pass:** 60 fps at `?dpr=1.75` (3.4M triangles).
+  - **A15 pass:** the home card is live with its thumbnail and 59,758 pieces, and the credits page has its section.
+- **Thumbnail:** `/casa-malaparte/?view=sea&clean&date=2026-06-21`, cropped to 1200 × 675.

@@ -347,6 +347,22 @@ ${lines.join('\n')}
 export const LOT_WATERFALLS: [number, number][] = [${falls.join(', ')}];
 `;
   }
+  if (H.coastline) {
+    // spec 031: OSM's coastline near the lot (natural=coastline: land on the left of each way), in model ft, for headlands the
+    // terrain tiles mistake for sea
+    const cl = await overpass(
+      `${SLUG}-coastline-${H.coastline.radiusM}.json`,
+      `[out:json][timeout:120];way["natural"="coastline"](around:${H.coastline.radiusM},${LAT0},${LON0});out geom;`,
+    );
+    const r1 = (v) => Math.round(v * 10) / 10;
+    const lines = cl.filter((e) => e.geometry).map((e) => `  [${e.geometry.map((g) => `[${toModel(g.lat, g.lon).map(r1).join(', ')}]`).join(', ')}],`);
+    extra += `
+// OSM's coastline near the house (natural=coastline; land on the left of each line), in model ft. © OpenStreetMap contributors (ODbL). Spec 031.
+export const LOT_COAST: [number, number][][] = [
+${lines.join('\n')}
+];
+`;
+  }
   if (H.exportSelf) {
     // spec 025: the house's own OSM outline(s) in model ft, so the model can follow them exactly
     const r1 = (v) => Math.round(v * 10) / 10;
