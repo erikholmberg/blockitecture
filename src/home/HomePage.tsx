@@ -10,10 +10,10 @@ export function HomePage({ houses }: { houses: House[] }) {
           Blockitecture
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-          Famous houses, built brick by brick
+          Famous houses, built block by block
         </h1>
         <p className="mt-3 text-base text-muted-foreground text-pretty">
-          Landmark modernist houses rebuilt from toy bricks in your browser. Watch each one go up piece by piece
+          Landmark modernist houses rebuilt from toy blocks in your browser. Watch each one go up piece by piece
           on its real site, then orbit around it or walk inside.
         </p>
       </header>
@@ -27,7 +27,7 @@ export function HomePage({ houses }: { houses: House[] }) {
       <footer className="mt-14 text-xs text-muted-foreground">
         <Separator className="mb-5" />
         <p>
-          Fan tributes in a generic toy-brick style, not affiliated with the LEGO Group, or with the Eames Office, the Eames
+          Fan tributes in a generic toy-block style, not affiliated with the LEGO Group, or with the Eames Office, the Eames
           Foundation, Herman Miller or Vitra. Neighborhoods ©{' '}
           <a className="underline underline-offset-2 hover:text-foreground" href="https://www.openstreetmap.org/copyright">
             OpenStreetMap contributors

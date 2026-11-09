@@ -16,7 +16,7 @@ export const STAHL: HouseDefinition = {
     name: 'Stahl House',
     address: '1635 Woods Drive, Los Angeles',
     eyebrow: 'Case Study House #22 · Pierre Koenig · 1959–60',
-    headline: ['The Stahl House,', 'brick by brick'],
+    headline: ['The Stahl House,', 'block by block'],
     intro: [
       'Steel, glass and a view over the whole of Los Angeles. Watch all',
       'pieces snap into place on the Hollywood Hills. Fly around it, or walk in and look around while it goes up.',

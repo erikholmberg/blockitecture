@@ -32,7 +32,7 @@ export function HouseCard({ house }: { house: House }) {
       {live && house.thumbnail ? (
         <img
           src={house.thumbnail}
-          alt={`${house.title}, built from toy bricks`}
+          alt={`${house.title}, built from toy blocks`}
           width={1200}
           height={675}
           loading="lazy"

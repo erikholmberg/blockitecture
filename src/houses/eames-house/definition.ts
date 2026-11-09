@@ -16,14 +16,14 @@ export const EAMES: HouseDefinition = {
     name: 'Eames House',
     address: '203 Chautauqua Blvd, Pacific Palisades',
     eyebrow: 'Case Study House #8 · Charles & Ray Eames · 1949',
-    headline: ['The Eames House,', 'brick by brick'],
+    headline: ['The Eames House,', 'block by block'],
     intro: [
       'Off-the-shelf steel, colored panels and a meadow of eucalyptus high above the Pacific. Watch all',
       'pieces snap into place, from the retaining wall to the last cushion. Fly around it, or walk in while it goes up.',
     ],
     complete: 'Complete. Welcome to Case Study House #8',
     disclaimer:
-      'Fan tribute in a generic toy-brick style. Not affiliated with the Eames Office, the Eames Foundation, Herman Miller, Vitra or the LEGO Group.',
+      'Fan tribute in a generic toy-block style. Not affiliated with the Eames Office, the Eames Foundation, Herman Miller, Vitra or the LEGO Group.',
   },
   site: SITE,
   phases: PHASES,

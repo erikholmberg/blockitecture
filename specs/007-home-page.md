@@ -110,6 +110,7 @@ Adding a house later = one registry entry + `<slug>/index.html` + `public/<slug>
   The Light toggle is now controlled from `main.ts`, so `?light=dusk` shows correctly.
 - **URL params:** `?view=<overview|famous|pool|basin>`, `&light=dusk`, `&clean` (finished build, no HUD).
   The thumbnail is `/stahl-house/?view=famous&light=dusk&clean`, cropped to 16:9 at 1200 × 675 (134 KB).
+  *Later:* recaptured in daylight to match the Eames card, as `/stahl-house/?view=pool&clean&date=2026-06-21` (154 KB).
 - **Bugs found and fixed during verification:**
   - *shadcn `Slider` had no accessible name.* Radix puts `role="slider"` on the thumb, but `aria-label` went to the root.
     `src/components/ui/slider.tsx` now passes it to the thumb (caught by A3).

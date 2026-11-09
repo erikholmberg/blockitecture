@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-08: all recommendations except Q3, amended to the actual Eames furniture; built after spec 009)
 - **Owner:** Erik
 - **Created:** 2026-11-08
-- **Commits:** 491d035
+- **Commits:** 901b188 (010a), 491d035 (010b)
 
 ## Goal
 The second rendering: Charles and Ray Eames's house and studio (Case Study House #8, 1949) at 203 North Chautauqua Boulevard,
