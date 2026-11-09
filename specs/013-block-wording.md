@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09: "should we change reference of brick to block to match the blockitecture name" → "yes")
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** fd20e14
 
 ## Goal
 Visitor-facing wording matches the name: "block by block", "toy blocks", "Sorting blocks…". This also keeps a little more distance from
