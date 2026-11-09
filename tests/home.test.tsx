@@ -31,8 +31,8 @@ describe('007: home page', () => {
     }
   });
 
-  it('A2: credits are on the page', () => {
+  it('A2: credits are on the page (spec 021: the disclaimers moved to /credits/, linked from the footer)', () => {
     expect(doc.body.textContent).toContain('OpenStreetMap contributors');
-    expect(doc.body.textContent).toContain('not affiliated with the LEGO Group');
+    expect(doc.querySelector('footer a[href="/credits/"]')).not.toBeNull();
   });
 });

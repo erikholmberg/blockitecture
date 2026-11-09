@@ -16,6 +16,10 @@ export interface House {
   /** 16:9 image under public/ (live houses) */
   thumbnail?: string;
   blurb: string;
+  /** spec 021: organisations this tribute isn't affiliated with, as named on the house's intro card (live houses) */
+  affiliations?: string[];
+  /** spec 021: what the model was built from, for the credits page (live houses) */
+  sources?: string[];
 }
 
 export const HOUSES: House[] = [
@@ -30,6 +34,10 @@ export const HOUSES: House[] = [
     pieces: 27_233,
     thumbnail: '/stahl-house/thumbnail.jpg',
     blurb: 'Steel, glass and a view over the whole of Los Angeles, on the real hillside above the Sunset Strip.',
+    sources: [
+      'Published photographs and descriptions of the house',
+      'Its outline and neighbourhood: OpenStreetMap',
+    ],
   },
   {
     slug: 'eames-house',
@@ -42,6 +50,11 @@ export const HOUSES: House[] = [
     pieces: 21_657,
     thumbnail: '/eames-house/thumbnail.jpg',
     blurb: 'Off-the-shelf steel and colored panels in a eucalyptus meadow above the Pacific.',
+    affiliations: ['the Eames Office', 'the Eames Foundation', 'Herman Miller', 'Vitra'],
+    sources: [
+      'Published dimensions, descriptions and photographs of the house and its furniture',
+      'Its outline and neighbourhood: OpenStreetMap',
+    ],
   },
   {
     slug: 'fallingwater',
@@ -53,6 +66,12 @@ export const HOUSES: House[] = [
     pieces: 58_425,
     thumbnail: '/fallingwater/thumbnail.jpg',
     blurb: 'Ochre concrete terraces cantilevered over the falls of Bear Run, in a ravine of rhododendron and hemlock.',
+    affiliations: ['the Western Pennsylvania Conservancy', 'the Frank Lloyd Wright Foundation'],
+    sources: [
+      'Measured drawings: Historic American Buildings Survey, HABS PA-5346 (2010), Library of Congress',
+      'The National Historic Landmark nomination (National Park Service)',
+      'Its outline, Bear Run and the neighbourhood: OpenStreetMap',
+    ],
   },
   // spec 016: the next houses, picked from a shortlist of 20
   {
@@ -65,6 +84,12 @@ export const HOUSES: House[] = [
     pieces: 10_668,
     thumbnail: '/rietveld-schroder-house/thumbnail.jpg',
     blurb: 'De Stijl planes in red, blue, yellow, black and white, at the end of an ordinary row of houses.',
+    affiliations: ['the Centraal Museum', 'the Rietveld Schröderhuis', 'Cassina'],
+    sources: [
+      'Photographs by Sailko, Wikimedia Commons, CC BY 3.0',
+      'Photographs by A. J. van der Wal (Rijksdienst voor het Cultureel Erfgoed), Wikimedia Commons, CC BY-SA 4.0',
+      'Its outline, the row of houses and the streets: OpenStreetMap',
+    ],
   },
   {
     slug: 'farnsworth-house',

@@ -27,8 +27,11 @@ export function HomePage({ houses }: { houses: House[] }) {
       <footer className="mt-14 text-xs text-muted-foreground">
         <Separator className="mb-5" />
         <p>
-          Fan tributes in a generic toy-block style, not affiliated with the LEGO Group, or with the Eames Office, the Eames
-          Foundation, Herman Miller or Vitra. Neighborhoods ©{' '}
+          Fan tributes in a generic toy-block style.{' '}
+          <a className="underline underline-offset-2 hover:text-foreground" href="/credits/">
+            Credits &amp; disclaimers
+          </a>{' '}
+          · Neighborhoods ©{' '}
           <a className="underline underline-offset-2 hover:text-foreground" href="https://www.openstreetmap.org/copyright">
             OpenStreetMap contributors
           </a>
