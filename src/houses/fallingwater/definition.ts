@@ -39,7 +39,7 @@ export const FALLINGWATER: HouseDefinition = {
     guest: { label: 'Guest wing & walkway', view: { pos: v3(95, 60, 10), target: v3(40, 30, -45) } },
   },
   // on the bridge over Bear Run, facing the house
-  walkStart: [120, 60, Math.PI],
+  walkStart: [120, 60, Math.PI / 2],
   lights: { interior: [[45, 5, 45], [40, 14, 36], [38, 22, 22], [70, 32, -60]] },
   // "No roof": the main roof and the canopy, then the third and second floors' trays, so all three levels open up
   roofCut: {

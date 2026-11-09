@@ -213,6 +213,8 @@ About 4 minutes in all, timed like the other two houses.
     - Phone controls weren't checked: there's no touch device here.
   - **A18 pass:** 60 fps at `?dpr=1.75` (4.5M triangles), as the Stahl House.
   - **A19 pass:** the home card is live, with the thumbnail and 58,425 pieces.
+- **Fix (2026-11-09, found while building spec 019):** Walk started on the bridge looking along the deck, not at the house as
+  intended. The heading was π, which faces +z in this engine; it's now π/2.
 - **Thumbnail:** `/fallingwater/?view=classic&clean&date=2026-06-21`, cropped to 1200 × 675.
 - **Claude usage** (spec 018, through 0b32450): 116 replies; 181.6k output, 623.2k cache-write and 26.3M cache-read tokens; 10.2% of all
   tokens so far. The Eames House took 188.8k output tokens.
