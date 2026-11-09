@@ -1,6 +1,7 @@
 # 035 — Casa Luis Barragán
 
-- **Status:** Approved (approved by Erik 2026-11-09: "build it", all recommendations)
+- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's acceptance of the
+  manual checks that couldn't be run here: walking itself and the phone controls)
 - **Owner:** Erik
 - **House:** casa-luis-barragan
 - **Created:** 2026-11-09
@@ -124,4 +125,59 @@ About 3 minutes.
 - [x] **Q5: Timing.** *Recommended: about 3 minutes*.
 
 ## Implementation notes
-Filled in after approval.
+- **The nomination's plans, read** (WHC 1136, rendered at 300 dpi; its 1:200 scale bar measures 56.75 px/m):
+  - **The ground floor** (p. 63): the rooms 1–14 as numbered.
+  - **The first floor** (p. 65): nothing is drawn over the living room, the library and the studio, so those three are **double
+    height**.
+  - **The roof** (p. 67): the service rooms, the service terrace, the walled terrace and the roof terraces.
+  - **The cross section** (p. 71): the first floor about 2.9 m up, the roof about 6.0 m, and a tall block over the stair about
+    14 m.
+- **Data:**
+  - Fitted to OSM's "Casa Luis Barragán" (Q1046414). Both 82.5° and −97.5° fit equally well (IoU 0.915; it's close to a
+    rectangle). **82.5°** puts the plan's street side on General Francisco Ramírez to the east, as the nomination's cadastral plan
+    shows; the other would have put the street behind the garden.
+  - A search over all angles was far too slow at 1° steps, so it's narrowed to 78–88°.
+  - y = 0 is the ground floor, level with the street: `lotElevationM` 2,279.6 m, 1.7 m under the terrain's reading at the house's
+    centre.
+  - The street isn't among the lot's OSM roads, so it's laid in the site from OSM's centreline (z ≈ 160): sidewalks and asphalt.
+- **The site:**
+  - Levelled under the house, the garden's paved terrace and patio, and the street.
+  - The garden climbs with the real slope, about 15 ft up to the west. It was levelled at first, which left a stepped bowl.
+  - Its high walls follow the ground up.
+  - `flatsBelow: 2000` makes the valley's flat ground read as city.
+- **Model:** `src/houses/casa-luis-barragan/`, 24,482 pieces.
+  - **Walls:** rough plaster, grey to the street and pale inside. The rooms each have their own walls, with doorways.
+  - **Floors:** volcanic stone downstairs, pine upstairs.
+  - **Windows:** the great window onto the garden with its cross of mullions, the studio's window, the street window of square
+    panes, and the yellow garage and street doors.
+  - **Roof:** timber beams hung under the roof in the tall rooms; the service rooms and the grey tower.
+  - **The walled terrace** (A3): orange toward the garden (the tallest), pink, white, and grey to the street, all over 6 ft, and
+    open to the sky.
+  - **The library's stair** (A4): eight timber treads, each fixed only to the library's west wall with nothing under it, climbing
+    to a door into the room above the alcove. That wall has no other doorways; a random doorway first left two treads hanging in
+    mid-air.
+  - **Outside:** tall trees in the garden, the patio's clay pots, the reflecting pool, trees along the street, and the
+    neighbouring archive as a plain block.
+- **Tests:**
+  - `tests/barragan.test.ts` covers A1–A9 plus the home card. A1 pins all nine other models; the Lovell House's is
+    23,428 / `9515e85a`.
+  - The house is added to `tests/buildOrder.test.ts`, `tests/credits.test.tsx` and `tests/cameraGround.test.ts`.
+  - 252 tests in all.
+  - Deviation from the flow: the tests were written after the model, not before.
+- **Manual checks** (Chrome, 2026-11-09):
+  - **A10 pass** (16×): the ground and the floors, the walls and first floor rising room by room, then the furniture, then the roof
+    with the coloured walls, then the garden.
+  - **A11 pass:** *The roof terrace* shows the white, orange and pink walls against the sky, with the garden's trees beyond. It's
+    the thumbnail.
+  - **A12 pass:** flat ground reads as built-up city in every direction, with the neighbours from OSM.
+  - **A13 partial:**
+    - All views work.
+    - The garden view first landed in the undergrowth on the climbing slope; it now stands on the paved terrace facing the great
+      window.
+    - Walk starts there too, facing the window. It first started inside the slope.
+    - At dusk the windows glow and the terrace's walls catch the last light.
+    - **Not checked:** walking itself, and the phone controls.
+  - **A14 pass:** 60 fps at `?dpr=1.75` (2.0M triangles).
+  - **A15 pass:** the home page shows the tenth card live with its thumbnail, and the credits page has its section with the Barragan
+    Foundation in the disclaimer (Q3).
+- **Thumbnail:** `/casa-luis-barragan/?view=terrace&clean&date=2026-06-21`, cropped to 1200 × 675.

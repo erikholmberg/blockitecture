@@ -17,6 +17,7 @@ export const PAGES = {
   'casa-malaparte': r('./casa-malaparte/index.html'),
   'kaufmann-desert-house': r('./kaufmann-desert-house/index.html'),
   'lovell-health-house': r('./lovell-health-house/index.html'),
+  'casa-luis-barragan': r('./casa-luis-barragan/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

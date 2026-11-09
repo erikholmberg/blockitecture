@@ -175,6 +175,23 @@ export const HOUSES: House[] = [
       'Published photographs of the house',
     ],
   },
+  {
+    slug: 'casa-luis-barragan',
+    title: 'Casa Luis Barragán',
+    architect: 'Luis Barragán',
+    year: 1948,
+    location: 'Tacubaya, Mexico City',
+    status: 'live',
+    pieces: 24_482,
+    thumbnail: '/casa-luis-barragan/thumbnail.jpg',
+    blurb: 'A plain grey wall to the street; inside, tall quiet rooms, a wild garden and a roof terrace walled in pink and orange.',
+    affiliations: ['the Casa Luis Barragán', 'the Fundación de Arquitectura Tapatía Luis Barragán', 'the Barragan Foundation'],
+    sources: [
+      'Plans, sections and facades at 1:200: the UNESCO World Heritage nomination, "Casa Estudio Luis Barragán" (WHC 1136, 2003)',
+      'Its outline, its street and the neighbourhood: OpenStreetMap',
+      'Published photographs of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
