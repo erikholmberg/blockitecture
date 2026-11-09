@@ -1,7 +1,7 @@
 # 017 — Fallingwater
 
-- **Status:** In progress (approved by Erik 2026-11-09: all recommendations; the water arrives at the end). Built; two manual
-  checks fall short and two criteria were amended after the HABS drawings (see Implementation notes)
+- **Status:** Done (approved by Erik 2026-11-09: all recommendations; the water arrives at the end. Closed by Erik 2026-11-09,
+  accepting the deviations and the two partial manual checks below)
 - **Owner:** Erik
 - **House:** fallingwater
 - **Created:** 2026-11-09
@@ -184,6 +184,8 @@ About 4 minutes in all, timed like the other two houses.
   - Fallingwater is added to `tests/buildOrder.test.ts`'s `DEFINITIONS` (A5).
   - The 007/016 registry tests now list Fallingwater as live, which changes spec 016's A1 list.
   - 135 tests in all.
+- **Accepted by Erik (2026-11-09):** the amended A3 and A10, and the A15/A17 shortfalls (dusk reflections on the water, No roof
+  on the guest wing), left as known limitations.
 - **Deviations:**
   - **A3, indoor area:**
     - The model has 3,642 ft² indoors against the NHL's 2,885. The rooms HABS labels already add up to more than 2,885 (the
