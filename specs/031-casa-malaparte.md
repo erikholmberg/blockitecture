@@ -1,6 +1,6 @@
 # 031 — Casa Malaparte
 
-- **Status:** Draft
+- **Status:** Approved (approved by Erik 2026-11-09: "build it", all recommendations)
 - **Owner:** Erik
 - **House:** casa-malaparte
 - **Created:** 2026-11-09
@@ -102,14 +102,14 @@ About 3 minutes; the house is long but simple.
 - Boats, and the path down to the sea.
 
 ## Open questions
-- [ ] **Q1: Sources.** *Recommended: OSM's footprint plus Commons photographs*, marking assumed dimensions as [assumed], as for the
+- [x] **Q1: Sources.** *Recommended: OSM's footprint plus Commons photographs*, marking assumed dimensions as [assumed], as for the
       Schröder House. If you have Talamona's book or another source with plans, I'd use it.
-- [ ] **Q2: Level of detail.** *Recommended: like the other houses.* That means the full exterior: the red box, the wedge stair, the
+- [x] **Q2: Level of detail.** *Recommended: like the other houses.* That means the full exterior: the red box, the wedge stair, the
       roof terrace and the white wall. Inside: the great living room with its framed windows and the fireplace with its glass back,
       plus the furniture photographs show (Malaparte's own pieces: the tables, the sofas). Each piece is marked documented or assumed.
-- [ ] **Q3: Disclaimer.** *Recommended:* "Fan tribute in a generic toy-block style. Not affiliated with the Fondazione Giorgio Ronchi
+- [x] **Q3: Disclaimer.** *Recommended:* "Fan tribute in a generic toy-block style. Not affiliated with the Fondazione Giorgio Ronchi
       or the LEGO Group." The credits page picks it up.
-- [ ] **Q4: Timing.** *Recommended: about 3 minutes*, like the Schröder and Farnsworth houses.
+- [x] **Q4: Timing.** *Recommended: about 3 minutes*, like the Schröder and Farnsworth houses.
 
 ## Implementation notes
 Filled in after approval.
