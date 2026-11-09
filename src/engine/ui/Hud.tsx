@@ -76,10 +76,10 @@ function Seg<T extends string>({ value, onChange, items, label, size = 'default'
       value={value}
       onValueChange={(v) => v && onChange(v as T)}
       aria-label={label}
-      className={cn('rounded-md p-0.5', paper)}
+      className={cn('rounded-lg p-0.5', paper)}
     >
       {items.map(([v, text]) => (
-        <ToggleGroupItem key={v} value={v} className={cn('px-3', toggleOn)}>
+        <ToggleGroupItem key={v} value={v} className={cn('rounded-[calc(var(--radius)-2px)]! px-3', toggleOn)}>
           {text}
         </ToggleGroupItem>
       ))}
@@ -99,7 +99,7 @@ function CamButton({ label, keyHint, onClick, pressed, children }: {
           aria-label={label}
           aria-pressed={pressed}
           onClick={onClick}
-          className={cn('size-10', paper, pressed && 'bg-foreground text-background hover:bg-foreground/90 hover:text-background')}
+          className={cn('size-9 rounded-lg', paper, pressed && 'bg-foreground text-background hover:bg-foreground/90 hover:text-background')}
         >
           {children}
         </Button>
@@ -113,7 +113,7 @@ function ViewsMenu({ house, h }: { house: HudHouse; h: HudHandlers }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="Views" className={cn('size-10', paper)}>
+        <Button variant="outline" size="icon" aria-label="Views" className={cn('size-9 rounded-lg', paper)}>
           <Eye />
         </Button>
       </DropdownMenuTrigger>
@@ -229,7 +229,7 @@ export function Hud({ store, h, house, compact: compactProp }: {
                 {s.mode === 'orbit' && <ViewsMenu house={house} h={h} />}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" aria-label="Settings" className={cn('size-10', paper)}>
+                    <Button variant="outline" size="icon" aria-label="Settings" className={cn('size-10 rounded-lg', paper)}>
                       <SlidersHorizontal />
                     </Button>
                   </DropdownMenuTrigger>
@@ -301,9 +301,9 @@ export function Hud({ store, h, house, compact: compactProp }: {
                 <div className="hidden text-[11px] text-muted-foreground sm:block">{text.address}</div>
               </div>
               <div className="pointer-events-auto flex flex-wrap justify-end gap-2">
-                <Seg label="Camera mode" value={s.mode} onChange={(m) => h.onMode(m)} items={[['orbit', 'Orbit'], ['walk', 'Walk']]} />
-                <Seg label="Roof" value={roof} onChange={onRoof} items={[['on', 'Roof'], ['off', 'No roof']]} />
-                <Seg label="Light" value={s.light} onChange={(v) => h.onLight(v)} items={[['day', 'Day'], ['dusk', 'Dusk']]} />
+                <Seg size="sm" label="Camera mode" value={s.mode} onChange={(m) => h.onMode(m)} items={[['orbit', 'Orbit'], ['walk', 'Walk']]} />
+                <Seg size="sm" label="Roof" value={roof} onChange={onRoof} items={[['on', 'Roof'], ['off', 'No roof']]} />
+                <Seg size="sm" label="Light" value={s.light} onChange={(v) => h.onLight(v)} items={[['day', 'Day'], ['dusk', 'Dusk']]} />
               </div>
             </div>
 
