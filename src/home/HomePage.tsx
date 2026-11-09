@@ -28,7 +28,11 @@ export function HomePage({ houses }: { houses: House[] }) {
         <footer className="mt-14 text-xs text-muted-foreground">
           <Separator className="mb-5" />
           <p>
-            Fan tributes in a generic toy-block style.{' '}
+            Built by{' '}
+            <a className="underline underline-offset-2 hover:text-foreground" href="https://erikholmberg.com">
+              Erik Holmberg
+            </a>
+            .{' '}
             <a className="underline underline-offset-2 hover:text-foreground" href="/credits/">
               Credits &amp; disclaimers
             </a>{' '}
