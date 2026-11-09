@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09, after the preview: the design, and dropping "block by block" from the card)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** b43c976
 
 ## Goal
 The intro card every house page opens with feels tighter and more designed. The title is smaller, and the controls note reads as a
