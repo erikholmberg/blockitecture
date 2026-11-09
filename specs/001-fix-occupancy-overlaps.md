@@ -2,6 +2,7 @@
 
 - **Status:** Done (A5 manual check pending)
 - **Owner:** Erik
+- **House:** stahl-house
 - **Created:** 2026-11-08
 - **Commits:** 404a3f6
 

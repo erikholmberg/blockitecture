@@ -3,6 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-08: "make sure the stahl house is positioned the right way compass wise, for sunrise and
   sunset in the accurate place"; sun follows the visitor's today; keep Day / Dusk, no Dawn)
 - **Owner:** Erik
+- **House:** stahl-house
 - **Created:** 2026-11-08
 - **Commits:** cb55516
 

@@ -2,6 +2,7 @@
 
 - **Status:** Done (approved by Erik 2026-11-08: Q1 wave, Q2 16 s, Q3 keep name)
 - **Owner:** Erik
+- **House:** stahl-house
 - **Created:** 2026-11-08
 - **Commits:** 309af6f
 

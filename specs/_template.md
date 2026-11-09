@@ -2,6 +2,7 @@
 
 - **Status:** Draft | Approved | In progress | Done | Superseded by NNN
 - **Owner:** Erik
+- **House:** <slug, or delete this line for shared work (engine, home page, process); spec 018>
 - **Created:** YYYY-MM-DD
 - **Commits:** <!-- filled in when Done -->
 

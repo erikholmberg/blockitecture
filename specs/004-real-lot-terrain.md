@@ -2,6 +2,7 @@
 
 - **Status:** Done (approved by Erik 2026-11-08: all recommendations)
 - **Owner:** Erik
+- **House:** stahl-house
 - **Created:** 2026-11-08
 - **Commits:** 0222851
 

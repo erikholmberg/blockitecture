@@ -3,6 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-08: "there is a lot of flickering as you rotate around the house"; a bug report,
   fully specified by its symptom)
 - **Owner:** Erik
+- **House:** eames-house
 - **Created:** 2026-11-08
 - **Commits:** 491d035
 

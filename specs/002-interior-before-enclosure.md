@@ -2,6 +2,7 @@
 
 - **Status:** Done (approved by Erik 2026-11-08: Q1 yes, Q2 after, Q3 yes)
 - **Owner:** Erik
+- **House:** stahl-house
 - **Created:** 2026-11-08
 - **Commits:** c1448e5
 

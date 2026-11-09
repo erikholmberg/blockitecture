@@ -2,6 +2,7 @@
 
 - **Status:** Done (approved by Erik 2026-11-08: all recommendations except Q3, amended to the actual Eames furniture; built after spec 009)
 - **Owner:** Erik
+- **House:** eames-house
 - **Created:** 2026-11-08
 - **Commits:** 901b188 (010a), 491d035 (010b)
 

@@ -42,6 +42,9 @@ Every change that alters behavior goes through a spec in `specs/`. The flow:
 3. **Implement** until `npm run check` passes. Walk through the `[manual]` criteria in `npm run dev`
    and report each one as passed or failed. Never claim one passed if you didn't check it.
 4. **Close out.** Fill in Implementation notes, set Status to `Done`, add the commit hashes.
+   Run `npm run usage -- --record` after committing and commit `usage/ledger.json` with the "Record commit" commit; for a house spec,
+   put its `npm run usage` totals in Implementation notes (spec 018). Each spec names its house in a `House:` line, and a commit
+   covers one house at most, so usage per house stays exact.
    If the change alters baseline behavior, update `specs/000-baseline.md` (or the relevant spec) as well.
 
 Changing behavior that a spec covers means changing the spec first. If code and spec
@@ -58,6 +61,7 @@ npm run test:watch
 npm run check        # tsc (src + tests) + tests: must pass before every commit
 node scripts/fetch-neighborhood.mjs <slug>   # regenerate public/<slug>/neighborhood.bin and the house's model/lotTerrain.ts (OSM + terrain; cached in scripts/.cache)
 npm run build        # tsc + vite build → dist/
+npm run usage        # Claude tokens per house from this machine's transcripts + usage/ledger.json (--by-spec, --record; spec 018)
 ```
 
 ## Testability notes
