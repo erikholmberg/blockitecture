@@ -3,7 +3,7 @@
 - **Status:** Done (approved by Erik 2026-11-09: B, after the preview)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** dc3bd42
 
 ## Goal
 The home page and the credits page get a slightly warm off-white background, with the cards staying pure white, so the cards lift
