@@ -9,6 +9,7 @@ const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 export const PAGES = {
   home: r('./index.html'),
   'stahl-house': r('./stahl-house/index.html'),
+  'eames-house': r('./eames-house/index.html'),
 };
 
 /** /stahl-house → /stahl-house/ in dev and preview, like vercel.json's trailingSlash in production. */

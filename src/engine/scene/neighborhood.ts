@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { groundHeight, inGrid, lotDistance, Neighborhood, parseNeighborhood, sampleGrid } from '@/engine/scene/neighborhoodData';
+import { groundHeight, inGrid, isWater, lotDistance, Neighborhood, parseNeighborhood, sampleGrid, seaMeshHeight, waterMask } from '@/engine/scene/neighborhoodData';
 import { hash2, noise2 } from '@/engine/voxel';
-import type { Lot } from '@/engine/house';
+import type { Lot, Scenery } from '@/engine/house';
 
 /**
  * Spec 003: the real Hollywood Hills around the house: terrain, roads and buildings from
@@ -13,8 +13,16 @@ export class NeighborhoodScene {
   private glow: THREE.PointsMaterial;
   private mats: THREE.MeshStandardMaterial[] = [];
 
-  constructor(private n: Neighborhood, private lot: Lot) {
+  private seaY: number | null;
+  private flatsBelow: number;
+  private chaparral: boolean;
+
+  constructor(private n: Neighborhood, private lot: Lot, scenery: Scenery = {}) {
+    this.seaY = scenery.sea ? -n.anchor.lotElevationM / 0.3048 : null;
+    this.flatsBelow = scenery.flatsBelow ?? -330;
+    this.chaparral = scenery.chaparral ?? false;
     const ground = (x: number, z: number) => groundHeight(n, lot, x, z);
+    if (this.seaY !== null) this.group.add(this.sea(this.seaY));
     this.group.add(this.terrain(ground));
     this.group.add(this.farTerrain());
     this.group.add(this.roads(ground));
@@ -40,12 +48,25 @@ export class NeighborhoodScene {
   // ---------- terrain ----------
   private terrainColor(x: number, z: number, y: number, slope: number, c: THREE.Color) {
     const nz = noise2(x * 0.012, z * 0.012), r = hash2(Math.floor(x / 40), Math.floor(z / 40));
-    if (y < -330 && slope < 0.12) return c.setHex(nz < 0.5 ? 0x9a948a : 0xa39d90); // the flats: built-up
+    if (this.seaY !== null && y < this.seaY + 6) return c.setHex(y < this.seaY ? 0xbfae86 : 0xd8c9a0); // beach and sea floor
+    if (y < this.flatsBelow && slope < 0.12) return c.setHex(nz < 0.5 ? 0x9a948a : 0xa39d90); // the flats: built-up
+    if (this.chaparral && slope > 0.9 && slope < 2.2) return c.setHex(nz < 0.5 ? 0x4f6b44 : r < 0.5 ? 0x6b7550 : 0x5c6f4a); // chaparral
     if (slope > 0.9) return c.setHex(r < 0.5 ? 0x8b8378 : 0x958a73); // cut rock / bare slope
     // chaparral and dry grass, like the brick hillside palette
     if (nz < 0.35) return c.setHex(0x5f7a4e);
     if (nz < 0.55) return c.setHex(r < 0.3 ? 0x8d8b4f : 0x6f8a5a);
     return c.setHex(r < 0.4 ? 0xb3a274 : 0x8fae9a);
+  }
+
+  /** the sea: one flat sheet at true sea level under everything (vertex-coloured, so dusk can tint it) */
+  private sea(y: number) {
+    const f = this.n.far, half = ((f.nx - 1) * f.step) / 2 + 20000;
+    const g = new THREE.PlaneGeometry(half * 2, half * 2, 1, 1).rotateX(-Math.PI / 2);
+    g.translate(f.x0 + ((f.nx - 1) * f.step) / 2, y, f.z0 + ((f.nz - 1) * f.step) / 2);
+    const c = new THREE.Color(0x2e6b86);
+    g.setAttribute('color', new THREE.Float32BufferAttribute(Array.from({ length: 4 }, () => [c.r, c.g, c.b]).flat(), 3));
+    // pushed slightly back in depth, so terrain just above the waterline always wins against it (spec 011)
+    return new THREE.Mesh(g, this.material({ roughness: 0.18, metalness: 0.15, polygonOffset: true, polygonOffsetFactor: 4, polygonOffsetUnits: 4 }));
   }
 
   private gridMesh(
@@ -88,7 +109,10 @@ export class NeighborhoodScene {
   private terrain(ground: (x: number, z: number) => number) {
     const g = this.n.near;
     // no hole under the brick lot: there the ground sits just below the bricks' lowest course
-    const geo = this.gridMesh(g.x0, g.z0, g.step, g.nx, g.nz, ground, () => false);
+    // under the sea, rendered terrain drops well below it so the two never z-fight (spec 011)
+    const water = this.seaY !== null ? waterMask(g, this.seaY) : null;
+    const h = (x: number, z: number) => seaMeshHeight(ground(x, z), this.seaY, !!water && isWater(g, water, x, z));
+    const geo = this.gridMesh(g.x0, g.z0, g.step, g.nx, g.nz, h, () => false);
     const m = new THREE.Mesh(geo, this.material());
     m.receiveShadow = true;
     return m;
@@ -96,7 +120,9 @@ export class NeighborhoodScene {
 
   private farTerrain() {
     const f = this.n.far, near = this.n.near;
-    const h = (x: number, z: number) => sampleGrid(f, x, z) - 4; // sits just under the near terrain where they overlap
+    const water = this.seaY !== null ? waterMask(f, this.seaY) : null;
+    // just under the near terrain where they overlap; under the sea, well below it (spec 011)
+    const h = (x: number, z: number) => seaMeshHeight(sampleGrid(f, x, z) - 4, this.seaY, !!water && isWater(f, water, x, z));
     const inside = (x: number, z: number) =>
       inGrid(near, x - f.step, z - f.step) && inGrid(near, x + f.step, z + f.step);
     return new THREE.Mesh(this.gridMesh(f.x0, f.z0, f.step, f.nx, f.nz, h, inside), this.material());

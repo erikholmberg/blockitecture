@@ -117,6 +117,52 @@ export function lotDistance(lot: Lot, x: number, z: number) {
   return Math.hypot(dx, dz);
 }
 
+/** Spec 011: how far below sea level rendered terrain under the (opaque) sea is pushed, so the two never fight. */
+export const UNDER_SEA = 30;
+/** Spec 011: terrain just above sea level renders at least this far above it (a slight beach berm). */
+export const ABOVE_SEA = 3;
+/** Spec 011: open water is seeded from samples at least this far below sea level. */
+export const DEEP = 15;
+
+/**
+ * Spec 011: which grid samples are open water: below sea level AND connected (4-neighbour flood fill) to a sample at
+ * least DEEP ft under it. Low spots enclosed by land (noisy coastal data, a few feet below sea level by the highway)
+ * are not water.
+ */
+export function waterMask(g: Grid, seaY: number): Uint8Array {
+  const m = new Uint8Array(g.nx * g.nz);
+  const queue: number[] = [];
+  for (let k = 0; k < m.length; k++) if (g.h[k] < seaY - DEEP) { m[k] = 1; queue.push(k); }
+  while (queue.length) {
+    const k = queue.pop()!, i = k % g.nx, j = (k - i) / g.nx;
+    for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const ii = i + di, jj = j + dj;
+      if (ii < 0 || jj < 0 || ii >= g.nx || jj >= g.nz) continue;
+      const k2 = jj * g.nx + ii;
+      if (!m[k2] && g.h[k2] < seaY) { m[k2] = 1; queue.push(k2); }
+    }
+  }
+  return m;
+}
+
+/** whether the grid sample nearest (x, z) is open water (false outside the grid) */
+export function isWater(g: Grid, mask: Uint8Array, x: number, z: number): boolean {
+  const i = Math.round((x - g.x0) / g.step), j = Math.round((z - g.z0) / g.step);
+  return i >= 0 && j >= 0 && i < g.nx && j < g.nz && mask[j * g.nx + i] === 1;
+}
+
+/**
+ * Height to render terrain at, given the sea (spec 011), so the sea sheet and the shore never sit close enough to
+ * z-fight: open water (see waterMask) drops to at least UNDER_SEA ft under it; land stays at least ABOVE_SEA ft above
+ * it (a slight beach berm; this also lifts enclosed low spots, which would otherwise show as ponds). Unchanged higher
+ * up, and for houses without a sea.
+ */
+export function seaMeshHeight(y: number, seaY: number | null, water: boolean): number {
+  if (seaY === null) return y;
+  if (water) return Math.min(y, seaY - UNDER_SEA);
+  return Math.max(y, seaY + ABOVE_SEA);
+}
+
 /** How far the terrain mesh sits under the real ground inside the brick lot, hidden by the bricks. */
 export const UNDER_LOT = 3;
 

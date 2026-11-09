@@ -84,3 +84,15 @@ describe('006: camera moves', () => {
     }
   });
 });
+
+// Spec: specs/011-sea-flicker.md: the orbit near plane
+import { orbitNear, WALK_NEAR } from '../src/engine/controls/cameraMoves';
+describe('011: near plane', () => {
+  it('orbit: 1% of the distance to the target, between 0.3 and 2 ft; walk mode stays at 0.3 ft', () => {
+    expect(WALK_NEAR).toBe(0.3);
+    expect(orbitNear(MIN_DIST)).toBeCloseTo(0.3, 6); // 12 ft → 0.12, clamped up to 0.3
+    expect(orbitNear(132)).toBeCloseTo(1.32, 6); // the Eames overview distance
+    expect(orbitNear(MAX_DIST)).toBe(2);
+    for (let d = MIN_DIST; d <= MAX_DIST; d += 50) expect(orbitNear(d)).toBeLessThanOrEqual(d / 6); // never close to the target
+  });
+});

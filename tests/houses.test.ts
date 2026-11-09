@@ -29,6 +29,8 @@ describe('007: house registry', () => {
   });
 
   it('A1: the planned coming-soon houses are listed', () => {
-    expect(HOUSES.filter((h) => h.status === 'coming-soon').map((h) => h.slug)).toEqual(['eames-house', 'fallingwater']);
+    // spec 010 made the Eames House live; Fallingwater is still to come
+    expect(HOUSES.filter((h) => h.status === 'coming-soon').map((h) => h.slug)).toEqual(['fallingwater']);
+    expect(HOUSES.filter((h) => h.status === 'live').map((h) => h.slug)).toEqual(['stahl-house', 'eames-house']);
   });
 });

@@ -5,12 +5,10 @@ import { Y } from '@/houses/stahl-house/model/layout';
 
 const F = Y.FLOOR;
 
-function chair(b: Builder, x: number, z: number, facing: 'n' | 's' | 'e' | 'w', color: number) {
+/** `y0`: where the legs stand: the floor, or the top of a rug (spec 012: on the rug the legs used to be silently dropped) */
+function chair(b: Builder, x: number, z: number, facing: 'n' | 's' | 'e' | 'w', color: number, y0 = F) {
   b.newGroup();
-  b.add(x, z, F, 1, 1, 6, C.steel, 'bar');
-  b.add(x + 1, z, F, 1, 1, 6, C.steel, 'bar');
-  b.add(x, z + 1, F, 1, 1, 6, C.steel, 'bar');
-  b.add(x + 1, z + 1, F, 1, 1, 6, C.steel, 'bar');
+  for (const [lx, lz] of [[x, z], [x + 1, z], [x, z + 1], [x + 1, z + 1]]) b.add(lx, lz, y0, 1, 1, F + 6 - y0, C.steel, 'bar');
   b.add(x, z, F + 6, 2, 2, 1, color, 'tile');
   const back: Record<string, [number, number, number, number]> = {
     n: [x, z + 1, 2, 1], s: [x, z, 2, 1], e: [x, z, 1, 2], w: [x + 1, z, 1, 2],
@@ -36,8 +34,10 @@ function plant(b: Builder, x: number, z: number, y = F, big = false) {
   b.add(x, z, y, 2, 2, 3, C.white, 'brick', { studs: false });
   b.add(x, z, y + 3, 2, 2, 1, C.dirt, 'plate', { studs: false });
   const leaves = big ? 6 : 3;
+  // leaves spiral around the pot, so each one shares a face with the one below it (spec 012: none float)
+  const around = [[0, 0], [1, 0], [1, 1], [0, 1]];
   for (let i = 0; i < leaves; i++) {
-    const ox = i % 2, oz = (i >> 1) % 2;
+    const [ox, oz] = around[i % 4];
     b.add(x + ox, z + oz, y + 4 + i * 2, 1, 1, 3, i % 2 ? C.brightGreen : C.green, 'round');
   }
 }
@@ -138,19 +138,19 @@ export function buildInterior(b: Builder) {
   b.add(58, 39, F + 5, 1, 1, 1, C.orange, 'tile');
   b.add(60, 39, F + 5, 2, 1, 2, C.white, 'tile');
   // two armchairs facing the sofa
-  chair(b, 55, 43, 'n', C.teal);
-  chair(b, 61, 43, 'n', C.teal);
+  chair(b, 55, 43, 'n', C.teal, F + 1); // on the rug
+  chair(b, 61, 43, 'n', C.teal, F + 1);
   // lounge chair & ottoman by the corner glass
   b.newGroup();
   b.box(65, 39, 68, 42, F, F + 2, { kind: 'plate', unit: 2, color: C.reddishBrown });
   b.box(65, 39, 68, 42, F + 2, F + 4, { kind: 'brick', unit: 2, color: C.black });
   b.box(67, 39, 68, 42, F + 4, F + 10, { kind: 'brick', unit: 6, color: C.black });
   b.box(65, 44, 67, 46, F, F + 3, { kind: 'brick', color: C.black });
-  // floor lamp
+  // floor lamp, at the end of the sofa (spec 012: it used to stand inside the sofa, so only its shade was placed)
   b.newGroup();
-  b.add(64, 32, F, 1, 1, 3, C.black, 'round');
-  b.add(64, 32, F + 3, 1, 1, 12, C.steel, 'bar');
-  b.add(64, 32, F + 15, 1, 1, 3, C.warmLight, 'lamp');
+  b.add(66, 32, F, 1, 1, 3, C.black, 'round');
+  b.add(66, 32, F + 3, 1, 1, 12, C.steel, 'bar');
+  b.add(66, 32, F + 15, 1, 1, 3, C.warmLight, 'lamp');
   // hi-fi cabinet & plants
   b.newGroup();
   b.box(58, 47, 66, 49, F, F + 4, { kind: 'brick', unit: 4, color: C.darkWood });
@@ -193,12 +193,17 @@ export function buildInterior(b: Builder) {
   b.box(1, 31, 3, 40, F, Y.WALL_TOP - 3, { kind: 'brick', color: (_x, _y, z) => (z % 3 === 0 ? C.darkWood : C.wood) });
   b.box(8, 37, 13, 39, F, F + 7, { kind: 'brick', color: C.white });
   b.box(8, 37, 13, 39, F + 7, F + 8, { kind: 'tile', color: C.white });
+  // the mirror hangs on the dressing-room partition, so it goes in with the walls (spec 012)
+  b.setPhase(P.ENVELOPE);
   b.box(8, 39, 13, 40, F + 10, F + 20, { kind: 'glass', unit: 10, color: C.glass });
+  b.setPhase(P.INTERIOR);
   b.newGroup();
   // double sink vanity
   b.box(13, 41, 19, 43, F, F + 7, { kind: 'brick', color: C.white });
   b.box(13, 41, 19, 43, F + 7, F + 8, { kind: 'tile', color: (x) => (x === 14 || x === 17 ? C.lightGray : C.white) });
+  b.setPhase(P.ENVELOPE); // mirror on the partition (spec 012)
   b.box(13, 41, 19, 42, F + 10, F + 20, { kind: 'glass', unit: 10, color: C.glass });
+  b.setPhase(P.INTERIOR);
   // WC
   b.newGroup();
   b.add(11, 47, F, 2, 2, 4, C.white, 'round');
@@ -206,9 +211,12 @@ export function buildInterior(b: Builder) {
   // sunken shower: floor drain & shower head
   b.newGroup();
   b.add(3, 47, F, 1, 1, 1, C.lightGray, 'tile');
+  b.setPhase(P.ENVELOPE); // the shower head is on the street wall (spec 012)
   b.add(1, 47, 18, 1, 1, 3, C.lightGray, 'bar');
-  // light fixtures in bedrooms (ceiling)
-  b.newGroup();
-  for (const [x, z] of [[8, 15], [8, 4], [8, -5], [5, 35], [14, 45], [56, 40], [43, 39]])
-    b.add(x, z, Y.BEAM_TOP - 1, 2, 2, 1, C.warmLight, 'light');
+  b.setPhase(P.INTERIOR);
+  // light fixtures in the ceiling: they hang from the roof deck, so they go in with it (spec 012, as spec 002)
+  b.hanging(P.ROOF, () => {
+    for (const [x, z] of [[8, 15], [8, 4], [8, -5], [5, 35], [14, 45], [56, 40], [43, 39]])
+      b.add(x, z, Y.BEAM_TOP - 1, 2, 2, 1, C.warmLight, 'light');
+  });
 }

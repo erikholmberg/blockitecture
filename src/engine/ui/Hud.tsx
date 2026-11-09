@@ -136,6 +136,7 @@ export function Hud({ store, h, house }: { store: HudStore; h: HudHandlers; hous
                 <Button size="lg" className="h-11 w-fit px-5 text-[15px]" onClick={() => { setStarted(true); h.onStart(); }}>
                   Start building
                 </Button>
+                {text.disclaimer && <p className="text-[11px] leading-snug text-muted-foreground">{text.disclaimer}</p>}
                 <p className="text-xs text-muted-foreground">
                   Drag to orbit · scroll to zoom · camera buttons on the right · <b>Walk</b> mode for first person
                 </p>

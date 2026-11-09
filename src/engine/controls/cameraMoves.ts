@@ -12,6 +12,15 @@ export const ZOOM_STEP = 0.75; // each "+" multiplies the distance by this
 export const ROTATE_STEP = Math.PI / 8; // 22.5° per "⟲ / ⟳"
 export const GLIDE_DUR = 0.6; // s
 
+/** Walk mode's near plane: you can stand right next to a wall. */
+export const WALK_NEAR = 0.3;
+/**
+ * Spec 011: the camera's near plane in orbit mode. Depth precision far away improves in proportion to it, and a near plane
+ * of 0.3 ft made distant surfaces z-fight (flicker). In orbit mode the camera is ≥ 12 ft from its target, so a near plane
+ * of 1% of that distance (0.3–2 ft) clips nothing in practice.
+ */
+export const orbitNear = (distance: number) => Math.min(2, Math.max(WALK_NEAR, distance * 0.01));
+
 const v3 = (x: number, y: number, z: number): V3 => ({ x, y, z });
 const sub = (a: V3, b: V3) => v3(a.x - b.x, a.y - b.y, a.z - b.z);
 const add = (a: V3, b: V3) => v3(a.x + b.x, a.y + b.y, a.z + b.z);

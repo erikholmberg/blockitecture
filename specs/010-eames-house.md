@@ -1,6 +1,6 @@
 # 010 — The Eames House (Case Study House #8)
 
-- **Status:** Approved (Erik, 2026-11-08: all recommendations except Q3, amended to the actual Eames furniture; built after spec 009)
+- **Status:** Done (approved by Erik 2026-11-08: all recommendations except Q3, amended to the actual Eames furniture; built after spec 009)
 - **Owner:** Erik
 - **Created:** 2026-11-08
 - **Commits:** <!-- filled in when Done -->
@@ -119,3 +119,59 @@ from "Coming soon" to live.
     - the intro text comes from the definition;
     - No roof cuts exactly the roof;
     - Home → (−95, 70, −120); Walk starts and respawns at (23.5, −16).
+
+### 010b: the Eames House (done 2026-11-08)
+- **Research results:**
+  - The earlier coordinates were ~2 km off. The house is at ~34.0297° N, 118.5194° W.
+  - OSM *does* map it, as two Microsoft-footprint buildings, "Casa" and "Oficina", sharing wikidata Q980011. The house's
+    axis reads 12.6° and the studio's 8.1°.
+  - Sources: 7′4″ bays on 20 ft depth, 17 ft high; residence 8 bays (7 enclosed = 51 ft, plus the open south patio bay),
+    courtyard 4, studio 5 (37 ft). The retaining wall is on the west, 8 ft high. The front faces east onto the walkway,
+    eucalyptus and meadow; the residence is at the south end.
+- **Placement:**
+  - The data script now fits several buildings at once (union) and can search the rotation.
+  - Result: **rotation −14°** (the line between the two pavilions), offset (10, 59), IoU 0.817.
+  - Lot elevation 46.4 m = 152 ft above the Pacific, matching the sources' "about 150 ft". This is checked by a test.
+- **Engine additions (all opt-in or generic; the Stahl House stays byte-identical):**
+  - `Builder(grid)` takes a per-house grid.
+  - `realToModelDir()` / `bearingToTheta()` fix spec 009's sun formula, which was only right for 0°/180° rotations.
+    It's tested against the data script's rotation for arbitrary angles.
+  - `scenery` adds `sea` (a water sheet at true sea level, beach colors), `chaparral`, `flatsBelow` and a `city` height band.
+  - `text.disclaimer` appears on the intro card.
+  - The data script gained multi-building fit, `rotationSearch`, `despike` and `seaFloorFt`.
+- **Data repair:** the terrain tiles over Santa Monica Bay are corrupt in places.
+  - Spikes up to **8,261 ft**: 2,588 samples in the near grid, 133 in the far one. They rendered as giant pale "towers" behind the house,
+    which I first misread as the Santa Monica Mountains; a raycast showed them hovering over the ocean.
+  - Deep blobs offshore, at −500 to −1,075 ft.
+  - Fixes: iterative 3×3 then 5×5 median despike for the spikes; the sea floor clamped to 60 ft below sea level for the
+    blobs (hidden under the water). A test checks that no visible sample remains a spike.
+- **Model:** `src/houses/eames-house/`, with 21,644 pieces generated in ~110 ms.
+  - Bay lines are the 7′4″ module rounded to whole studs: 7/8 ft alternating, 124.7 → 125 ft.
+  - The site: a level terrace; the hill standing 8 ft behind the angled wall and planted with dense trees (as in photographs,
+    where they screen the houses above); a berm; blends to the real ground at every edge.
+  - The structure: black H-columns, the rail at 8′1″, joists, a white deck, gravel and curb, the mezzanine and studio loft
+    with stair and hoist openings.
+  - Panels: two courses × two sub-panels with mullions per bay, plus the end walls. The front door is translucent with two gold
+    panels above, and two bays carry crossed tension rods. **The per-bay color arrangement is my composition in the documented palette,
+    not a verified elevation.**
+  - Landscape: the eucalyptus row (pale, gently leaning trunks with branch-attached crowns), the Venice pier pilings, the carport awning,
+    meadow flowers.
+- **Furniture (Q3 as amended):** each piece's comment says **[documented]** or **[assumed]**.
+  - Documented: the lounge chair + ottoman; the built-in alcove sofa; rosewood paneling; rugs and tatami; pillows,
+    baskets, books, plants and the paper lantern; marble/steel counters, metal cabinets and refrigerator; Ray's checkerboard bath;
+    the freestanding closets; the spiral stair; the studio's steel stair, kitchenette, bathroom and darkroom.
+  - Assumed: the ESU-like shelving, molded shell chairs, plywood chairs and worktables.
+  - *Deviation from the criterion as written:* positions follow the documented room layout rather than a specific
+    photograph per piece, and each comment cites a source, not a photo.
+- **Results:**
+  - `tests/eames.test.ts` (8 tests): dimensions within ±2 ft; deterministic, no overlaps, inside the grid; phases in order,
+    ~230 s, the wave bottom-up; lot edges meet the real ground; placement, sea level and ocean in view; no terrain spikes;
+    furniture sourcing markers; the card is live with the real piece count and disclaimer. The spec 007 registry/home tests now follow
+    the registry. 88 tests total.
+  - Chrome:
+    - All views work: Overview, From the meadow, Courtyard, Living room (the ocean through the south glass), Bluff & bay.
+    - Dusk sets over the bay at the real bearing.
+    - No roof cuts both pavilions; Walk starts on the meadow; the controls work.
+    - 57–60 fps at dpr 1.75 (3.4M triangles).
+    - The home page shows two live cards.
+  - Thumbnail: `/eames-house/?view=meadow&clean&date=2026-06-21`.

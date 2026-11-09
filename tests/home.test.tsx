@@ -18,11 +18,11 @@ describe('007: home page', () => {
     const card = doc.querySelector('[data-house="stahl-house"]')!;
     const link = card.closest('a') ?? card.querySelector('a');
     expect(link?.getAttribute('href')).toBe('/stahl-house/');
-    expect(card.textContent).toContain('27,222');
+    expect(card.textContent).toContain('27,233');
   });
 
   it('A2: coming-soon cards are not links and say so', () => {
-    for (const slug of ['eames-house', 'fallingwater']) {
+    for (const slug of HOUSES.filter((h) => h.status === 'coming-soon').map((h) => h.slug)) {
       const card = doc.querySelector(`[data-house="${slug}"]`)!;
       expect(card.closest('a')).toBeNull();
       expect(card.querySelector('a')).toBeNull();

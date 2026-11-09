@@ -77,6 +77,6 @@ describe('005: hillside from the top, down the slope', () => {
   });
 
   it('A5: the model itself is unchanged (only start times move)', () => {
-    expect(modelFingerprint(bricks)).toEqual({ count: 27222, hash: 'ebe0f28f' });
+    expect(modelFingerprint(bricks)).toEqual({ count: 27233, hash: '116d7826' }); // spec 012 (was 27,222 / ebe0f28f)
   });
 });

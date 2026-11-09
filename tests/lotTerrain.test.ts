@@ -51,7 +51,7 @@ describe('004: brick hillside from the real terrain', () => {
   it('A2: the house pad stays level at y = 0 and the house is unchanged', () => {
     for (let x = PLATEAU[0] + 10; x < PLATEAU[2] - 10; x += 3)
       for (let z = PLATEAU[1] + 10; z < PLATEAU[3] - 10; z += 3) if (!inPool(x, z)) expect(hm.at(x, z)).toBe(0);
-    expect(houseFingerprint(builder.bricks)).toEqual({ count: 3603, hash: 'e781fb43' });
+    expect(houseFingerprint(builder.bricks)).toEqual({ count: 3613, hash: 'b6c7272d' }); // spec 012 (was 3,603 / e781fb43)
   });
 
   it('A3: no holes: every lot cell has a brick at its surface, and every step between neighbors is walled', () => {

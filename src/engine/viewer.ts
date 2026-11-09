@@ -11,7 +11,7 @@ import { Collision } from '@/engine/controls/collision';
 import { Walker } from '@/engine/controls/walk';
 import { attachTouch } from '@/engine/controls/touch';
 import { CamAction, mountHud } from '@/engine/ui/Hud';
-import { Glide, MAX_DIST, MIN_DIST, rotated, View, zoomed } from '@/engine/controls/cameraMoves';
+import { Glide, MAX_DIST, MIN_DIST, orbitNear, rotated, View, WALK_NEAR, zoomed } from '@/engine/controls/cameraMoves';
 import type { HouseDefinition } from '@/engine/house';
 import { dateParam, sunFor } from '@/engine/scene/sun';
 
@@ -75,8 +75,8 @@ export async function startViewer(house: HouseDefinition) {
     const t1 = performance.now();
     const n = await neighborhoodData;
     if (n) {
-      hood = new NeighborhoodScene(n, house.lot);
-      city = new City(n, house.downtownDir);
+      hood = new NeighborhoodScene(n, house.lot, house.scenery);
+      city = new City(n, house.downtownDir, house.scenery);
       scene.add(hood.group, city.group);
       if (DEBUG) console.log(`[${house.slug}] neighborhood: ${n.buildings.count} buildings, ${n.roads.count} roads, ready in ${(performance.now() - t1).toFixed(0)} ms`);
     }
@@ -255,7 +255,7 @@ export async function startViewer(house: HouseDefinition) {
     fpsEl = document.createElement('div');
     fpsEl.className = 'fps';
     app.appendChild(fpsEl);
-    const debugApi = { house, seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood, sun };
+    const debugApi = { house, seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood, sun, renderer, scene };
     (window as any).__viewer = debugApi;
     (window as any).__stahl = debugApi; // older name, kept for existing debug snippets
   }
@@ -287,6 +287,12 @@ export async function startViewer(house: HouseDefinition) {
         if (glide.done) glide = null;
       }
       orbit.update(dt);
+    }
+    // spec 011: keep the near plane as far out as the camera allows, for depth precision (no flicker far away)
+    const near = mode === 'walk' ? WALK_NEAR : orbitNear(camera.position.distanceTo(orbit.target));
+    if (Math.abs(near - camera.near) > camera.near * 0.05) {
+      camera.near = near;
+      camera.updateProjectionMatrix();
     }
 
     renderer.render(scene, camera);

@@ -94,7 +94,7 @@ export function buildLandscape(b: Builder, hm: HeightMap) {
   b.newGroup();
   b.add(48, -10, Y.FLOOR, 4, 4, 2, C.white, 'round');
   b.box(48, -10, 52, -6, Y.FLOOR, Y.FLOOR + 1, { kind: 'tile', color: C.white });
-  b.add(49, -9, Y.FLOOR + 1, 1, 1, 15, C.white, 'bar');
+  b.add(49, -9, Y.FLOOR + 2, 1, 1, 14, C.white, 'bar'); // the pole stands on the table (spec 012: it used to overlap it and was dropped)
   b.box(46, -12, 54, -4, Y.FLOOR + 16, Y.FLOOR + 17, {
     kind: 'tile',
     color: (x, _y, z) => ((x + z) % 2 ? C.orange : C.white),

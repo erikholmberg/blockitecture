@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { rng } from '@/engine/voxel';
 import { Neighborhood, sampleGrid } from '@/engine/scene/neighborhoodData';
+import type { Scenery } from '@/engine/house';
 
 /**
  * The Los Angeles basin beyond the real neighborhood (spec 003): procedural blocks and a carpet of
@@ -14,7 +15,8 @@ export class City {
   private blocks: THREE.MeshStandardMaterial;
 
   /** `downtownDir`: model-space direction from the house toward downtown */
-  constructor(n: Neighborhood, downtownDir: [number, number]) {
+  constructor(n: Neighborhood, downtownDir: [number, number], scenery: Scenery = {}) {
+    const maxY = scenery.city?.maxY ?? -300, minY = scenery.city?.minY ?? -Infinity;
     const r = rng(1960);
     const cx = n.anchor.offsetX, cz = n.anchor.offsetZ;
     const R0 = 1200 / 0.3048 + 150; // real data covers everything inside this
@@ -25,7 +27,7 @@ export class City {
       const d = Math.hypot(x - cx, z - cz);
       if (d < R0 || d > R1) return false;
       const y = h(x, z);
-      if (y > -300) return false; // hills and mountains
+      if (y > maxY || y < minY) return false; // hills and mountains (and, by the sea, the water)
       const s = Math.abs(h(x + 250, z) - y) + Math.abs(h(x, z + 250) - y);
       return s < 45; // flat ground only
     };

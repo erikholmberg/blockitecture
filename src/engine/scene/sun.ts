@@ -59,8 +59,25 @@ export function solarNoon(day: string, lon: number): Date {
   return new Date(noon);
 }
 
-/** Three.js spherical azimuth θ (degrees, direction (x, z) = (sin θ, cos θ)) for a real compass bearing. */
-export const bearingToTheta = (bearing: number, rotationDeg: number) => (((180 - bearing + rotationDeg) % 360) + 360) % 360;
+/**
+ * A real compass bearing as a model-space direction (x, z). This is the same transform the data script applies to
+ * the real world (scripts/fetch-neighborhood.mjs `local`): unrotated model x = east, z = south, then rotated by
+ * rotationDeg: (x, z) → (x cos r − z sin r, x sin r + z cos r).
+ */
+export function realToModelDir(bearing: number, rotationDeg: number): [number, number] {
+  const b = (bearing * Math.PI) / 180, r = (rotationDeg * Math.PI) / 180;
+  const x = Math.sin(b), z = -Math.cos(b);
+  return [x * Math.cos(r) - z * Math.sin(r), x * Math.sin(r) + z * Math.cos(r)];
+}
+
+/**
+ * Three.js spherical azimuth θ (degrees, direction (x, z) = (sin θ, cos θ)) for a real compass bearing.
+ * (Spec 010: derived from realToModelDir. Spec 009's `180 − bearing + rotation` was only right for 0° and 180°.)
+ */
+export function bearingToTheta(bearing: number, rotationDeg: number) {
+  const [x, z] = realToModelDir(bearing, rotationDeg);
+  return ((Math.atan2(x, z) * 180) / Math.PI + 360) % 360;
+}
 
 export const DUSK_ELEVATION = 2.2; // degrees: the dusk look of the original preset
 export const DAY_AFTER_NOON_H = 3; // mid-afternoon

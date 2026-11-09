@@ -7,7 +7,7 @@ Famous houses, built brick by brick in your browser. The home page (`/`) lists t
 | | Page | Status |
 |---|---|---|
 | **Stahl House** (Case Study House #22), Pierre Koenig, 1959–60 | `/stahl-house/` | live |
-| **Eames House** (Case Study House #8), Charles & Ray Eames, 1949 | — | coming soon |
+| **Eames House** (Case Study House #8), Charles & Ray Eames, 1949 | `/eames-house/` | live |
 | **Fallingwater**, Frank Lloyd Wright, 1939 | — | coming soon |
 
 ### Stahl House
@@ -22,6 +22,12 @@ around it, or walk through it while it goes up.
 - **No roof**: lift the roof off to see inside · **Day / Dusk**: dusk lights up the house over the city
 - **Links to a view**: `/stahl-house/?view=famous&light=dusk` (add `&clean` to hide the controls, for screenshots)
 
+### Eames House
+The house and studio on their meadow high above the Pacific: the retaining wall and the planted hill, the 7′4″ steel
+frame, the grid of colored panels, the eucalyptus row, and the interiors with the Eames furniture documented in the house.
+The real Pacific Palisades around it, with Santa Monica Bay below.
+
+### Real surroundings
 The surrounding Hollywood Hills and the Sunset Strip are real: buildings and roads from
 [OpenStreetMap](https://www.openstreetmap.org/copyright) (© OpenStreetMap contributors, ODbL) and terrain from the
 Mapzen / AWS Terrain Tiles, baked into `public/stahl-house/neighborhood.bin` by `node scripts/fetch-neighborhood.mjs`.
@@ -47,4 +53,5 @@ npm run build   # static site in dist/ (deployed on Vercel)
 4. When it's live: a page at `<slug>/index.html`, listed in `PAGES` in `vite.config.ts`, and `public/<slug>/thumbnail.jpg`
    (1200 × 675, captured from `/<slug>/?view=…&clean&date=…`).
 
-These are fan tributes in a generic toy-brick style and are not affiliated with the LEGO Group.
+These are fan tributes in a generic toy-brick style and are not affiliated with the LEGO Group, or with the Eames Office, the
+Eames Foundation, Herman Miller or Vitra.

@@ -76,3 +76,30 @@ describe('003: real neighborhood data', () => {
     }
   });
 });
+
+// Spec: specs/011-sea-flicker.md (A1)
+import { ABOVE_SEA, DEEP, isWater, seaMeshHeight, UNDER_SEA, waterMask } from '../src/engine/scene/neighborhoodData';
+describe('011: no z-fighting between the sea and the shore', () => {
+  const sea = -152.3;
+  it('A1: open water is below sea level and connected to deep water; an enclosed dip on land is not', () => {
+    // 6 × 3 grid: deep sea on the left, a shelf, a beach, and an enclosed dip below sea level on the right
+    const row = [sea - 40, sea - 2, sea + 1, sea + 4, sea - 3, sea + 4];
+    const g = { x0: 0, z0: 0, step: 20, nx: 6, nz: 3, h: Float32Array.from([...row, ...row, ...row]) };
+    const m = waterMask(g, sea);
+    expect([0, 1, 2, 3, 4, 5].map((i) => m[6 + i])).toEqual([1, 1, 0, 0, 0, 0]);
+    expect(isWater(g, m, 20, 20)).toBe(true); // the shallow shelf, connected to the deep sea
+    expect(isWater(g, m, 80, 20)).toBe(false); // the dip by the road
+    expect(isWater(g, m, -100, 0)).toBe(false); // outside the grid
+    expect(DEEP).toBeGreaterThan(0);
+  });
+
+  it('A1: water drops well below the sea, land stays clear above it; higher up and without a sea, unchanged', () => {
+    expect(UNDER_SEA).toBeGreaterThanOrEqual(30);
+    expect(ABOVE_SEA).toBeGreaterThanOrEqual(3);
+    for (const y of [sea - 0.1, sea - 10, sea - 29]) expect(seaMeshHeight(y, sea, true)).toBeLessThanOrEqual(sea - UNDER_SEA);
+    expect(seaMeshHeight(sea - 80, sea, true)).toBe(sea - 80);
+    for (const y of [sea - 3, sea, sea + 2.9]) expect(seaMeshHeight(y, sea, false)).toBe(sea + ABOVE_SEA); // incl. enclosed dips
+    for (const y of [sea + ABOVE_SEA, sea + 6, 0, 120]) expect(seaMeshHeight(y, sea, false)).toBe(y);
+    for (const y of [-500, -152.4, 0, 30]) for (const w of [true, false]) expect(seaMeshHeight(y, null, w)).toBe(y);
+  });
+});

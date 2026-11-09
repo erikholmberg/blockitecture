@@ -42,15 +42,15 @@ describe('002: interior before enclosure', () => {
     expect(hung.filter((i) => bricks[i].kind === 'bar').length).toBe(5);
     expect(hung.some((i) => bricks[i].kind === 'light')).toBe(true);
     expect(hung.some((i) => bricks[i].kind === 'brick')).toBe(true);
-    // all within the kitchen
-    for (const i of hung) {
+    const inKitchen = (i: number) => {
       const b = bricks[i];
-      expect(b.phase).toBe(P.ROOF);
-      expect(b.x).toBeGreaterThanOrEqual(20);
-      expect(b.x + b.w).toBeLessThanOrEqual(34);
-      expect(b.z).toBeGreaterThanOrEqual(32);
-      expect(b.z + b.d).toBeLessThanOrEqual(48);
-    }
+      return b.x >= 20 && b.x + b.w <= 34 && b.z >= 32 && b.z + b.d <= 48;
+    };
+    for (const i of hung) expect(bricks[i].phase).toBe(P.ROOF);
+    // spec 012: besides the kitchen, exactly the 7 ceiling light fixtures in the other rooms hang from the roof
+    const elsewhere = hung.filter((i) => !inKitchen(i));
+    expect(elsewhere.length).toBe(7);
+    for (const i of elsewhere) expect([bricks[i].kind, bricks[i].w, bricks[i].d]).toEqual(['light', 2, 2]);
     const roofSolid = startsOf((i) => bricks[i].phase === P.ROOF && !bricks[i].hangs);
     expect(min(hung.map((i) => s.start[i]))).toBeGreaterThan(max(roofSolid));
     const order = s.order.filter((i) => bricks[i].hangs);
@@ -76,6 +76,7 @@ describe('002: interior before enclosure', () => {
   });
 
   it('A5: the house itself is unchanged (fingerprint of phases 1–6; spec 004 moved the paving and reshaped the hillside)', () => {
-    expect(houseFingerprint(bricks)).toEqual({ count: 3603, hash: 'e781fb43' });
+    // spec 012 fixed floating pieces in the house (+10 pieces, mirrors moved to the walls' phase): was 3,603 / e781fb43
+    expect(houseFingerprint(bricks)).toEqual({ count: 3613, hash: 'b6c7272d' });
   });
 });

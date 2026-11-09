@@ -1,7 +1,7 @@
 // Spec: specs/009-compass-correct-sun.md (A1–A4, A6)
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { bearingToTheta, dateParam, solarNoon, solarPosition, sunFor } from '../src/engine/scene/sun';
+import { bearingToTheta, dateParam, realToModelDir, solarNoon, solarPosition, sunFor } from '../src/engine/scene/sun';
 import { SITE } from '../src/houses/stahl-house/model/layout';
 import { parseNeighborhood } from '../src/engine/scene/neighborhoodData';
 import { buildStahlHouse } from '../src/houses/stahl-house/model/stahlHouse';
@@ -51,6 +51,25 @@ describe('009: compass-correct sun', () => {
     expect(dir(90)).toEqual([-1, 0]); // real east → model −x
   });
 
+  it('A2 (spec 010): the sun uses the same real→model rotation as the data script, for any rotation', () => {
+    // the data script: unrotated x = east, z = −north, then (x c − z s, x s + z c)
+    const script = (east: number, north: number, r: number) => {
+      const c = Math.cos(r * rad), s = Math.sin(r * rad), x = east, z = -north;
+      return [x * c - z * s, x * s + z * c];
+    };
+    for (const r of [0, 90, 180, -11, 37.5]) {
+      for (const bearing of [0, 45, 90, 200, 271]) {
+        const [sx, sz] = script(Math.sin(bearing * rad), Math.cos(bearing * rad), r);
+        const [dx, dz] = realToModelDir(bearing, r);
+        expect(dx).toBeCloseTo(sx, 9);
+        expect(dz).toBeCloseTo(sz, 9);
+        const t = bearingToTheta(bearing, r) * rad; // three.js spherical: (sin θ, cos θ)
+        expect(Math.sin(t)).toBeCloseTo(sx, 9);
+        expect(Math.cos(t)).toBeCloseTo(sz, 9);
+      }
+    }
+  });
+
   it('A3: dusk sets in the real west at 2.2°, day is mid-afternoon in the south-west, all year', () => {
     for (let m = 1; m <= 12; m++) {
       const day = `2026-${String(m).padStart(2, '0')}-15`;
@@ -74,8 +93,9 @@ describe('009: compass-correct sun', () => {
 
   it('A6: the model and the timeline are unchanged', () => {
     const bricks = buildStahlHouse().builder.bricks;
-    expect(modelFingerprint(bricks)).toEqual({ count: 27222, hash: 'ebe0f28f' });
-    expect(houseFingerprint(bricks)).toEqual({ count: 3603, hash: 'e781fb43' });
+    // updated by spec 012 (floating pieces fixed): was 27,222 / ebe0f28f and 3,603 / e781fb43
+    expect(modelFingerprint(bricks)).toEqual({ count: 27233, hash: '116d7826' });
+    expect(houseFingerprint(bricks)).toEqual({ count: 3613, hash: 'b6c7272d' });
     expect(sequence(bricks, PHASES, STAHL.center).total).toBeCloseTo(228.7, 5);
   });
 });

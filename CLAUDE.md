@@ -14,6 +14,18 @@ pages and the viewer HUD are React + shadcn/ui + Tailwind v4 + Inter (spec 007).
 - `public/<slug>/` — per-house static files (thumbnail, `neighborhood.bin`). `scripts/houses/<slug>.mjs` — its real-world data settings.
 - `src/components/ui/` — shadcn components (ours to edit; add more with `npx shadcn@latest add <name>`).
 - Don't use `backdrop-blur` on anything over the 3D canvas: it re-blurs the scene every frame (−22% fps, spec 007).
+- House definitions can opt into `scenery` (sea, chaparral, flats, city band). Coastal terrain tiles can be corrupt:
+  use `despike` / `seaFloorFt` in `scripts/houses/<slug>.mjs` (spec 010b) and check for spikes in a test.
+- Real-world rotation is any angle: use `realToModelDir()` / `bearingToTheta()` from `src/engine/scene/sun.ts`.
+
+## Build order for every house (spec 012, enforced by tests/buildOrder.test.ts)
+- Phases declare a `role`. The order is site → foundation → floor → **structure** (frame and any upper floors/decks) →
+  **interior** → **envelope** (walls, panels, glass, and anything mounted on them) → **roof** → landscape. You furnish inside the open
+  frame, and the roof goes on last.
+- Anything hanging from the roof (ceiling lights, pendants, cabinets) goes in with the roof via `b.hanging(P.ROOF, …)`.
+- No interior piece may land in mid-air (it must touch something already built), and no piece of the house may be silently
+  dropped by `add()` (`Builder.dropped`; only terrain and landscaping may skip taken space).
+- Add every new house's definition to `DEFINITIONS` in `tests/buildOrder.test.ts`; the test fails for a live house that's missing.
 
 ## We use spec-driven development
 

@@ -10,7 +10,7 @@ export default {
   // model point (ft) whose real ground is y = 0, and the centre of the terrain grids
   center: [32, 12],
   // fit the house's own OSM outline onto the model's roof outline to find the offset
-  fit: { wikidata: 'Q2328939', roof: [[-2, 23, 77, 57], [-2, -36, 27, 23]] },
+  fit: { wikidata: 'Q2328939', roof: [[-2, 23, 77, 57], [-2, -36, 27, 23]], window: [-5, -40, 80, 60] },
   // the brick lot (src/houses/stahl-house/model/site.ts TERRAIN)
   lot: { x0: -112, z0: -120, x1: 144, z1: 132 },
   near: { half: 4200, step: 20, zoom: 15 },

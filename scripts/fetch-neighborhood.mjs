@@ -105,8 +105,13 @@ async function elevation(lat, lon, z) {
 let OX = 0, OZ = 0; // fitted below
 /** real lat/lon → model ft, rotated 180° about the house */
 // rotation of the real world into the model; cos/sin snapped so multiples of 90° are exact
-const RC = Math.round(Math.cos((H.rotationDeg * Math.PI) / 180) * 1e9) / 1e9 + 0;
-const RS = Math.round(Math.sin((H.rotationDeg * Math.PI) / 180) * 1e9) / 1e9 + 0;
+let ROT = H.rotationDeg, RC = 0, RS = 0;
+const setRotation = (deg) => {
+  ROT = deg;
+  RC = Math.round(Math.cos((deg * Math.PI) / 180) * 1e9) / 1e9 + 0;
+  RS = Math.round(Math.sin((deg * Math.PI) / 180) * 1e9) / 1e9 + 0;
+};
+setRotation(H.rotationDeg);
 /** real (east, north) ft → unrotated model (x = east, z = south) → rotated by rotationDeg */
 const local = (lat, lon) => {
   const x = (lon - LON0) * KX, z = -(lat - LAT0) * KZ;
@@ -130,18 +135,27 @@ function pointInPoly(x, z, ring) {
 const inRoof = (x, z) => ROOF.some((r) => x >= r[0] && x < r[2] && z >= r[1] && z < r[3]);
 
 /** Find the offset that best overlays the OSM house outline on the model's roof outline. */
-function fitHouse(ringLatLon) {
-  const ring0 = ringLatLon.map(([lat, lon]) => local(lat, lon));
-  const xs = ring0.map((p) => p[0]), zs = ring0.map((p) => p[1]);
-  const bx0 = Math.floor(Math.min(...xs)), bx1 = Math.ceil(Math.max(...xs));
-  const bz0 = Math.floor(Math.min(...zs)), bz1 = Math.ceil(Math.max(...zs));
+/** Fit the house's OSM outline(s) (several buildings may share its wikidata, e.g. house + studio). */
+function fitHouse(ringsLatLon) {
   const cells = [];
-  for (let z = bz0; z < bz1; z++) for (let x = bx0; x < bx1; x++) if (pointInPoly(x + 0.5, z + 0.5, ring0)) cells.push([x, z]);
+  for (const ringLatLon of ringsLatLon) {
+    const ring0 = ringLatLon.map(([lat, lon]) => local(lat, lon));
+    const xs = ring0.map((p) => p[0]), zs = ring0.map((p) => p[1]);
+    const bx0 = Math.floor(Math.min(...xs)), bx1 = Math.ceil(Math.max(...xs));
+    const bz0 = Math.floor(Math.min(...zs)), bz1 = Math.ceil(Math.max(...zs));
+    for (let z = bz0; z < bz1; z++) for (let x = bx0; x < bx1; x++) if (pointInPoly(x + 0.5, z + 0.5, ring0)) cells.push([x, z]);
+  }
+  // roof cells: scan the roof rects' bounding box (+ margin); the Stahl House keeps its original window
+  const W = H.fit.window ?? [
+    Math.min(...ROOF.map((r) => r[0])) - 3, Math.min(...ROOF.map((r) => r[1])) - 4,
+    Math.max(...ROOF.map((r) => r[2])) + 3, Math.max(...ROOF.map((r) => r[3])) + 3,
+  ];
   let roofArea = 0;
-  for (let z = -40; z < 60; z++) for (let x = -5; x < 80; x++) if (inRoof(x, z)) roofArea++;
+  for (let z = W[1]; z < W[3]; z++) for (let x = W[0]; x < W[2]; x++) if (inRoof(x, z)) roofArea++;
+  const [sx, sz] = H.fit.searchCenter ?? [0, 0];
   let best = { score: -1, ox: 0, oz: 0 };
-  for (let oz = -80; oz <= 80; oz++)
-    for (let ox = -80; ox <= 80; ox++) {
+  for (let oz = sz - 80; oz <= sz + 80; oz++)
+    for (let ox = sx - 80; ox <= sx + 80; ox++) {
       let hit = 0;
       for (const [x, z] of cells) if (inRoof(x + ox, z + oz)) hit++;
       const iou = hit / (cells.length + roofArea - hit);
@@ -161,9 +175,22 @@ const roadsRaw = await overpass(
   `[out:json][timeout:180];way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|service)$"](around:${R + 200},${LAT0},${LON0});out tags geom;`,
 );
 
-const self = buildingsRaw.find((e) => e.tags?.wikidata === H.fit.wikidata);
-if (!self) throw new Error(`${SLUG}: the house (wikidata ${H.fit.wikidata}) was not found in the OSM data`);
-const fit = fitHouse(self.geometry.map((g) => [g.lat, g.lon]));
+const selves = buildingsRaw.filter((e) => e.tags?.wikidata === H.fit.wikidata);
+if (!selves.length) throw new Error(`${SLUG}: the house (wikidata ${H.fit.wikidata}) was not found in the OSM data`);
+const rings = selves.map((e) => e.geometry.map((g) => [g.lat, g.lon]));
+let fit = fitHouse(rings);
+if (H.fit.rotationSearch) {
+  // try a range of rotations too; keep the best overlap (spec 010)
+  const [r0, r1, step] = H.fit.rotationSearch;
+  let bestRot = ROT;
+  for (let r = r0; r <= r1 + 1e-9; r += step) {
+    setRotation(+r.toFixed(3));
+    const f = fitHouse(rings);
+    if (f.score > fit.score) { fit = f; bestRot = ROT; }
+  }
+  setRotation(bestRot);
+  console.log(`rotation search ${r0}…${r1}: best ${bestRot}°`);
+}
 OX = fit.ox; OZ = fit.oz;
 console.log(`house fit: offset (${OX}, ${OZ}) ft, IoU ${fit.score.toFixed(3)}, OSM ${fit.osmArea} ft², roof ${fit.roofArea} ft²`);
 
@@ -173,7 +200,7 @@ const E0 = await elevation(hLat, hLon, NEAR.zoom);
 console.log(`lot elevation ${E0.toFixed(1)} m`);
 const toY = (m) => (m - E0) / FT;
 
-async function grid({ half, step, zoom }) {
+async function grid({ half, step, zoom }, despikeFt) {
   const n = Math.round((2 * half) / step) + 1;
   const x0 = Math.round(CX - half), z0 = Math.round(CZ - half);
   const h = new Int16Array(n * n);
@@ -182,10 +209,47 @@ async function grid({ half, step, zoom }) {
       const [lat, lon] = toLatLon(x0 + i * step, z0 + j * step);
       h[j * n + i] = Math.round(toY(await elevation(lat, lon, zoom)) * 4);
     }
+  if (despikeFt) despike(h, n, despikeFt, `${step} ft grid`);
+  if (H.seaFloorFt !== undefined) {
+    // spec 010b: under the (opaque) sea the exact depth doesn't show, but the tiles have corrupt blobs hundreds of
+    // feet deep near the shore; clamp the sea floor to a plausible depth below sea level
+    const floor = Math.round((toY(0) - H.seaFloorFt) * 4);
+    let clamped = 0;
+    for (let k = 0; k < h.length; k++) if (h[k] < floor) { h[k] = floor; clamped++; }
+    console.log(`sea floor ${step} ft grid: ${clamped} samples clamped to ${H.seaFloorFt} ft below sea level`);
+  }
   return { x0, z0, step, nx: n, nz: n, h };
 }
-const near = await grid(NEAR);
-const far = await grid(FAR);
+
+/**
+ * Spec 010b: the terrain tiles have occasional corrupt samples over the ocean (spikes hundreds of feet up or down).
+ * Replace any sample that differs from the median of its 8 neighbours by more than `limitFt` with that median.
+ * Opt-in per house (H.despike), so other houses' data stays byte-identical.
+ */
+function despike(h, n, limitFt, label) {
+  // repeated passes, first over the 8 neighbours (3×3), then over 24 (5×5) for clusters of bad samples
+  let total = 0, worst = 0;
+  for (const r of [1, 2]) {
+    for (let pass = 0; pass < 12; pass++) {
+      const src = Int16Array.from(h);
+      let fixed = 0;
+      for (let j = r; j < n - r; j++)
+        for (let i = r; i < n - r; i++) {
+          const nb = [];
+          for (let dj = -r; dj <= r; dj++) for (let di = -r; di <= r; di++) if (di || dj) nb.push(src[(j + dj) * n + i + di]);
+          nb.sort((a, b) => a - b);
+          const m = nb.length >> 1, med = Math.round((nb[m - 1] + nb[m]) / 2), k = j * n + i;
+          const dev = Math.abs(src[k] - med) / 4;
+          if (dev > limitFt) { h[k] = med; fixed++; worst = Math.max(worst, dev); }
+        }
+      total += fixed;
+      if (!fixed) break;
+    }
+  }
+  console.log(`despike ${label}: ${total} samples fixed (worst ${worst.toFixed(0)} ft off its neighbours)`);
+}
+const near = await grid(NEAR, H.despike?.near);
+const far = await grid(FAR, H.despike?.far);
 const nearAt = (x, z) => {
   const fx = (x - near.x0) / near.step, fz = (z - near.z0) / near.step;
   const i = Math.max(0, Math.min(near.nx - 2, Math.floor(fx))), j = Math.max(0, Math.min(near.nz - 2, Math.floor(fz)));
@@ -224,7 +288,7 @@ const KIND = { house: 0, apartments: 1, commercial: 2, retail: 2, hotel: 2, offi
 const bCoords = [], bStart = [], bBase = [], bTop = [], bKind = [];
 let skipped = { self: 0, lot: 0, far: 0, tiny: 0 };
 for (const e of buildingsRaw) {
-  if (e === self) { skipped.self++; continue; }
+  if (selves.includes(e)) { skipped.self++; continue; }
   if (!e.geometry || e.geometry.length < 4) continue;
   let ring = e.geometry.slice(0, -1).map((g) => toModel(g.lat, g.lon));
   // drop near-duplicate vertices
@@ -291,7 +355,7 @@ const arrays = {
 const header = {
   version: 1,
   attribution: ['© OpenStreetMap contributors (ODbL)', 'Terrain: Mapzen / AWS Terrain Tiles'],
-  anchor: { lat: LAT0, lon: LON0, rotationDeg: H.rotationDeg, lotElevationM: +E0.toFixed(2), offsetX: OX, offsetZ: OZ, houseIoU: +fit.score.toFixed(3) },
+  anchor: { lat: LAT0, lon: LON0, rotationDeg: ROT, lotElevationM: +E0.toFixed(2), offsetX: OX, offsetZ: OZ, houseIoU: +fit.score.toFixed(3) },
   scale: { coords: 2, heights: 4 },
   encoding: { nearH: 'row-delta', farH: 'row-delta', bCoords: 'path-delta', rCoords: 'path-delta' },
   near: { x0: near.x0, z0: near.z0, step: near.step, nx: near.nx, nz: near.nz },

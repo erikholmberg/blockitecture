@@ -5,7 +5,10 @@ import { Brick, Kind, KIND_STUDS, KIND_UNIT, SIZES } from '@/engine/catalog';
  * Must contain every piece (tests/model.test.ts, spec 001-A1); pieces outside it skip overlap checks.
  * y reaches down to −400 plates (−160 ft) for the real hillside (spec 004).
  */
-export const G = { x0: -128, nx: 280, z0: -128, nz: 272, y0: -400, ny: 464 };
+export interface Grid { x0: number; nx: number; z0: number; nz: number; y0: number; ny: number }
+
+/** The Stahl House's grid, and the default (spec 010: each house can pass its own to `new Builder(grid)`). */
+export const G: Grid = { x0: -128, nx: 280, z0: -128, nz: 272, y0: -400, ny: 464 };
 
 export type ColorArg = number | ((x: number, y: number, z: number) => number);
 export type Mask = (x: number, z: number, y: number) => boolean;
@@ -53,11 +56,19 @@ export function noise2(x: number, z: number) {
 }
 
 export class Builder {
+  constructor(readonly grid: Grid = G) {
+    this.occ = new Uint8Array(Math.ceil((grid.nx * grid.nz * grid.ny) / 2));
+  }
   bricks: Brick[] = [];
   /** 0 = empty, otherwise phase+1 of the occupying brick; two cells per byte (4 bits each, phase+1 ≤ 8) */
-  occ = new Uint8Array(Math.ceil((G.nx * G.nz * G.ny) / 2));
+  occ: Uint8Array;
   phase = 0;
   group = 0;
+  /**
+   * Spec 012: pieces add() refused because their space was taken. A house's own pieces must never be silently dropped
+   * (tests/buildOrder.test.ts); terrain and landscaping may skip occupied space.
+   */
+  dropped: { phase: number; x: number; y: number; z: number; w: number; d: number; h: number; kind: Kind }[] = [];
   /** while true, placed pieces are flagged as ceiling-hung */
   hangs = false;
 
@@ -80,9 +91,10 @@ export class Builder {
   }
 
   private idx(x: number, y: number, z: number) {
-    x -= G.x0; z -= G.z0; y -= G.y0;
-    if (x < 0 || z < 0 || y < 0 || x >= G.nx || z >= G.nz || y >= G.ny) return -1;
-    return (y * G.nz + z) * G.nx + x;
+    const g = this.grid;
+    x -= g.x0; z -= g.z0; y -= g.y0;
+    if (x < 0 || z < 0 || y < 0 || x >= g.nx || z >= g.nz || y >= g.ny) return -1;
+    return (y * g.nz + z) * g.nx + x;
   }
   occAt(x: number, y: number, z: number) {
     const i = this.idx(x, y, z);
@@ -113,7 +125,11 @@ export class Builder {
   ): boolean {
     if (!opts.force) {
       for (let zz = z; zz < z + d; zz++)
-        for (let xx = x; xx < x + w; xx++) if (!this.free(xx, zz, y, y + h)) return false;
+        for (let xx = x; xx < x + w; xx++)
+          if (!this.free(xx, zz, y, y + h)) {
+            this.dropped.push({ phase: this.phase, x, y, z, w, d, h, kind });
+            return false;
+          }
     }
     const b: Brick = {
       x, y, z, w, d, h, color, kind,
