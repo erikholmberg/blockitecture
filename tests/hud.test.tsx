@@ -112,3 +112,24 @@ describe('007: React HUD wiring', () => {
     expect(screen.getByRole('link', { name: /All houses/ }).getAttribute('href')).toBe('/');
   });
 });
+
+describe('007: "All houses" returns home, even before the build starts', () => {
+  for (const compact of [false, true]) {
+    it(`the link sits above the intro's backdrop (${compact ? 'phone' : 'desktop'})`, () => {
+      const store = createHudStore({
+        t: 0, total: 228.7, playing: false, speed: 1, placed: 0, pieces: 27233, phase: 0,
+        mode: 'orbit', walkHint: '', autoRotate: true, phaseStart: [0, 17.5], light: 'day', hidden: false, chromeHidden: false,
+      });
+      const { container } = render(<Hud compact={compact} store={store} h={handlers()} house={{ text: STAHL.text, views: STAHL.views, phaseNames: STAHL.phases.map((p) => p.name) }} />);
+      const backdrop = container.querySelector('[data-intro]')!.parentElement!;
+      const z = (el: Element) => Number(/(?:^|\s)z-(\d+)(?:\s|$)/.exec(el.className)?.[1] ?? 0);
+      const link = container.querySelector('a[href="/"]')!;
+      expect(link).not.toBeNull();
+      // the link, or the positioned chip around it, stacks above the backdrop and takes clicks
+      let el: Element | null = link, above = false;
+      while (el && el !== container) { if (z(el) > z(backdrop) && /(^|\s)(relative|absolute|fixed)(\s|$)/.test(el.className)) { above = true; break; } el = el.parentElement; }
+      expect(above).toBe(true);
+      expect(z(backdrop)).toBeGreaterThan(0);
+    });
+  }
+});

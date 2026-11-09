@@ -220,7 +220,8 @@ export function Hud({ store, h, house, compact: compactProp }: {
           <>
             {/* spec 014: one line of title on the left, Views and Settings on the right */}
             <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
-              <a href="/" className={cn('pointer-events-auto flex h-10 min-w-0 items-center gap-1.5 rounded-md px-3 text-[13px] font-semibold', paper)}>
+              {/* spec 007: "All houses" works before the build starts too, above the intro's backdrop */}
+              <a href="/" className={cn('pointer-events-auto relative z-20 flex h-10 min-w-0 items-center gap-1.5 rounded-md px-3 text-[13px] font-semibold', paper)}>
                 <ArrowLeft className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
                 <span className="sr-only">All houses: </span>
                 <span className="truncate">{text.name}</span>
@@ -293,7 +294,8 @@ export function Hud({ store, h, house, compact: compactProp }: {
           <>
             {/* top: title and toggles */}
             <div className="absolute inset-x-3.5 top-3.5 flex flex-wrap items-start justify-between gap-2.5">
-              <div className={cn('pointer-events-auto rounded-md px-3 py-2', paper)}>
+              {/* spec 007: "All houses" works before the build starts too, above the intro's backdrop */}
+              <div className={cn('pointer-events-auto relative z-20 rounded-md px-3 py-2', paper)}>
                 <a href="/" className="mb-0.5 flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
                   <ArrowLeft className="size-3" aria-hidden /> All houses
                 </a>
