@@ -33,7 +33,7 @@ export const FALLINGWATER: HouseDefinition = {
   views: {
     overview: { label: 'Overview', view: { pos: v3(-60, 70, 190), target: v3(50, 0, 45) } },
     // the famous photograph: from downstream, below the falls, looking up at the terraces
-    classic: { label: 'The classic view', view: { pos: v3(-30, -14, 135), target: v3(48, 4, 50) } },
+    classic: { label: 'The classic view', view: { pos: v3(-30, -9, 135), target: v3(48, 4, 50) } }, // y −14 → −9: it was inside the bank (spec 028)
     living: { label: 'Living room', view: { pos: v3(47, 5, 62), target: v3(31, 3, 33) } },
     bridge: { label: 'The bridge', view: { pos: v3(168, 8, 62), target: v3(70, 4, 50) } },
     guest: { label: 'Guest wing & walkway', view: { pos: v3(95, 60, 10), target: v3(40, 30, -45) } },

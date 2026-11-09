@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import '@/styles/globals.css';
 import '@/engine/ui/styles.css';
 import { sequence } from '@/engine/sequencer';
+import { clampAboveGround, groundLookup } from '@/engine/controls/ground';
 import { BrickSet, roofCut, waterTime } from '@/engine/BrickSet';
 import { Environment } from '@/engine/scene/environment';
 import { City } from '@/engine/scene/cityBackdrop';
@@ -86,6 +87,9 @@ export async function startViewer(house: HouseDefinition) {
     }
     // the OSM credit is rendered by the HUD (src/ui/Hud.tsx)
   }
+
+  // spec 028: the orbit camera never goes below the ground (or the water) under it
+  const ground = groundLookup({ heightmap, lot: house.lot, n: hood ? await neighborhoodData : null, scenery: house.scenery });
 
   const set = new BrickSet(bricks, schedule.order, schedule.start, studs, house.roofCut, {
     flowingWater: house.scenery?.flowingWater,
@@ -279,7 +283,7 @@ export async function startViewer(house: HouseDefinition) {
     fpsEl = document.createElement('div');
     fpsEl.className = 'fps';
     app.appendChild(fpsEl);
-    const debugApi = { house, seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood, sun, renderer, scene };
+    const debugApi = { house, seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood, sun, renderer, scene, ground };
     (window as any).__viewer = debugApi;
     (window as any).__stahl = debugApi; // older name, kept for existing debug snippets
   }
@@ -312,6 +316,8 @@ export async function startViewer(house: HouseDefinition) {
         if (glide.done) glide = null;
       }
       orbit.update(dt);
+      const c = clampAboveGround(camera.position, ground);
+      if (c !== camera.position) camera.position.y = c.y;
     }
     // spec 011: keep the near plane as far out as the camera allows, for depth precision (no flicker far away)
     const near = mode === 'walk' ? WALK_NEAR : orbitNear(camera.position.distanceTo(orbit.target));
