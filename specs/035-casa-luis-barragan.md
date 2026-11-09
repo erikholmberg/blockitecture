@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** casa-luis-barragan
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** c203b49 (spec), fa8a84a (build)
 
 ## Goal
 The tenth rendering: Luis Barragán's own house and studio (1948) at General Francisco Ramírez 12–14, Tacubaya, Mexico City, a UNESCO
@@ -180,4 +180,5 @@ About 3 minutes.
   - **A14 pass:** 60 fps at `?dpr=1.75` (2.0M triangles).
   - **A15 pass:** the home page shows the tenth card live with its thumbnail, and the credits page has its section with the Barragan
     Foundation in the disclaimer (Q3).
+- **Claude usage** (spec 018): 53 replies; 73.0k output, 120.0k cache-write and 20.9M cache-read tokens; 3.6% of all tokens so far.
 - **Thumbnail:** `/casa-luis-barragan/?view=terrace&clean&date=2026-06-21`, cropped to 1200 × 675.
