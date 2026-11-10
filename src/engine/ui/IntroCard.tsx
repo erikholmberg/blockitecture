@@ -7,11 +7,13 @@ import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import type { HouseDefinition } from '@/engine/house';
 
-export function IntroCard({ text, pieces, compact, onStart, credit }: {
+export function IntroCard({ text, pieces, compact, onStart, onFinished, credit }: {
   text: HouseDefinition['text'];
   pieces: number;
   compact: boolean;
   onStart: () => void;
+  /** spec 037: skip straight to the finished house */
+  onFinished?: () => void;
   /** the map credit, shown on phones (where it isn't in the corner) */
   credit?: ReactNode;
 }) {
@@ -30,10 +32,17 @@ export function IntroCard({ text, pieces, compact, onStart, credit }: {
         <p className="text-sm leading-relaxed text-muted-foreground">
           {text.intro[0]} <b className="text-foreground">{pieces.toLocaleString('en-US')}</b> {text.intro[1]}
         </p>
-        <Button className="w-fit gap-1.5 px-4" onClick={onStart}>
-          <Play className="size-3.5 fill-current" />
-          Start building
-        </Button>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <Button className="w-fit gap-1.5 px-4" onClick={onStart}>
+            <Play className="size-3.5 fill-current" />
+            Start building
+          </Button>
+          {onFinished && (
+            <button type="button" onClick={onFinished} className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground">
+              See it finished
+            </button>
+          )}
+        </div>
       </div>
       <div data-intro-footer className="flex flex-col gap-2.5 border-t bg-muted/60 px-6 py-3.5">
         <ul className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-foreground/80">

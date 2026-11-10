@@ -15,6 +15,8 @@ export interface HudSnapshot {
   hidden: boolean;
   /** spec 014: the visitor tapped the scene to hide the controls (phones only; ignored on wide screens) */
   chromeHidden: boolean;
+  /** spec 037: a brief note, such as "Link copied" ('' or absent: none) */
+  note?: string;
 }
 
 export function createHudStore(initial: HudSnapshot) {

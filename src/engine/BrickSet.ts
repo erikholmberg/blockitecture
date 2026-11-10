@@ -5,7 +5,10 @@ import { Stud } from '@/engine/voxel';
 import { DROP_DUR } from '@/engine/sequencer';
 import type { HouseDefinition } from '@/engine/house';
 
-const DROP_HEIGHT = 9;
+import { DROP_HEIGHT } from '@/engine/motion';
+/** how far pieces drop into place, in plates; 0 with reduced motion (spec 037) */
+let dropHeight = DROP_HEIGHT;
+export const setDropHeight = (h: number) => { dropHeight = h; };
 
 /** When on, everything above the ceiling inside the roof outline is cut away. */
 export const roofCut = { value: 0 };
@@ -166,7 +169,7 @@ class Layer {
       const p = Math.min(1, (t - this.start[i]) / DROP_DUR);
       const e = 1 - p;
       // ease-out with a tiny settle
-      const off = e * e * e * DROP_HEIGHT - Math.sin(p * Math.PI) * 0.06;
+      const off = dropHeight === 0 ? 0 : e * e * e * dropHeight - Math.sin(p * Math.PI) * 0.06;
       m[i * 16 + 13] = this.base13[i] + off;
     }
     const a = Math.min(this.prevLo, lo), b = Math.max(this.prevHi, count);

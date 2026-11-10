@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  ArrowLeft, Expand, Eye, Home, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Repeat, SlidersHorizontal,
+  ArrowLeft, Expand, Eye, Home, ImageDown, Link2, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Repeat, Share2, SlidersHorizontal,
 } from 'lucide-react';
 import type { HouseDefinition } from '@/engine/house';
 import { Button } from '@/components/ui/button';
@@ -40,6 +40,8 @@ export interface HudHandlers {
   onLight(l: 'day' | 'dusk'): void;
   onRoof(on: boolean): void;
   onCam(a: CamAction): void;
+  /** spec 037: copy a link to this view, or save a postcard of it */
+  onShare?(kind: 'link' | 'image'): void;
 }
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -109,6 +111,24 @@ function CamButton({ label, keyHint, onClick, pressed, children }: {
   );
 }
 
+/** spec 037: Share, beside the camera controls on wide screens */
+function ShareMenu({ h }: { h: HudHandlers }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon" aria-label="Share" className={cn('size-9 rounded-lg', paper)}>
+          <Share2 />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="left" align="start" className="min-w-44">
+        <DropdownMenuLabel>Share</DropdownMenuLabel>
+        <DropdownMenuItem onSelect={() => h.onShare?.('link')}><Link2 /> Copy link</DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => h.onShare?.('image')}><ImageDown /> Save image</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 function ViewsMenu({ house, h }: { house: HudHouse; h: HudHandlers }) {
   return (
     <DropdownMenu>
@@ -174,6 +194,8 @@ export function Hud({ store, h, house, compact: compactProp }: {
     </div>
   );
   const phaseLabel = done ? text.complete : house.phaseNames[s.phase];
+  // spec 037: what the screen-reader live region says: the phase as it starts, then Complete
+  const announcement = !started ? '' : done ? 'Complete' : `Now building: ${house.phaseNames[s.phase]}`;
   const count = `${s.placed.toLocaleString('en-US')} / ${s.pieces.toLocaleString('en-US')} pieces`;
   const playButton = (
     <Button size="icon" className="size-9 shrink-0 rounded-full" aria-label={s.playing ? 'Pause (P)' : 'Play (P)'} title="Play / pause (P)" onClick={h.onPlayPause}>
@@ -201,8 +223,17 @@ export function Hud({ store, h, house, compact: compactProp }: {
               pieces={s.pieces}
               compact={compact}
               onStart={() => { setStarted(true); h.onStart(); }}
+              onFinished={() => { setStarted(true); h.onStart(); h.onFinish(); }}
               credit={<a href={OSM_URL} target="_blank" rel="noopener" className="text-[11px] text-muted-foreground underline">{CREDIT}</a>}
             />
+          </div>
+        )}
+
+        {/* spec 037: build progress for screen readers (visually hidden), and brief notes such as "Link copied" */}
+        <div aria-live="polite" className="sr-only">{announcement}</div>
+        {s.note && (
+          <div role="status" className="absolute top-16 left-1/2 -translate-x-1/2 rounded-md bg-foreground px-3.5 py-2 text-[13px] text-background shadow-sm">
+            {s.note}
           </div>
         )}
 
@@ -265,6 +296,10 @@ export function Hud({ store, h, house, compact: compactProp }: {
                     )}
                     {fullscreenOk && <DropdownMenuItem onSelect={() => h.onCam('full')}><Expand /> Fullscreen</DropdownMenuItem>}
                     <DropdownMenuItem onSelect={h.onRestart}><RotateCcw /> Restart</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>Share</DropdownMenuLabel>
+                    <DropdownMenuItem onSelect={() => h.onShare?.('link')}><Link2 /> Copy link</DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => h.onShare?.('image')}><ImageDown /> Save image</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild className="text-[11px] leading-snug text-muted-foreground">
                       <a href={OSM_URL} target="_blank" rel="noopener">{CREDIT}</a>
@@ -330,6 +365,7 @@ export function Hud({ store, h, house, compact: compactProp }: {
                 <CamButton label="Default view" keyHint="H" onClick={() => h.onCam('home')}><Home /></CamButton>
                 <CamButton label="Auto-rotate" keyHint="R" pressed={s.autoRotate} onClick={() => h.onCam('auto')}><Repeat /></CamButton>
                 {fullscreenOk && <CamButton label="Fullscreen" onClick={() => h.onCam('full')}><Expand /></CamButton>}
+                <ShareMenu h={h} />
               </div>
             )}
 
@@ -382,6 +418,11 @@ export function mountHud(parent: HTMLElement, h: HudHandlers, total: number, pie
     setAutoRotate: (autoRotate: boolean) => store.set({ autoRotate }),
     setLight: (light: 'day' | 'dusk') => store.set({ light }),
     hide: () => store.set({ hidden: true }),
+    /** spec 037: a brief note ("Link copied"), cleared after a couple of seconds */
+    note: (note: string) => {
+      store.set({ note });
+      setTimeout(() => { if (store.get().note === note) store.set({ note: '' }); }, 2200);
+    },
   };
 }
 export type HudApi = ReturnType<typeof mountHud>;

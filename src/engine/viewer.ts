@@ -17,6 +17,10 @@ import { Glide, MAX_DIST, MIN_DIST, orbitNear, rotated, View, WALK_NEAR, zoomed 
 import { wantsCity, type HouseDefinition } from '@/engine/house';
 import { dateParam, sunFor } from '@/engine/scene/sun';
 import { exposureAt } from '@/engine/introDim';
+import { motionSettings, prefersReducedMotion } from '@/engine/motion';
+import { setDropHeight } from '@/engine/BrickSet';
+import { Cam, postcardCaption, postcardFileName, readShare, shareLink, shareQuery } from '@/engine/share';
+import { deliverPostcard, renderPostcard } from '@/engine/postcard';
 
 /**
  * Spec 010a: the viewer for one house. Each house page calls this with its HouseDefinition;
@@ -28,9 +32,12 @@ export async function startViewer(house: HouseDefinition) {
   const params = new URLSearchParams(location.search);
   const DEBUG = params.has('debug');
   // spec 007: ?view=<key>&light=dusk for sharing a view; &clean = finished house, no HUD (for thumbnails)
-  const VIEW_PARAM = params.get('view');
+  // spec 037: also ?cam=x,y,z,tx,ty,tz and ?t=<seconds>, read by readShare() once the schedule is known
   const LIGHT_PARAM = params.get('light') === 'dusk' ? 'dusk' : 'day';
   const CLEAN = params.has('clean');
+  // spec 037: reduced motion: no auto-rotate, camera moves jump, pieces appear in place
+  const motion = motionSettings(prefersReducedMotion());
+  setDropHeight(motion.dropHeight);
   const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
   // the real neighborhood (spec 003) downloads while the model is generated
@@ -97,6 +104,7 @@ export async function startViewer(house: HouseDefinition) {
   });
   scene.add(set.group);
 
+
   // ---------- controls ----------
   const orbit = new OrbitControls(camera, renderer.domElement);
   orbit.target.set(house.center.x, house.center.y, house.center.z);
@@ -105,7 +113,7 @@ export async function startViewer(house: HouseDefinition) {
   orbit.minDistance = MIN_DIST;
   orbit.maxDistance = MAX_DIST; // spec 006 (was 520)
   orbit.maxPolarAngle = Math.PI * 0.53;
-  orbit.autoRotate = true;
+  orbit.autoRotate = motion.autoRotate;
   orbit.autoRotateSpeed = -0.35;
   // grabbing the scene stops auto-rotation and any glide in progress (spec 006)
   orbit.addEventListener('start', () => {
@@ -140,7 +148,7 @@ export async function startViewer(house: HouseDefinition) {
       : a === 'right' ? rotated(base, 1)
       : a === 'home' ? house.views.overview.view
       : (house.views[a.slice(5)] ?? house.views.overview).view;
-    glide = new Glide(currentView(), to);
+    glide = new Glide(currentView(), to, motion.glide ? undefined : 0);
     orbit.autoRotate = false;
     hud.setAutoRotate(false);
   }
@@ -158,6 +166,7 @@ export async function startViewer(house: HouseDefinition) {
   let sinceStart: number | null = null;
   let speed = 1;
   let mode: 'orbit' | 'walk' = 'orbit';
+  let light: 'day' | 'dusk' = LIGHT_PARAM;
   const savedOrbit = { pos: new THREE.Vector3(), target: new THREE.Vector3() };
 
   const currentPhase = () => {
@@ -231,21 +240,49 @@ export async function startViewer(house: HouseDefinition) {
     onFinish() { t = schedule.total; },
     onRestart() { t = 0; playing = true; },
     onMode: setMode,
-    onLight(l) { env.set(l); hud.setLight(l); },
+    onLight(l) { light = l; env.set(l); hud.setLight(l); },
+    onShare: (kind) => void (kind === 'link' ? copyLink() : savePostcard()),
     onRoof(on) { roofCut.value = on ? 0 : 1; },
     onCam: camAction,
   }, schedule.total, bricks.length, { text: house.text, views: house.views, phaseNames: house.phases.map((p) => p.name) });
   hud.setPhaseTicks(schedule.phaseStart, schedule.total);
 
-  if (VIEW_PARAM && house.views[VIEW_PARAM]) {
-    const v = house.views[VIEW_PARAM].view;
-    camera.position.set(v.pos.x, v.pos.y, v.pos.z);
-    orbit.target.set(v.target.x, v.target.y, v.target.z);
+  hud.setAutoRotate(orbit.autoRotate);
+  // a shared view (spec 007's ?view=, spec 037's ?cam= and ?t=)
+  const shared = readShare(params, Object.keys(house.views), schedule.total);
+  const sharedView = shared.view ? house.views[shared.view].view
+    : shared.cam ? { pos: { x: shared.cam[0], y: shared.cam[1], z: shared.cam[2] }, target: { x: shared.cam[3], y: shared.cam[4], z: shared.cam[5] } }
+    : null;
+  if (sharedView) {
+    camera.position.set(sharedView.pos.x, sharedView.pos.y, sharedView.pos.z);
+    orbit.target.set(sharedView.target.x, sharedView.target.y, sharedView.target.z);
     orbit.autoRotate = false;
     hud.setAutoRotate(false);
     orbit.update();
   }
+  if (shared.t !== undefined) t = shared.t;
   if (LIGHT_PARAM === 'dusk') { env.set('dusk'); hud.setLight('dusk'); }
+
+  // ---------- share (spec 037) ----------
+  function shareState() {
+    const pos = mode === 'walk' ? savedOrbit.pos : camera.position;
+    const target = mode === 'walk' ? savedOrbit.target : orbit.target;
+    const near = (a: { x: number; y: number; z: number }, b: { x: number; y: number; z: number }) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) < 0.5;
+    const view = Object.keys(house.views).find((k) => near(house.views[k].view.pos, pos) && near(house.views[k].view.target, target));
+    const cam: Cam = [pos.x, pos.y, pos.z, target.x, target.y, target.z];
+    return shareQuery({ view, cam: view ? undefined : cam, light, t, total: schedule.total });
+  }
+  async function copyLink() {
+    const q = shareState();
+    const url = `${location.origin}${location.pathname}${q ? `?${q}` : ''}`;
+    const r = await shareLink(url, house.text.name, navigator, isTouch);
+    if (r === 'copied') hud.note('Link copied');
+    else if (r === 'failed') hud.note("Couldn't copy the link");
+  }
+  async function savePostcard() {
+    const blob = await renderPostcard(renderer, scene, camera, postcardCaption(house.text, location.host));
+    if (blob) await deliverPostcard(blob, postcardFileName(house.slug), house.text.name, isTouch);
+  }
   if (CLEAN) {
     t = schedule.total;
     orbit.autoRotate = false;
@@ -286,7 +323,12 @@ export async function startViewer(house: HouseDefinition) {
     fpsEl = document.createElement('div');
     fpsEl.className = 'fps';
     app.appendChild(fpsEl);
-    const debugApi = { house, seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood, sun, renderer, scene, ground };
+    const debugApi = {
+      house, seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood, sun, renderer, scene, ground,
+      // spec 037: the share link's query and the postcard, for checking without the clipboard or a download
+      shareQuery: () => shareState(),
+      postcard: () => renderPostcard(renderer, scene, camera, postcardCaption(house.text, location.host)),
+    };
     (window as any).__viewer = debugApi;
     (window as any).__stahl = debugApi; // older name, kept for existing debug snippets
   }
