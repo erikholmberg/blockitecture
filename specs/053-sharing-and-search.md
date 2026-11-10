@@ -3,7 +3,7 @@
 - **Status:** In progress (approved by Erik 2026-11-10: "build it, no custom domain": all recommendations)
 - **Owner:** Erik
 - **Created:** 2026-11-10
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 90dfc04
 
 ## Goal
 Erik asked (2026-11-10) for link previews when the site is shared, and for the site to be easy to find in search engines (SEO) and
