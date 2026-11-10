@@ -1,10 +1,10 @@
 # 052 — Vercel Web Analytics
 
 - **Status:** In progress (approved by Erik 2026-11-10: "build it", all recommendations. Built and checked in dev; waiting on
-  Erik to enable Analytics in Vercel and deploy, A4. Not committed.)
+  Erik to enable Analytics in Vercel and deploy, A4. Committed with Erik's go-ahead, 2026-11-10.)
 - **Owner:** Erik
 - **Created:** 2026-11-10
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 18267a9
 
 ## Goal
 Erik asked to add Vercel Analytics to the site (2026-11-10), to see how many people visit and which houses they open. The site
