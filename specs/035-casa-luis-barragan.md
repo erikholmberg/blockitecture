@@ -167,8 +167,7 @@ About 3 minutes.
 - **Manual checks** (Chrome, 2026-11-09):
   - **A10 pass** (16×): the ground and the floors, the walls and first floor rising room by room, then the furniture, then the roof
     with the coloured walls, then the garden.
-  - **A11 pass:** *The roof terrace* shows the white, orange and pink walls against the sky, with the garden's trees beyond. It's
-    the thumbnail.
+  - **A11 pass:** *The roof terrace* shows the white, orange and pink walls against the sky, with the garden's trees beyond.
   - **A12 pass:** flat ground reads as built-up city in every direction, with the neighbours from OSM.
   - **A13 partial:**
     - All views work.
@@ -181,4 +180,6 @@ About 3 minutes.
   - **A15 pass:** the home page shows the tenth card live with its thumbnail, and the credits page has its section with the Barragan
     Foundation in the disclaimer (Q3).
 - **Claude usage** (spec 018): 53 replies; 73.0k output, 120.0k cache-write and 20.9M cache-read tokens; 3.6% of all tokens so far.
-- **Thumbnail:** `/casa-luis-barragan/?view=terrace&clean&date=2026-06-21`, cropped to 1200 × 675.
+- **Thumbnail:** `/casa-luis-barragan/?cam=-30,58,45,60,10,110&clean&date=2026-06-21`, cropped to 1200 × 675: the house from above the
+  garden, with the tower and the terrace's coloured walls. It was first *The roof terrace* (`?view=terrace`); Erik found that hard to
+  read as the house on the home page (2026-11-09).
