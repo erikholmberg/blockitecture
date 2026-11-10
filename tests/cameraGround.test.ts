@@ -11,6 +11,7 @@ import { MALAPARTE } from '../src/houses/casa-malaparte/definition';
 import { KAUFMANN } from '../src/houses/kaufmann-desert-house/definition';
 import { LOVELL } from '../src/houses/lovell-health-house/definition';
 import { BARRAGAN } from '../src/houses/casa-luis-barragan/definition';
+import { KOSHINO } from '../src/houses/koshino-house/definition';
 import { FALLINGWATER } from '../src/houses/fallingwater/definition';
 import { FARNSWORTH } from '../src/houses/farnsworth-house/definition';
 import { SCHRODER } from '../src/houses/rietveld-schroder-house/definition';
@@ -50,7 +51,7 @@ describe('028: the camera stays above the ground', () => {
   });
 
   it('A3: every house\'s named views start above the ground (the clamp leaves them alone)', () => {
-    for (const h of [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN]) {
+    for (const h of [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO]) {
       const { ground } = load(h);
       for (const [name, v] of Object.entries(h.views)) {
         const p = v.view.pos;

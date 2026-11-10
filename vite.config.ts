@@ -18,6 +18,7 @@ export const PAGES = {
   'kaufmann-desert-house': r('./kaufmann-desert-house/index.html'),
   'lovell-health-house': r('./lovell-health-house/index.html'),
   'casa-luis-barragan': r('./casa-luis-barragan/index.html'),
+  'koshino-house': r('./koshino-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

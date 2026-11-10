@@ -33,6 +33,6 @@ describe('007: house registry', () => {
     expect(HOUSES.filter((h) => h.status === 'coming-soon').map((h) => h.slug)).toEqual([
       // spec 020's Kaufmann Desert House was the last; specs 031 and 033 made Casa Malaparte and it live
     ]);
-    expect(HOUSES.filter((h) => h.status === 'live').map((h) => h.slug)).toEqual(['stahl-house', 'eames-house', 'fallingwater', 'rietveld-schroder-house', 'farnsworth-house', 'ennis-house', 'casa-malaparte', 'kaufmann-desert-house', 'lovell-health-house', 'casa-luis-barragan']);
+    expect(HOUSES.filter((h) => h.status === 'live').map((h) => h.slug)).toEqual(['stahl-house', 'eames-house', 'fallingwater', 'rietveld-schroder-house', 'farnsworth-house', 'ennis-house', 'casa-malaparte', 'kaufmann-desert-house', 'lovell-health-house', 'casa-luis-barragan', 'koshino-house']);
   });
 });

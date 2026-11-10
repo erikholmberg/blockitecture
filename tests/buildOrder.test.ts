@@ -13,9 +13,10 @@ import { MALAPARTE } from '../src/houses/casa-malaparte/definition';
 import { KAUFMANN } from '../src/houses/kaufmann-desert-house/definition';
 import { LOVELL } from '../src/houses/lovell-health-house/definition';
 import { BARRAGAN } from '../src/houses/casa-luis-barragan/definition';
+import { KOSHINO } from '../src/houses/koshino-house/definition';
 
 /** every house definition; adding a live house without adding it here fails A2 */
-const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN];
+const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO];
 
 describe('012: roof last, on every house', () => {
   it('A2: every live house is covered', () => {

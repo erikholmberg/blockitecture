@@ -192,6 +192,23 @@ export const HOUSES: House[] = [
       'Published photographs of the house',
     ],
   },
+  {
+    slug: 'koshino-house',
+    title: 'Koshino House',
+    architect: 'Tadao Ando',
+    year: 1981,
+    location: 'Ashiya, Japan',
+    status: 'live',
+    pieces: 32_677,
+    thumbnail: '/koshino-house/thumbnail.jpg',
+    blurb: 'Two boxes of bare concrete sunk into a wooded slope, a courtyard of steps between them, and a curved studio.',
+    affiliations: ['Hiroko Koshino', 'KH Gallery', 'Tadao Ando Architect & Associates'],
+    sources: [
+      'Plans, section and aerial photograph as published (ArchDaily, "AD Classics: Koshino House"; Arquitectura Viva), without dimensions',
+      'Its outline and the neighbourhood: OpenStreetMap',
+      'Published photographs of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
