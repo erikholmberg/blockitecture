@@ -23,7 +23,7 @@ export const FARNSWORTH: HouseDefinition = {
     ],
     complete: 'Complete. Welcome to the Farnsworth House',
     disclaimer:
-      'Fan tribute in a generic toy-block style. Not affiliated with the National Trust for Historic Preservation, the Farnsworth House or the LEGO Group.',
+      'Fan tribute in a generic toy-block style. Not affiliated with the National Trust for Historic Preservation or the Farnsworth House.',
   },
   site: SITE,
   phases: PHASES,

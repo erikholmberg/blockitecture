@@ -22,7 +22,7 @@ export const BARRAGAN: HouseDefinition = {
     ],
     complete: 'Complete. Welcome to Casa Luis Barragán',
     disclaimer:
-      'Fan tribute in a generic toy-block style. Not affiliated with the Casa Luis Barragán, the Fundación de Arquitectura Tapatía Luis Barragán, the Barragan Foundation or the LEGO Group.',
+      'Fan tribute in a generic toy-block style. Not affiliated with the Casa Luis Barragán, the Fundación de Arquitectura Tapatía Luis Barragán or the Barragan Foundation.',
   },
   site: SITE,
   phases: PHASES,

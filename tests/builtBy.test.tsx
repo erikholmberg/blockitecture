@@ -19,6 +19,6 @@ describe('024: built by Erik Holmberg', () => {
 
   it('A2: the fan-tribute line moved: not in the footer, still on the credits page', () => {
     expect(footer.textContent).not.toMatch(/Fan tributes/);
-    expect(doc(renderToString(<CreditsPage houses={HOUSES} />)).body.textContent).toMatch(/fan tribute in a generic toy-block style, not affiliated with the LEGO Group/);
+    expect(doc(renderToString(<CreditsPage houses={HOUSES} />)).body.textContent).toMatch(/fan tribute in a generic toy-block style, not affiliated with the people or organisations named with it/); // spec 046: no LEGO Group
   });
 });

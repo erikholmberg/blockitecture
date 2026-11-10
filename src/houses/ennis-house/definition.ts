@@ -22,7 +22,7 @@ export const ENNIS: HouseDefinition = {
     ],
     complete: 'Complete. Welcome to the Ennis House',
     disclaimer:
-      'Fan tribute in a generic toy-block style. Not affiliated with the Ennis House Foundation, the Frank Lloyd Wright Foundation or the LEGO Group.',
+      'Fan tribute in a generic toy-block style. Not affiliated with the Ennis House Foundation or the Frank Lloyd Wright Foundation.',
   },
   site: SITE,
   phases: PHASES,

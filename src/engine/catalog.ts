@@ -1,6 +1,9 @@
 /** Units: 1 world unit = 1 stud (~1 ft at minifig-ish scale). Heights are counted in plates. */
 export const PLATE = 0.4;
 
+/** Spec 046: the pieces' studs aren't drawn (the models still record them, so studs could come back with this one switch). */
+export const DRAW_STUDS = false;
+
 export type Kind =
   | 'brick' // studded box
   | 'plate' // studded thin box

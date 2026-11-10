@@ -22,7 +22,7 @@ export const SCHRODER: HouseDefinition = {
     ],
     complete: 'Complete. Welcome to the Schröder House',
     disclaimer:
-      'Fan tribute in a generic toy-block style. Not affiliated with the Centraal Museum, the Rietveld Schröderhuis, Cassina or the LEGO Group.',
+      'Fan tribute in a generic toy-block style. Not affiliated with the Centraal Museum, the Rietveld Schröderhuis or Cassina.',
   },
   site: SITE,
   phases: PHASES,

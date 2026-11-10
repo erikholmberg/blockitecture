@@ -22,7 +22,7 @@ export const FALLINGWATER: HouseDefinition = {
     ],
     complete: 'Complete. Welcome to Fallingwater',
     disclaimer:
-      'Fan tribute in a generic toy-block style. Not affiliated with the Western Pennsylvania Conservancy, the Frank Lloyd Wright Foundation or the LEGO Group.',
+      'Fan tribute in a generic toy-block style. Not affiliated with the Western Pennsylvania Conservancy or the Frank Lloyd Wright Foundation.',
   },
   site: SITE,
   phases: PHASES,

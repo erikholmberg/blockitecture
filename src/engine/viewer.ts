@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { DRAW_STUDS } from '@/engine/catalog';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import '@/styles/globals.css';
 import '@/engine/ui/styles.css';
@@ -53,7 +54,7 @@ export async function startViewer(house: HouseDefinition) {
   const t0 = performance.now();
   const { builder, heightmap } = house.build();
   const schedule = sequence(builder.bricks, house.phases, house.center);
-  const studs = builder.computeStuds(schedule.order);
+  const studs = DRAW_STUDS ? builder.computeStuds(schedule.order) : [];
   const bricks = builder.bricks;
   builder.occ = new Uint8Array(0); // free memory
   if (DEBUG) console.log(`[${house.slug}] ${bricks.length} pieces, ${studs.length} studs, generated in ${(performance.now() - t0).toFixed(0)} ms`);

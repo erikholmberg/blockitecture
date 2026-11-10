@@ -23,7 +23,7 @@ export const MALAPARTE: HouseDefinition = {
       'pieces snap into place, from the rock to the white wall on the roof. Fly around it, or walk in while it goes up.',
     ],
     complete: 'Complete. Welcome to Casa Malaparte',
-    disclaimer: 'Fan tribute in a generic toy-block style. Not affiliated with the Fondazione Giorgio Ronchi or the LEGO Group.',
+    disclaimer: 'Fan tribute in a generic toy-block style. Not affiliated with the Fondazione Giorgio Ronchi.',
   },
   site: SITE,
   phases: PHASES,

@@ -21,7 +21,7 @@ export const LOVELL: HouseDefinition = {
       'pieces snap into place, from the pool under the house to the roof. Fly around it, or walk in while it goes up.',
     ],
     complete: 'Complete. Welcome to the Lovell Health House',
-    disclaimer: 'Fan tribute in a generic toy-block style. Not affiliated with the owners of the Lovell House, the Neutra estate or the LEGO Group.',
+    disclaimer: 'Fan tribute in a generic toy-block style. Not affiliated with the owners of the Lovell House or the Neutra estate.',
   },
   site: SITE,
   phases: PHASES,
