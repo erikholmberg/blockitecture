@@ -1,4 +1,3 @@
-import { Separator } from '@/components/ui/separator';
 import { House } from '@/houses/index';
 import { HouseCard } from '@/home/HouseCard';
 
@@ -26,7 +25,6 @@ export function HomePage({ houses }: { houses: House[] }) {
         </main>
 
         <footer className="mt-14 text-xs text-muted-foreground">
-          <Separator className="mb-5" />
           <p>
             Built by{' '}
             <a className="underline underline-offset-2 hover:text-foreground" href="https://erikholmberg.com">

@@ -62,7 +62,6 @@ export function CreditsPage({ houses }: { houses: House[] }) {
         </main>
 
         <footer className="mt-14 text-xs text-muted-foreground">
-          <Separator className="mb-5" />
           <a href="/" className="underline underline-offset-2 hover:text-foreground">
             ← All houses
           </a>
