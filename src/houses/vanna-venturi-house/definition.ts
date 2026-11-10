@@ -21,7 +21,7 @@ export const VANNA_VENTURI: HouseDefinition = {
       'pieces snap into place, from the lawn to the stepped roof. Fly around it, or walk in while it goes up.',
     ],
     complete: 'Complete. Welcome to the Vanna Venturi House',
-    disclaimer: "Fan tribute in a generic toy-block style. Not affiliated with the house's owners or VSBA Architects & Planners (Venturi Scott Brown).",
+    disclaimer: "Fan tribute. Not affiliated with the house's owners or VSBA Architects & Planners (Venturi Scott Brown).",
   },
   site: SITE,
   phases: PHASES,

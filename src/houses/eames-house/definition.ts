@@ -23,7 +23,7 @@ export const EAMES: HouseDefinition = {
     ],
     complete: 'Complete. Welcome to Case Study House #8',
     disclaimer:
-      'Fan tribute in a generic toy-block style. Not affiliated with the Eames Office, the Eames Foundation, Herman Miller or Vitra.',
+      'Fan tribute. Not affiliated with the Eames Office, the Eames Foundation, Herman Miller or Vitra.',
   },
   site: SITE,
   phases: PHASES,

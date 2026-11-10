@@ -19,7 +19,7 @@ export function CreditsPage({ houses }: { houses: House[] }) {
           </a>
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Credits &amp; disclaimers</h1>
           <p className="mt-3 text-base text-muted-foreground text-pretty">
-            Every house here is a fan tribute in a generic toy-block style, not affiliated with the people or organisations named with it.
+            Every house here is a fan tribute, not affiliated with the people or organisations named with it.
           </p>
         </header>
 

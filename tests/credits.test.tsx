@@ -39,8 +39,8 @@ describe('021: a credits page', () => {
   });
 
   it('A2: the credits page has the fan-tribute line, and each live house with its affiliations and sources', () => {
-    // spec 046: the LEGO Group is no longer named
-    expect(creditsText).toMatch(/fan tribute in a generic toy-block style, not affiliated with/);
+    // spec 046: the LEGO Group is no longer named; spec 048: nor the toy-block style
+    expect(creditsText).toMatch(/fan tribute, not affiliated with/);
     for (const h of live) {
       const section = credits.querySelector(`[data-credits="${h.slug}"]`);
       expect(section, h.slug).not.toBeNull();

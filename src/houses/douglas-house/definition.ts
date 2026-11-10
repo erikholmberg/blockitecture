@@ -21,7 +21,7 @@ export const DOUGLAS: HouseDefinition = {
       'pieces snap into place, from the piles in the slope to the smokestacks. Fly around it, or walk in while it goes up.',
     ],
     complete: 'Complete. Welcome to the Douglas House',
-    disclaimer: "Fan tribute in a generic toy-block style. Not affiliated with the house's owners or Meier Partners (formerly Richard Meier & Partners Architects).",
+    disclaimer: "Fan tribute. Not affiliated with the house's owners or Meier Partners (formerly Richard Meier & Partners Architects).",
   },
   site: SITE,
   phases: PHASES,

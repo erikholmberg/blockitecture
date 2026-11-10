@@ -21,7 +21,7 @@ export const KAUFMANN: HouseDefinition = {
       'pieces snap into place, from the footings to the palms. Fly around it, or walk in while it goes up.',
     ],
     complete: 'Complete. Welcome to the Kaufmann Desert House',
-    disclaimer: 'Fan tribute in a generic toy-block style. Not affiliated with the owners of the Kaufmann House or the Neutra estate.',
+    disclaimer: 'Fan tribute. Not affiliated with the owners of the Kaufmann House or the Neutra estate.',
   },
   site: SITE,
   phases: PHASES,

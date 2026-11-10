@@ -21,7 +21,7 @@ export const ROSE_SEIDLER: HouseDefinition = {
       'pieces snap into place, from the sandstone base to the gum trees. Fly around it, or walk in while it goes up.',
     ],
     complete: 'Complete. Welcome to the Rose Seidler House',
-    disclaimer: 'Fan tribute in a generic toy-block style. Not affiliated with Museums of History NSW or Harry Seidler & Associates.',
+    disclaimer: 'Fan tribute. Not affiliated with Museums of History NSW or Harry Seidler & Associates.',
   },
   site: SITE,
   phases: PHASES,

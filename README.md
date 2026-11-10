@@ -54,5 +54,5 @@ npm run build   # static site in dist/ (deployed on Vercel)
 4. When it's live: a page at `<slug>/index.html`, listed in `PAGES` in `vite.config.ts`, and `public/<slug>/thumbnail.jpg`
    (1200 × 675, captured from `/<slug>/?view=…&clean&date=…`).
 
-These are fan tributes in a generic toy-block style, not affiliated with the houses' architects, owners or museums: each is
-named on its intro card and on the credits page.
+These are fan tributes, not affiliated with the houses' architects, owners or museums: each is named on its intro card and
+on the credits page.

@@ -21,7 +21,7 @@ export const SHEATS_GOLDSTEIN: HouseDefinition = {
       'pieces snap into place, from the ridge to the garden. Fly around it, or walk in while it goes up.',
     ],
     complete: 'Complete. Welcome to the Sheats-Goldstein Residence',
-    disclaimer: 'Fan tribute in a generic toy-block style. Not affiliated with James Goldstein, LACMA or the John Lautner Foundation.',
+    disclaimer: 'Fan tribute. Not affiliated with James Goldstein, LACMA or the John Lautner Foundation.',
   },
   site: SITE,
   phases: PHASES,
