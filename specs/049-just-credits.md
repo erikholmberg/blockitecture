@@ -1,9 +1,9 @@
 # 049 — Just "Credits"
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it". Built and checked in Chrome; not committed.)
+- **Status:** In progress (approved by Erik 2026-11-10: "build it". Built and checked in Chrome; committed with Erik's go-ahead, 2026-11-10.)
 - **Owner:** Erik
 - **Created:** 2026-11-10
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 0147ded
 
 ## Goal
 The credits page (spec 021) is labelled "Credits & disclaimers". Since specs 046 and 048, what's left of the disclaimers is one
