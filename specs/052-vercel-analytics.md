@@ -1,7 +1,7 @@
 # 052 — Vercel Web Analytics
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it", all recommendations. Built and checked in dev; waiting on
-  Erik to enable Analytics in Vercel and deploy, A4. Committed with Erik's go-ahead, 2026-11-10.)
+- **Status:** In progress (approved by Erik 2026-11-10: "build it", all recommendations. Built and checked in dev; committed
+  with Erik's go-ahead, 2026-11-10. Analytics enabled and A4 checked on the live site the same day.)
 - **Owner:** Erik
 - **Created:** 2026-11-10
 - **Commits:** 18267a9
@@ -62,6 +62,10 @@ is already deployed on Vercel (`vercel.json`, README), so its Web Analytics fit 
 - **In dev** (Chrome): the package loads Vercel's debug script (`va.vercel-scripts.com/v1/script.debug.js`), which logs each
   page view to the console and sends nothing ("No requests will be sent to the server"). Seen on the credits page and the Rose
   Seidler House's page.
-- **A4 not checked:** needs Analytics enabled in the Vercel project and a deploy.
+- **Enabled** 2026-11-10 in the Vercel dashboard (Project → Analytics → Enable), by Claude in Chrome with Erik's go-ahead: the
+  "Web Analytics, included in your plan" option (Pro; usage past the included events is billed at $30 per extra 1M events,
+  prorated), not Web Analytics Plus. No redeploy was needed: the live site already served `/_vercel/insights/script.js`.
+- **A4 pass** (the live site, blockitecture.vercel.app): the home page and the Douglas House's page each loaded the script and
+  sent a view; the dashboard then showed 1 visitor and 2 page views, on `/` and `/douglas-house`.
 - **A5 not measured.** The script loads on its own after the page and sends one small request per view.
 
