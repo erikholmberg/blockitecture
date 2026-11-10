@@ -170,7 +170,7 @@ About 4 minutes.
   - **A10 pass:** at 1:56 the walls, glass and built-ins stand with no roof; the coffered roof follows, the garden and the court
     last.
   - **A11 pass:** *The living room*: the coffers overhead, the pool, and the city to the horizon. The skylights throw spots of
-    light on the floor. It's the thumbnail.
+    light on the floor.
   - **A12 pass:** the ridge reads as chaparral and garden, with the basin's city below.
   - **A13 partial:**
     - All five views; *Over the city* was raised to clear the roof.
@@ -179,7 +179,9 @@ About 4 minutes.
     - **Not checked:** walking itself, the phone controls.
   - **A14 pass:** 60 fps at `?dpr=1.75` (4.7–5.5M triangles).
   - **A15 pass:** the twelfth card is live with its thumbnail; the credits page has its section.
-- **Thumbnail:** `/sheats-goldstein-residence/?cam=40,7,-16,50,8,40&clean&date=2026-06-21`, cropped to 1200 × 675.
+- **Thumbnail:** `/sheats-goldstein-residence/?cam=-30,55,100,40,2,-5&clean&date=2026-06-21`, cropped to 1200 × 675: both triangles,
+  the roof, the pool and the terrace's point from the south-west. It was first the view from inside the living room; Erik found
+  that hard to read as the house on the home page (2026-11-09).
 - **Claude usage** (spec 018): built in one stretch with spec 039, and both commits landed in the same second, so the ledger
   can't split them: it puts all of it under `sheats-goldstein-residence`. Together: 131 replies; 174.5k output, 292.5k cache-write and
   42.3M cache-read tokens; 6.3% of all tokens so far.
