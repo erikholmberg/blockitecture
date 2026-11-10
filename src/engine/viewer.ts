@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { DRAW_STUDS } from '@/engine/catalog';
+import { unpackPayload } from '@/engine/buildPayload';
+import { generateModel } from '@/engine/buildWorker';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import '@/styles/globals.css';
 import '@/engine/ui/styles.css';
-import { sequence } from '@/engine/sequencer';
 import { clampAboveGround, groundLookup } from '@/engine/controls/ground';
 import { BrickSet, nbHidden, roofCut, waterTime } from '@/engine/BrickSet';
 import { neighbourFootprints, updateHidden } from '@/engine/inTheWay';
@@ -28,7 +28,10 @@ import { deliverPostcard, renderPostcard } from '@/engine/postcard';
  * Spec 010a: the viewer for one house. Each house page calls this with its HouseDefinition;
  * nothing in src/engine knows about any particular house.
  */
-export async function startViewer(house: HouseDefinition) {
+/** spec 047: let the page draw a frame (the loading brick turns) between the big setup steps */
+const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+
+export async function startViewer(house: HouseDefinition, makeWorker?: () => Worker) {
   const app = document.getElementById('app')!;
   const loading = document.getElementById('loading')!;
   const params = new URLSearchParams(location.search);
@@ -51,12 +54,9 @@ export async function startViewer(house: HouseDefinition) {
   // ---------- build the model ----------
   // let the loading screen paint before the heavy lifting
   await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+  // spec 047: in the house's worker when it has one, so the main thread stays free and the loading brick keeps turning
   const t0 = performance.now();
-  const { builder, heightmap } = house.build();
-  const schedule = sequence(builder.bricks, house.phases, house.center);
-  const studs = DRAW_STUDS ? builder.computeStuds(schedule.order) : [];
-  const bricks = builder.bricks;
-  builder.occ = new Uint8Array(0); // free memory
+  const { bricks, schedule, studs, heightmap } = unpackPayload(await generateModel(house, makeWorker));
   if (DEBUG) console.log(`[${house.slug}] ${bricks.length} pieces, ${studs.length} studs, generated in ${(performance.now() - t0).toFixed(0)} ms`);
 
   // ---------- renderer & scene ----------
@@ -80,6 +80,7 @@ export async function startViewer(house: HouseDefinition) {
   const SUN_DAY = dateParam(params.get('date'));
   const sun = { day: sunFor(SUN_DAY, house.site, 'day'), dusk: sunFor(SUN_DAY, house.site, 'dusk') };
   const env = new Environment(renderer, scene, sun, house);
+  await nextFrame();
   if (DEBUG) console.log(`[${house.slug}] sun on ${SUN_DAY}: day ${sun.day.bearing.toFixed(0)}° / ${sun.day.elevation.toFixed(0)}°, dusk ${sun.dusk.bearing.toFixed(0)}° / ${sun.dusk.elevation.toFixed(1)}°`);
   let city: City | null = null;
   let hood: NeighborhoodScene | null = null;
@@ -87,7 +88,7 @@ export async function startViewer(house: HouseDefinition) {
     const t1 = performance.now();
     const n = await neighborhoodData;
     if (n) {
-      hood = new NeighborhoodScene(n, house.lot, house.scenery);
+      hood = await NeighborhoodScene.create(n, house.lot, house.scenery, nextFrame);
       scene.add(hood.group);
       if (wantsCity(house.scenery)) {
         city = new City(n, house.downtownDir, house.scenery);
@@ -101,10 +102,12 @@ export async function startViewer(house: HouseDefinition) {
   // spec 028: the orbit camera never goes below the ground (or the water) under it
   const ground = groundLookup({ heightmap, lot: house.lot, n: hood ? await neighborhoodData : null, scenery: house.scenery });
 
+  await nextFrame();
   const set = new BrickSet(bricks, schedule.order, schedule.start, studs, house.roofCut, {
     flowingWater: house.scenery?.flowingWater,
   });
   scene.add(set.group);
+  await nextFrame();
   // spec 038: the lot's neighbouring buildings, hidden while they stand between the orbit camera and the house
   const nbFootprints = neighbourFootprints(bricks);
   const seen = { pos: new THREE.Vector3(Infinity, 0, 0), target: new THREE.Vector3(), mode: '' };

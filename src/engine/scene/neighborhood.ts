@@ -10,11 +10,20 @@ import { Footprint, inTheWay, P3 } from '@/engine/inTheWay';
  * Spec 003: the real Hollywood Hills around the house: terrain, roads and buildings from
  * OpenStreetMap / AWS Terrain Tiles (public/<slug>/neighborhood.bin). Scenery only, not part of the build.
  */
+/** a grid's heights, with a row and a column beyond it (for slopes at its far edges) */
+function gridHeights(x0: number, z0: number, step: number, nx: number, nz: number, height: (x: number, z: number) => number) {
+  const W = nx + 1, H = new Float64Array(W * (nz + 1));
+  for (let j = 0; j <= nz; j++) for (let i = 0; i <= nx; i++) H[j * W + i] = height(x0 + i * step, z0 + j * step);
+  return H;
+}
+
 export class NeighborhoodScene {
   group = new THREE.Group();
-  private lights: THREE.PointsMaterial;
-  private glow: THREE.PointsMaterial;
+  private lights!: THREE.PointsMaterial; // set by the last build step (spec 047)
+  private glow!: THREE.PointsMaterial;
   private mats: THREE.MeshStandardMaterial[] = [];
+  /** spec 047: the near terrain's heights, between its two build steps */
+  private nearHeights?: Float64Array;
 
   private seaY: number | null;
   private flatsBelow: number;
@@ -27,7 +36,7 @@ export class NeighborhoodScene {
   private blds: { fp: Footprint; v0: number; v1: number; hidden: boolean }[] = [];
   private hidAttr: THREE.BufferAttribute | null = null;
 
-  constructor(private n: Neighborhood, private lot: Lot, scenery: Scenery = {}) {
+  constructor(private n: Neighborhood, private lot: Lot, scenery: Scenery = {}, build = true) {
     this.seaY = seaLevelY(scenery.sea, n.anchor.lotElevationM);
     this.flatsBelow = scenery.flatsBelow ?? -330;
     this.chaparral = scenery.chaparral ?? false;
@@ -35,14 +44,38 @@ export class NeighborhoodScene {
     this.lowlands = scenery.lowlands ?? false;
     this.desert = scenery.desert ?? false;
     this.waterAreas = scenery.waterAreas ?? [];
-    const ground = (x: number, z: number) => groundHeight(n, lot, x, z);
-    if (this.seaY !== null) this.group.add(this.sea(this.seaY));
-    for (const a of this.waterAreas) this.group.add(this.waterArea(a));
-    this.group.add(this.terrain(ground));
-    this.group.add(this.farTerrain());
-    this.group.add(this.roads(ground));
-    this.group.add(this.buildings(ground));
+    if (build) for (const step of this.steps()) step();
+  }
 
+  /**
+   * Spec 047: the same scene, built a step at a time with a pause between the steps (a frame, in the viewer), so the page's
+   * main thread is never busy long enough to stop the loading brick.
+   */
+  static async create(n: Neighborhood, lot: Lot, scenery: Scenery = {}, pause: () => Promise<void> = async () => {}) {
+    const s = new NeighborhoodScene(n, lot, scenery, false);
+    for (const step of s.steps()) { step(); await pause(); }
+    return s;
+  }
+
+  /** the scene's parts, in the order they're added */
+  private steps(): (() => void)[] {
+    const ground = (x: number, z: number) => groundHeight(this.n, this.lot, x, z);
+    return [
+      () => {
+        if (this.seaY !== null) this.group.add(this.sea(this.seaY));
+        for (const a of this.waterAreas) this.group.add(this.waterArea(a));
+      },
+      // the near terrain in two steps: its heights, then its mesh
+      () => { const g = this.n.near; this.nearHeights = gridHeights(g.x0, g.z0, g.step, g.nx, g.nz, this.nearHeight(ground)); },
+      () => { this.group.add(this.terrain(ground, this.nearHeights)); this.nearHeights = undefined; },
+      () => this.group.add(this.farTerrain()),
+      () => this.group.add(this.roads(ground)),
+      () => this.group.add(this.buildings(ground)),
+      () => this.addNightLights(ground),
+    ];
+  }
+
+  private addNightLights(ground: (x: number, z: number) => number) {
     const pts = this.nightPoints(ground);
     const pg = new THREE.BufferGeometry();
     pg.setAttribute('position', new THREE.Float32BufferAttribute(pts.pos, 3));
@@ -119,15 +152,18 @@ export class NeighborhoodScene {
     x0: number, z0: number, step: number, nx: number, nz: number,
     height: (x: number, z: number) => number,
     skipCell: (x: number, z: number) => boolean,
+    heights?: Float64Array,
   ) {
     const pos = new Float32Array(nx * nz * 3), col = new Float32Array(nx * nz * 3);
     const c = new THREE.Color();
+    // spec 047: each height once (with a row and a column beyond the grid for the slopes), not three times
+    const W = nx + 1, H = heights ?? gridHeights(x0, z0, step, nx, nz, height);
     for (let j = 0; j < nz; j++)
       for (let i = 0; i < nx; i++) {
-        const x = x0 + i * step, z = z0 + j * step, y = height(x, z);
+        const x = x0 + i * step, z = z0 + j * step, y = H[j * W + i];
         const k = (j * nx + i) * 3;
         pos[k] = x; pos[k + 1] = y; pos[k + 2] = z;
-        const slope = Math.abs(height(x + step, z) - y) / step + Math.abs(height(x, z + step) - y) / step;
+        const slope = Math.abs(H[j * W + i + 1] - y) / step + Math.abs(H[(j + 1) * W + i] - y) / step;
         this.terrainColor(x, z, y, slope, c);
         col[k] = c.r; col[k + 1] = c.g; col[k + 2] = c.b;
       }
@@ -152,15 +188,21 @@ export class NeighborhoodScene {
     return m;
   }
 
-  private terrain(ground: (x: number, z: number) => number) {
+  /** the near terrain's height function (shared by its two build steps) */
+  private nearHeight(ground: (x: number, z: number) => number) {
+    const g = this.n.near;
+    const water = this.seaY !== null ? waterMask(g, this.seaY) : null;
+    const levels = this.waterAreas.length ? waterAreaLevels(g, this.waterAreas) : null;
+    return (x: number, z: number) =>
+      this.sinkUnderWater(g, levels, x, z, seaMeshHeight(ground(x, z), this.seaY, !!water && isWater(g, water, x, z)));
+  }
+
+  private terrain(ground: (x: number, z: number) => number, heights?: Float64Array) {
     const g = this.n.near;
     // no hole under the brick lot: there the ground sits just below the bricks' lowest course
     // under the sea, rendered terrain drops well below it so the two never z-fight (spec 011)
-    const water = this.seaY !== null ? waterMask(g, this.seaY) : null;
-    const levels = this.waterAreas.length ? waterAreaLevels(g, this.waterAreas) : null;
-    const h = (x: number, z: number) =>
-      this.sinkUnderWater(g, levels, x, z, seaMeshHeight(ground(x, z), this.seaY, !!water && isWater(g, water, x, z)));
-    const geo = this.gridMesh(g.x0, g.z0, g.step, g.nx, g.nz, h, () => false);
+    const h = heights ? () => 0 : this.nearHeight(ground);
+    const geo = this.gridMesh(g.x0, g.z0, g.step, g.nx, g.nz, h, () => false, heights);
     const m = new THREE.Mesh(geo, this.material());
     m.receiveShadow = true;
     return m;

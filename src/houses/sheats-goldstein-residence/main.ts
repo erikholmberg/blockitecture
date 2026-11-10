@@ -1,4 +1,5 @@
 import { startViewer } from '@/engine/viewer';
 import { SHEATS_GOLDSTEIN } from './definition';
 
-startViewer(SHEATS_GOLDSTEIN);
+// spec 047: the model is generated in this house's worker
+startViewer(SHEATS_GOLDSTEIN, () => new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' }));

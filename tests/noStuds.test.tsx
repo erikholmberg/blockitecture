@@ -13,10 +13,11 @@ const housePages = Object.entries(PAGES).filter(([name]) => HOUSES.some((h) => h
 describe('046: no studs', () => {
   it('A1: the viewer draws no studs: the brick set is built with none, for every house', () => {
     expect(DRAW_STUDS).toBe(false);
-    const viewer = read('src/engine/viewer.ts');
-    // the only call that makes studs is behind the switch
-    expect(viewer).toMatch(/DRAW_STUDS \? builder\.computeStuds\(/);
-    expect(viewer.match(/computeStuds\(/g)?.length).toBe(1);
+    // the only call that makes studs is behind the switch (since spec 047, where the model is generated)
+    const gen = read('src/engine/buildPayload.ts');
+    expect(gen).toMatch(/DRAW_STUDS \? builder\.computeStuds\(/);
+    expect(gen.match(/computeStuds\(/g)?.length).toBe(1);
+    expect(read('src/engine/viewer.ts')).not.toMatch(/computeStuds\(/);
   });
 
   it('A3: no house page\'s loading brick has studs', () => {
