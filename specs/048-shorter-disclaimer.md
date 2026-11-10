@@ -1,9 +1,9 @@
 # 048 — A shorter disclaimer
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it". Built and checked in Chrome; not committed.)
+- **Status:** In progress (approved by Erik 2026-11-10: "build it". Built and checked in Chrome; committed with Erik's go-ahead, 2026-11-10.)
 - **Owner:** Erik
 - **Created:** 2026-11-10
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 57957e0
 
 ## Goal
 Spec 046 dropped the studs and the LEGO line. The disclaimers still say "in a generic toy-block style", which was there to set the
