@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { unpackPayload } from '@/engine/buildPayload';
+import { startAnalytics } from '@/analytics';
 import { generateModel } from '@/engine/buildWorker';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import '@/styles/globals.css';
@@ -32,6 +33,7 @@ import { deliverPostcard, renderPostcard } from '@/engine/postcard';
 const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => setTimeout(r, 0)));
 
 export async function startViewer(house: HouseDefinition, makeWorker?: () => Worker) {
+  startAnalytics(); // spec 052: count this house page's visit
   const app = document.getElementById('app')!;
   const loading = document.getElementById('loading')!;
   const params = new URLSearchParams(location.search);

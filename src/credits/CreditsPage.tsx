@@ -21,6 +21,9 @@ export function CreditsPage({ houses }: { houses: House[] }) {
           <p className="mt-3 text-base text-muted-foreground text-pretty">
             Every house here is a fan tribute, not affiliated with the people or organisations named with it.
           </p>
+          <p className="mt-2 text-sm text-muted-foreground text-pretty">
+            Visits are counted with Vercel Web Analytics: no cookies, and nothing that identifies you.
+          </p>
         </header>
 
         <main className="flex-1 space-y-8">
