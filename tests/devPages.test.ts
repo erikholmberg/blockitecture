@@ -14,7 +14,7 @@ describe('dev pages', () => {
   it('the shortlist covers every coming-soon house, with unique slugs', () => {
     const slugs = SHORTLIST.map((c) => c.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
-    expect(slugs.length).toBe(21); // the 20 from spec 016, plus Fallingwater
+    expect(slugs.length).toBe(41); // the 20 from spec 016, plus Fallingwater, plus spec 041's 20
     for (const h of HOUSES.filter((x) => x.status === 'coming-soon')) expect(slugs).toContain(h.slug);
   });
 });

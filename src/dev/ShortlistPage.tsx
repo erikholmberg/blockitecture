@@ -4,13 +4,13 @@
  * Commons and are not copied into the repo.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { Check, Copy, ExternalLink } from 'lucide-react';
+import { ArrowRight, Check, Copy, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { HOUSES } from '@/houses/index';
-import { Candidate, SHORTLIST } from '@/dev/shortlist';
+import { Candidate, SHORTLIST, builtOnShortlist, livePicks } from '@/dev/shortlist';
 
 interface Photo { thumb: string; page: string; credit: string }
 
@@ -66,8 +66,8 @@ async function commonsPhotos(c: Candidate): Promise<Photo[]> {
 const stars = (n: number) => '★'.repeat(n) + '☆'.repeat(3 - n);
 const FIT = { 3: 'Boxes: the engine can build it today', 2: 'Needs one new trick', 1: 'A showpiece challenge' } as const;
 
-function CandidateCard({ c, lead, more, picked, onPick, status }: {
-  c: Candidate; lead?: Photo; more?: Photo[]; picked: boolean; onPick: () => void; status?: string;
+function CandidateCard({ c, lead, more, picked, onPick, status, built }: {
+  c: Candidate; lead?: Photo; more?: Photo[]; picked: boolean; onPick: () => void; status?: string; built: boolean;
 }) {
   const photos = useMemo(() => {
     const all = [...(lead ? [lead] : []), ...(more ?? [])];
@@ -76,10 +76,10 @@ function CandidateCard({ c, lead, more, picked, onPick, status }: {
   const [shown, setShown] = useState(0);
   const main = photos[Math.min(shown, photos.length - 1)];
   return (
-    <Card className={cn('gap-4 pt-0 transition-shadow', picked && 'ring-2 ring-primary')}>
+    <Card className={cn('gap-4 pt-0 transition-shadow', picked && 'ring-2 ring-primary')} data-built={built || undefined}>
       <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-muted">
         {main ? (
-          <img src={main.thumb} alt={c.title} className="size-full object-cover" />
+          <img src={main.thumb} alt={c.title} className={cn('size-full object-cover', built && 'opacity-40 grayscale')} />
         ) : more ? (
           <div className="flex size-full items-center justify-center p-6 text-center text-sm text-muted-foreground">
             No photos on Wikimedia Commons.{' '}
@@ -89,6 +89,11 @@ function CandidateCard({ c, lead, more, picked, onPick, status }: {
           </div>
         ) : (
           <div className="size-full animate-pulse" />
+        )}
+        {built && (
+          <Badge className="absolute top-3 left-3 gap-1 px-2.5 py-1 text-sm shadow">
+            <Check /> Built
+          </Badge>
         )}
         {main && (
           <a href={main.page} target="_blank" rel="noopener" className="absolute right-2 bottom-2 max-w-[80%] truncate rounded bg-black/60 px-1.5 py-0.5 text-[10px] text-white hover:underline">
@@ -116,9 +121,15 @@ function CandidateCard({ c, lead, more, picked, onPick, status }: {
             <CardTitle className="text-lg font-semibold tracking-tight">{c.title}</CardTitle>
             <p className="text-sm text-muted-foreground">{c.architect} · {c.year} · {c.place}</p>
           </div>
-          <Button size="sm" variant={picked ? 'default' : 'outline'} onClick={onPick} aria-pressed={picked}>
-            {picked && <Check />} {picked ? 'Picked' : 'Pick'}
-          </Button>
+          {built ? (
+            <Button size="sm" variant="ghost" asChild>
+              <a href={`/${c.slug}/`}>View <ArrowRight /></a>
+            </Button>
+          ) : (
+            <Button size="sm" variant={picked ? 'default' : 'outline'} onClick={onPick} aria-pressed={picked}>
+              {picked && <Check />} {picked ? 'Picked' : 'Pick'}
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
@@ -162,9 +173,10 @@ export function ShortlistPage() {
   const toggle = (slug: string) => setPicks((p) => (p.includes(slug) ? p.filter((s) => s !== slug) : [...p, slug]));
   const statusOf = (slug: string) => {
     const h = HOUSES.find((x) => x.slug === slug);
-    return h ? (h.status === 'live' ? 'Live' : 'On the home page as coming soon') : undefined;
+    return h && h.status !== 'live' ? 'On the home page as coming soon' : undefined;
   };
-  const pickedTitles = picks.map((s) => SHORTLIST.find((c) => c.slug === s)?.title).filter(Boolean) as string[];
+  const built = useMemo(() => builtOnShortlist(SHORTLIST, HOUSES), []);
+  const pickedTitles = livePicks(picks, built).map((s) => SHORTLIST.find((c) => c.slug === s)?.title).filter(Boolean) as string[];
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
@@ -179,6 +191,7 @@ export function ShortlistPage() {
           <b className="text-foreground"> Pick</b> the ones you like. Picks are saved in this browser.
         </p>
         <div className="sticky top-3 z-10 flex flex-wrap items-center gap-2 rounded-lg bg-background/95 p-3 shadow-sm ring-1 ring-foreground/10">
+          <span className="text-sm text-muted-foreground">{built.size} of {SHORTLIST.length} built</span>
           <span className="text-sm font-semibold">Picks ({pickedTitles.length}):</span>
           <span className="text-sm text-muted-foreground">{pickedTitles.length ? pickedTitles.join(', ') : 'none yet'}</span>
           {pickedTitles.length > 0 && (
@@ -203,6 +216,7 @@ export function ShortlistPage() {
             picked={picks.includes(c.slug)}
             onPick={() => toggle(c.slug)}
             status={statusOf(c.slug)}
+            built={built.has(c.slug)}
           />
         ))}
       </main>
