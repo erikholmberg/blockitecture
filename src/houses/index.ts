@@ -226,6 +226,24 @@ export const HOUSES: House[] = [
       'Published photographs and descriptions of the house',
     ],
   },
+  {
+    slug: 'rose-seidler-house',
+    title: 'Rose Seidler House',
+    architect: 'Harry Seidler',
+    year: 1950,
+    location: 'Sydney, Australia',
+    status: 'live',
+    pieces: 19_226,
+    thumbnail: '/rose-seidler-house/thumbnail.jpg',
+    blurb: 'A white square raised over the bush, an open deck in its middle, a ramp to the garden and a mural in primary colours.',
+    affiliations: ['Museums of History NSW', 'Harry Seidler & Associates'],
+    sources: [
+      "Harry Seidler's published floor plan (seidler.net.au), without dimensions",
+      'The State Heritage Register listing (SHR 00261) and Museums of History NSW',
+      'Its outline and the neighbourhood: OpenStreetMap',
+      'Published photographs of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

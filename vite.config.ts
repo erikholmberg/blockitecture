@@ -20,6 +20,7 @@ export const PAGES = {
   'casa-luis-barragan': r('./casa-luis-barragan/index.html'),
   'koshino-house': r('./koshino-house/index.html'),
   'sheats-goldstein-residence': r('./sheats-goldstein-residence/index.html'),
+  'rose-seidler-house': r('./rose-seidler-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 
