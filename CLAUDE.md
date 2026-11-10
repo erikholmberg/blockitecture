@@ -13,6 +13,9 @@ pages and the viewer HUD are React + shadcn/ui + Tailwind v4 + Inter (spec 007).
   lot, data path…), `main.ts` (page entry). Page HTML at `<slug>/index.html`, listed in `PAGES` (`vite.config.ts`).
 - `public/<slug>/` — per-house static files (thumbnail, `neighborhood.bin`). `scripts/houses/<slug>.mjs` — its real-world data settings.
 - `dev/` + `src/dev/` — dev-only pages (e.g. `/dev/shortlist/`, photos of candidate houses). Not in `PAGES`, so never built or deployed.
+- `src/seo/` + `seo.plugin.ts` — link previews, readable HTML, sitemap.xml, robots.txt, llms.txt, all generated from the registry
+  and each house's definition (spec 053). The home and credits pages are rendered to HTML at build time and hydrated, so they
+  must render the same on the server as in the browser (no `window` during render). Edits to `src/seo/seo.ts` need a dev restart.
 - `src/components/ui/` — shadcn components (ours to edit; add more with `npx shadcn@latest add <name>`).
 - Don't use `backdrop-blur` on anything over the 3D canvas: it re-blurs the scene every frame (−22% fps, spec 007).
 - House definitions can opt into `scenery` (sea, chaparral, flats, city band). Coastal terrain tiles can be corrupt:
@@ -64,6 +67,7 @@ npm run build        # tsc + vite build → dist/
 npm run usage        # Claude tokens per house from this machine's transcripts + usage/ledger.json (--by-spec, --record; spec 018)
 npm run stats        # regenerate src/houses/stats.ts (each house's palette and figures) after any model change (spec 050)
 npm run video        # render the 30 s LinkedIn video (scripts/video/) from the running dev server into video/ (needs ffmpeg)
+npm run og-image     # remake public/og-image.jpg, the home page's link-preview image, from the running dev server (spec 053)
 ```
 
 ## Testability notes

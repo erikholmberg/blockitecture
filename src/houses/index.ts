@@ -20,11 +20,15 @@ export interface House {
   affiliations?: string[];
   /** spec 021: what the model was built from, for the credits page (live houses) */
   sources?: string[];
+  /** spec 053: the building's Wikidata entry (Q…), so search engines and AI models can tie the page to it; none for a house
+   *  that has no entry (the Koshino House, 2026-11-10) */
+  wikidata?: string;
 }
 
 export const HOUSES: House[] = [
   {
     slug: 'stahl-house',
+    wikidata: 'Q2328939',
     title: 'Stahl House',
     subtitle: 'Case Study House #22',
     architect: 'Pierre Koenig',
@@ -41,6 +45,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'eames-house',
+    wikidata: 'Q980011',
     title: 'Eames House',
     subtitle: 'Case Study House #8',
     architect: 'Charles & Ray Eames',
@@ -58,6 +63,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'fallingwater',
+    wikidata: 'Q463179',
     title: 'Fallingwater',
     architect: 'Frank Lloyd Wright',
     year: 1939,
@@ -76,6 +82,7 @@ export const HOUSES: House[] = [
   // spec 016: the next houses, picked from a shortlist of 20
   {
     slug: 'rietveld-schroder-house',
+    wikidata: 'Q914231',
     title: 'Rietveld Schröder House',
     architect: 'Gerrit Rietveld',
     year: 1924,
@@ -93,6 +100,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'farnsworth-house',
+    wikidata: 'Q1397013',
     title: 'Farnsworth House',
     architect: 'Ludwig Mies van der Rohe',
     year: 1951,
@@ -109,6 +117,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'ennis-house',
+    wikidata: 'Q578184',
     title: 'Ennis House',
     architect: 'Frank Lloyd Wright',
     year: 1924,
@@ -126,6 +135,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'casa-malaparte',
+    wikidata: 'Q2165447',
     title: 'Casa Malaparte',
     architect: 'Adalberto Libera / Curzio Malaparte',
     year: 1938,
@@ -143,6 +153,7 @@ export const HOUSES: House[] = [
   // spec 020: an eighth card, so the grid ends on a full row
   {
     slug: 'kaufmann-desert-house',
+    wikidata: 'Q6378695',
     title: 'Kaufmann Desert House',
     architect: 'Richard Neutra',
     year: 1946,
@@ -160,6 +171,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'lovell-health-house',
+    wikidata: 'Q6692217',
     title: 'Lovell Health House',
     architect: 'Richard Neutra',
     year: 1929,
@@ -177,6 +189,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'casa-luis-barragan',
+    wikidata: 'Q1046414',
     title: 'Casa Luis Barragán',
     architect: 'Luis Barragán',
     year: 1948,
@@ -211,6 +224,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'sheats-goldstein-residence',
+    wikidata: 'Q2178401',
     title: 'Sheats-Goldstein Residence',
     architect: 'John Lautner',
     year: 1963,
@@ -228,6 +242,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'rose-seidler-house',
+    wikidata: 'Q7367931',
     title: 'Rose Seidler House',
     architect: 'Harry Seidler',
     year: 1950,
@@ -246,6 +261,7 @@ export const HOUSES: House[] = [
   },
   {
     slug: 'douglas-house',
+    wikidata: 'Q3661091',
     title: 'Douglas House',
     architect: 'Richard Meier',
     year: 1973,

@@ -2,6 +2,7 @@ import { defineConfig, Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
+import { seoPlugin } from './seo.plugin';
 
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
@@ -46,7 +47,7 @@ function pageSlashRedirect(): Plugin {
 
 export default defineConfig({
   base: '/',
-  plugins: [react(), tailwindcss(), pageSlashRedirect()],
+  plugins: [react(), tailwindcss(), pageSlashRedirect(), seoPlugin(Object.keys(PAGES))], // seo: spec 053
   resolve: { alias: { '@': r('./src') } },
   build: { target: 'es2022', chunkSizeWarningLimit: 900, rollupOptions: { input: PAGES } },
 });
