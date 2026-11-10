@@ -209,6 +209,23 @@ export const HOUSES: House[] = [
       'Published photographs of the house',
     ],
   },
+  {
+    slug: 'sheats-goldstein-residence',
+    title: 'Sheats-Goldstein Residence',
+    architect: 'John Lautner',
+    year: 1963,
+    location: 'Beverly Crest, Los Angeles',
+    status: 'live',
+    pieces: 56_669,
+    thumbnail: '/sheats-goldstein-residence/thumbnail.jpg',
+    blurb: 'A coffered concrete roof pierced by hundreds of skylights, over a living room open to the pool and the whole city.',
+    affiliations: ['James Goldstein', 'LACMA', 'the John Lautner Foundation'],
+    sources: [
+      'Plans of levels 0 and −1 as published (designboom, courtesy of James Goldstein), without dimensions',
+      'Its outline and the neighbourhood: OpenStreetMap (Los Angeles County building outlines)',
+      'Published photographs and descriptions of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
