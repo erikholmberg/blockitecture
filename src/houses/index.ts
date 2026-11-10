@@ -33,7 +33,7 @@ export const HOUSES: House[] = [
     status: 'live',
     pieces: 27_233,
     thumbnail: '/stahl-house/thumbnail.jpg',
-    blurb: 'Steel, glass and a view over the whole of Los Angeles, on the real hillside above the Sunset Strip.',
+    blurb: 'Steel, glass and a view over the whole of Los Angeles, from a hillside above the Sunset Strip.',
     sources: [
       'Published photographs and descriptions of the house',
       'Its outline and neighbourhood: OpenStreetMap',
