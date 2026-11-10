@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "check": "tsc --noEmit && tsc --noEmit -p tests && vitest run",
     "usage": "node scripts/usage.ts",
-    "stats": "STATS_WRITE=1 vitest run tests/stats.test.ts"
+    "stats": "STATS_WRITE=1 vitest run tests/stats.test.ts",
+    "video": "node scripts/video/make-video.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
@@ -36,6 +37,7 @@
     "@types/three": "*",
     "@vitejs/plugin-react": "^6.2.1",
     "jsdom": "^29.1.1",
+    "playwright": "^1.65.0",
     "pngjs": "^7.0.0",
     "shadcn": "^4.23.0",
     "tailwindcss": "^4.3.5",

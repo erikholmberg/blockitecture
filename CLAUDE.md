@@ -63,6 +63,7 @@ node scripts/fetch-neighborhood.mjs <slug>   # regenerate public/<slug>/neighbor
 npm run build        # tsc + vite build → dist/
 npm run usage        # Claude tokens per house from this machine's transcripts + usage/ledger.json (--by-spec, --record; spec 018)
 npm run stats        # regenerate src/houses/stats.ts (each house's palette and figures) after any model change (spec 050)
+npm run video        # render the 30 s LinkedIn video (scripts/video/) from the running dev server into video/ (needs ffmpeg)
 ```
 
 ## Testability notes
