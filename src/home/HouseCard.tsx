@@ -11,7 +11,7 @@ function PaletteStrip({ slug }: { slug: string }) {
   const palette = STATS[slug]?.palette;
   if (!palette) return null;
   return (
-    <div data-palette aria-hidden="true" className="-mt-(--card-spacing) flex h-3.5 w-full border-t border-foreground/10">
+    <div data-palette aria-hidden="true" className="-mt-(--card-spacing) flex h-3.5 w-full">
       {palette.map((p) => (
         <div key={p.color} style={{ flexGrow: p.share, backgroundColor: hex(p.color) }} />
       ))}

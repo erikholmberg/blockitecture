@@ -18,8 +18,9 @@ parts list would look like a LEGO set is weaker since spec 046 removed the studs
 
 ## Behavior
 **The palette strip** (home page)
-- A bar about 14 px tall between each live card's thumbnail and its title, set off from the picture by a hairline, made of
-  the house's main colours, each as wide as its share. (Tried at 8 px first; Erik asked 2026-11-10 for it to stand out more.)
+- A bar about 14 px tall between each live card's thumbnail and its title, right against the picture, made of the house's
+  main colours, each as wide as its share. (Tried at 8 px first; Erik asked 2026-11-10 for it to stand out more. A hairline
+  above it was tried, then removed at Erik's request.)
 - Coming-soon cards have none.
 - It's decoration: hidden from screen readers, so it doesn't repeat what the picture shows.
 
