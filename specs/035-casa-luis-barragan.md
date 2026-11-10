@@ -1,11 +1,11 @@
 # 035 — Casa Luis Barragán
 
-- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's acceptance of the
-  manual checks that couldn't be run here: walking itself and the phone controls)
+- **Status:** Done (approved by Erik 2026-11-09: "build it", all recommendations. Closed by Erik 2026-11-09: "close the specs", accepting
+  the manual checks that couldn't be run here: walking itself and the phone controls)
 - **Owner:** Erik
 - **House:** casa-luis-barragan
 - **Created:** 2026-11-09
-- **Commits:** c203b49 (spec), fa8a84a (build)
+- **Commits:** c203b49 (spec), fa8a84a (build), 7d71c94 (thumbnail)
 
 ## Goal
 The tenth rendering: Luis Barragán's own house and studio (1948) at General Francisco Ramírez 12–14, Tacubaya, Mexico City, a UNESCO

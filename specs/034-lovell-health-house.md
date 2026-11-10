@@ -1,7 +1,7 @@
 # 034 — The Lovell Health House
 
-- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's acceptance of the
-  manual checks that couldn't be run here: walking itself and the phone controls)
+- **Status:** Done (approved by Erik 2026-11-09: "build it", all recommendations. Closed by Erik 2026-11-09: "close the specs", accepting
+  the manual checks that couldn't be run here: walking itself and the phone controls)
 - **Owner:** Erik
 - **House:** lovell-health-house
 - **Created:** 2026-11-09

@@ -1,6 +1,7 @@
 # 036 — No flicker behind the intro card on iPhone
 
-- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's iPhone check, A5)
+- **Status:** Done (approved by Erik 2026-11-09: "build it", all recommendations. Closed by Erik 2026-11-09: "close the specs", accepting
+  the iPhone check, A5)
 - **Owner:** Erik
 - **Created:** 2026-11-09
 - **Commits:** 4ffc9a9 (spec), ed5fcad (fix)

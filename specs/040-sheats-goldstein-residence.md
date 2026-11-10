@@ -1,11 +1,11 @@
 # 040 — The Sheats-Goldstein Residence
 
-- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built; waiting on Erik's checks of walking
-  and the phone controls. Not committed: Erik commits.)
+- **Status:** Done (approved by Erik 2026-11-09: "build it", all recommendations. Closed by Erik 2026-11-09: "close the specs", accepting
+  the manual checks that couldn't be run here: walking itself and the phone controls)
 - **Owner:** Erik
 - **House:** sheats-goldstein-residence
 - **Created:** 2026-11-09
-- **Commits:** 018662d (spec and build)
+- **Commits:** 018662d (spec and build), 411c250 (thumbnail)
 
 ## Goal
 The twelfth rendering: John Lautner's house for Helen and Paul Sheats (1961–63) on Angelo View Drive, Beverly Crest, Los Angeles. James

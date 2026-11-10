@@ -1,10 +1,10 @@
 # 037 — Share links, postcards and accessibility
 
-- **Status:** In progress (approved by Erik 2026-11-09: "approved", all recommendations. Built; waiting on Erik's checks of reduced
-  motion (A10) and the iPhone share sheet (A13). Not committed: Erik commits.)
+- **Status:** Done (approved by Erik 2026-11-09: "approved", all recommendations. Closed by Erik 2026-11-09: "close the specs", accepting
+  the checks that couldn't be run here: reduced motion (A10) and the iPhone share sheet (A13))
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 674d855 (build)
 
 ## Goal
 The top three ideas from the feature review (`docs/ideas/2026-11-09-feature-brainstorm.md`), all in the shared viewer, with no

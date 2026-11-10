@@ -1,10 +1,9 @@
 # 038 — Neighbouring buildings get out of the way
 
-- **Status:** In progress (approved by Erik 2026-11-09: "build it", all recommendations. Built and checked in Chrome; not
-  committed: Erik commits.)
+- **Status:** Done (approved by Erik 2026-11-09: "build it", all recommendations. Built and checked in Chrome. Closed by Erik 2026-11-09: "close the specs", accepting it)
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 5f599f0 (build)
 
 ## Goal
 When you orbit the house, neighbouring buildings standing between the camera and the house hide it. Erik saw this on the Lovell
