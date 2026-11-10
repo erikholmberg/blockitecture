@@ -1,11 +1,11 @@
 # 043 — The Rose Seidler House
 
 - **Status:** In progress (approved by Erik 2026-11-10: "build it", all recommendations. Built; waiting on Erik's checks of
-  walking and the phone controls. Not committed: Erik commits.)
+  walking and the phone controls. Committed with Erik's go-ahead, 2026-11-10.)
 - **Owner:** Erik
 - **House:** rose-seidler-house
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 9c49954 (spec and build)
 
 ## Goal
 The thirteenth rendering: Harry Seidler's first building, the house he designed for his parents Rose and Max Seidler (1948–50) in
@@ -159,5 +159,7 @@ About 2½ minutes.
   - **A16 pass:** the thirteenth card is live, with its thumbnail and piece count; the credits page has its section.
 - **Thumbnail:** `/rose-seidler-house/?cam=-34,18,70,22,0,24&clean&date=2026-06-21`, cropped to 1200 × 675: the house from the
   north-east, above the garden, with the ramp in front.
-- **Claude usage** (spec 018): to be recorded after Erik commits (`npm run usage`).
+- **Claude usage** (spec 018): 196 replies; 156.1k output, 582.8k cache-write and 25.7M cache-read tokens; 3.7% of all tokens so
+  far. This overstates the house: the ledger counts everything since the last recorded commit, and that stretch also covers the
+  session's uncommitted shortlist work (specs 041 and 042) and the close-out of specs 034–040.
 
