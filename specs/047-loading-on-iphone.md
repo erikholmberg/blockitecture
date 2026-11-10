@@ -1,10 +1,10 @@
 # 047 — The loading brick keeps turning on an iPhone
 
 - **Status:** In progress (approved by Erik 2026-11-10: "build it", the worker. Built and checked in Chrome; waiting on Erik's
-  iPhone, A5. Not committed.)
+  iPhone, A5. Committed with Erik's go-ahead, 2026-11-10.)
 - **Owner:** Erik
 - **Created:** 2026-11-10
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 5b55ab4
 
 ## Goal
 Reported by Erik, 2026-11-10: on his iPhone the loading brick (spec 027) "just turns a bit and stops". It should turn the whole
