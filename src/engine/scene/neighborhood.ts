@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {
-  groundHeight, inGrid, isWater, lotDistance, Neighborhood, parseNeighborhood, sampleGrid, seaMeshHeight, UNDER_WATER_AREA, waterAreaLevels, waterMask,
+  groundHeight, inGrid, isWater, lotDistance, Neighborhood, parseNeighborhood, sampleGrid, seaLevelY, seaMeshHeight, UNDER_WATER_AREA, waterAreaLevels, waterMask,
 } from '@/engine/scene/neighborhoodData';
 import { hash2, noise2 } from '@/engine/voxel';
 import type { Lot, Scenery, WaterArea } from '@/engine/house';
@@ -28,7 +28,7 @@ export class NeighborhoodScene {
   private hidAttr: THREE.BufferAttribute | null = null;
 
   constructor(private n: Neighborhood, private lot: Lot, scenery: Scenery = {}) {
-    this.seaY = scenery.sea ? -n.anchor.lotElevationM / 0.3048 : null;
+    this.seaY = seaLevelY(scenery.sea, n.anchor.lotElevationM);
     this.flatsBelow = scenery.flatsBelow ?? -330;
     this.chaparral = scenery.chaparral ?? false;
     this.forest = scenery.forest ?? false;

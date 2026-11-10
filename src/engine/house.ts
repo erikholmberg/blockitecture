@@ -82,8 +82,11 @@ export interface WaterArea {
 
 /** Heights are ft relative to the house (y = 0). */
 export interface Scenery {
-  /** water at true sea level, with a sandy shoreline (default: none) */
-  sea?: boolean;
+  /**
+   * water at true sea level, with a sandy shoreline (default: none); or, spec 045, a lake's surface at `levelM` metres above sea
+   * level, drawn the same way (Lake Michigan at the Douglas House)
+   */
+  sea?: boolean | { levelM: number };
   /** steep slopes read as chaparral (dark greens) rather than bare rock, which only shows on the steepest faces */
   chaparral?: boolean;
   /** flat ground below this reads as built-up flats (default −330) */

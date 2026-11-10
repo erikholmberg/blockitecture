@@ -21,6 +21,7 @@ export const PAGES = {
   'koshino-house': r('./koshino-house/index.html'),
   'sheats-goldstein-residence': r('./sheats-goldstein-residence/index.html'),
   'rose-seidler-house': r('./rose-seidler-house/index.html'),
+  'douglas-house': r('./douglas-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

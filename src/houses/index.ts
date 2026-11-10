@@ -244,6 +244,24 @@ export const HOUSES: House[] = [
       'Published photographs of the house',
     ],
   },
+  {
+    slug: 'douglas-house',
+    title: 'Douglas House',
+    architect: 'Richard Meier',
+    year: 1973,
+    location: 'Harbor Springs, Michigan',
+    status: 'live',
+    pieces: 33_445,
+    thumbnail: '/douglas-house/thumbnail.jpg',
+    blurb: 'A white tower of decks and glass set into a wooded bluff above Lake Michigan, entered by a bridge at its roof.',
+    affiliations: ["the house's owners", 'Meier Partners (formerly Richard Meier & Partners Architects)'],
+    sources: [
+      'The National Register of Historic Places nomination (2016), floor by floor, without plans or dimensions',
+      'The roof plan and aerial photograph published by the house (douglashouse.org)',
+      'Its outline and the neighbourhood: OpenStreetMap',
+      'Published photographs of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

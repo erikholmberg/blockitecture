@@ -125,6 +125,16 @@ export const ABOVE_SEA = 3;
 export const DEEP = 15;
 
 /**
+ * The water's surface in model ft (y = 0 at the lot), or null for no water: the sea at 0 m (spec 010b), or a lake at its own
+ * level (spec 045).
+ */
+export function seaLevelY(sea: boolean | { levelM: number } | undefined, lotElevationM: number): number | null {
+  if (!sea) return null;
+  const m = sea === true ? 0 : sea.levelM;
+  return (m - lotElevationM) / 0.3048;
+}
+
+/**
  * Spec 011: which grid samples are open water: below sea level AND connected (4-neighbour flood fill) to a sample at
  * least DEEP ft under it. Low spots enclosed by land (noisy coastal data, a few feet below sea level by the highway)
  * are not water.

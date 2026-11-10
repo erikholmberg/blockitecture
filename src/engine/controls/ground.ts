@@ -3,7 +3,7 @@
  */
 import { PLATE } from '@/engine/catalog';
 import type { Ground, Lot, Scenery } from '@/engine/house';
-import { groundHeight, lotDistance, Neighborhood, waterAreaAt } from '@/engine/scene/neighborhoodData';
+import { groundHeight, lotDistance, Neighborhood, seaLevelY, waterAreaAt } from '@/engine/scene/neighborhoodData';
 
 /** how far above the ground the camera stops, in ft (Q1) */
 export const CAMERA_MARGIN = 3;
@@ -21,7 +21,7 @@ export function clampAboveGround(p: Vec3, ground: (x: number, z: number) => numb
  * has loaded), and never below the water: the sea (spec 010b) or a water area (spec 022).
  */
 export function groundLookup(o: { heightmap: Ground; lot: Lot; n: Neighborhood | null; scenery?: Scenery }) {
-  const seaY = o.scenery?.sea && o.n ? -o.n.anchor.lotElevationM / 0.3048 : null;
+  const seaY = o.n ? seaLevelY(o.scenery?.sea, o.n.anchor.lotElevationM) : null;
   const areas = o.scenery?.waterAreas ?? [];
   return (x: number, z: number): number => {
     let y = !o.n || lotDistance(o.lot, x, z) === 0 ? o.heightmap.at(x, z) * PLATE : groundHeight(o.n, o.lot, x, z);

@@ -223,6 +223,15 @@ async function grid({ half, step, zoom }, despikeFt) {
     for (let k = 0; k < h.length; k++) if (h[k] < floor) { h[k] = floor; clamped++; }
     console.log(`sea floor ${step} ft grid: ${clamped} samples clamped to ${H.seaFloorFt} ft below sea level`);
   }
+  if (H.lake) {
+    // spec 045: the tiles have no bed for a lake (Lake Michigan reads as flat ground at its surface), so the engine's water
+    // (spec 011: open water must reach DEEP ft below the surface) wouldn't show; lower every sample under the lake's surface
+    // to a bed `floorFt` below it. Opt-in, so other houses' data stays byte-identical.
+    const surface = toY(H.lake.levelM), bed = Math.round((surface - H.lake.floorFt) * 4);
+    let lowered = 0;
+    for (let k = 0; k < h.length; k++) if (h[k] < surface * 4) { h[k] = bed; lowered++; }
+    console.log(`lake ${step} ft grid: ${lowered} samples under ${H.lake.levelM} m lowered to ${H.lake.floorFt} ft below it`);
+  }
   return { x0, z0, step, nx: n, nz: n, h };
 }
 
