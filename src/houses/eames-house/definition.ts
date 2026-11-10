@@ -5,6 +5,7 @@ import { buildEamesHouse } from './model/eamesHouse';
 import { CENTER, DRIVE, SITE } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 /** sea level relative to the house: the lot is 46.4 m above the Pacific (neighborhood.bin anchor) */
@@ -54,4 +55,6 @@ export const EAMES: HouseDefinition = {
     flatsBelow: -60, // the Santa Monica flats below the bluff
     city: { maxY: -40, minY: SEA_Y + 4 },
   },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['eames-house'],
 };

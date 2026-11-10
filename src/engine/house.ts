@@ -5,6 +5,7 @@
 import type { View } from './controls/cameraMoves';
 import type { Site } from './scene/sun';
 import type { Builder } from './voxel';
+import type { HouseStats } from './stats';
 
 export type Rect = [x0: number, z0: number, x1: number, z1: number];
 
@@ -70,6 +71,8 @@ export interface HouseDefinition {
   downtownDir: [x: number, z: number];
   /** optional scenery settings; the defaults are the Stahl House's (spec 010b) */
   scenery?: Scenery;
+  /** spec 050: the model by the numbers and its palette, from src/houses/stats.ts */
+  stats?: HouseStats;
 }
 
 /** Spec 022: a lake, pond or river from OSM: flat water at `level` ft over its rings (outer first, then holes), model ft. */

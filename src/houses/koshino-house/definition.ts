@@ -5,6 +5,7 @@ import { buildKoshinoHouse } from './model/koshinoHouse';
 import { BED, CENTER, LIVING, SITE, STUDIO_BOX, Y } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 const PL = 0.4;
@@ -47,4 +48,6 @@ export const KOSHINO: HouseDefinition = {
   downtownDir: realToModelDir(100, SITE.rotationDeg),
   // the Rokko mountains in forest, Osaka Bay at true sea level, the city on the coastal plain below
   scenery: { forest: true, sea: true, city: { maxY: -1300 } },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['koshino-house'],
 };

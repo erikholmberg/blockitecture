@@ -5,6 +5,7 @@ import { buildRoseSeidlerHouse } from './model/roseSeidlerHouse';
 import { CENTER, HOUSE, SITE, Y } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 const PL = 0.4;
@@ -47,4 +48,6 @@ export const ROSE_SEIDLER: HouseDefinition = {
   downtownDir: realToModelDir(159, SITE.rotationDeg),
   // the bush of the Ku-ring-gai plateau, no city in sight
   scenery: { forest: true, city: false },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['rose-seidler-house'],
 };

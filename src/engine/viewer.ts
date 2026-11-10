@@ -262,7 +262,7 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
     onShare: (kind) => void (kind === 'link' ? copyLink() : savePostcard()),
     onRoof(on) { roofCut.value = on ? 0 : 1; },
     onCam: camAction,
-  }, schedule.total, bricks.length, { text: house.text, views: house.views, phaseNames: house.phases.map((p) => p.name) });
+  }, schedule.total, bricks.length, { text: house.text, views: house.views, stats: house.stats, phaseNames: house.phases.map((p) => p.name) });
   hud.setPhaseTicks(schedule.phaseStart, schedule.total);
 
   hud.setAutoRotate(orbit.autoRotate);

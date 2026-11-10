@@ -5,9 +5,11 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  ArrowLeft, Expand, Eye, Home, ImageDown, Link2, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Repeat, Share2, SlidersHorizontal,
+  ArrowLeft, ChartColumn, Expand, Eye, Home, ImageDown, Link2, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Repeat, Share2, SlidersHorizontal,
 } from 'lucide-react';
 import type { HouseDefinition } from '@/engine/house';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { NumbersPanel } from '@/engine/ui/NumbersPanel';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup,
@@ -23,7 +25,7 @@ import { IntroCard } from '@/engine/ui/IntroCard';
 export type CamAction = 'in' | 'out' | 'left' | 'right' | 'home' | 'auto' | 'full' | `view:${string}`;
 
 /** What the HUD shows about the house (spec 010a). */
-export type HudHouse = Pick<HouseDefinition, 'text' | 'views'> & { phaseNames: string[] };
+export type HudHouse = Pick<HouseDefinition, 'text' | 'views' | 'stats'> & { phaseNames: string[] };
 
 export interface HudState {
   t: number; total: number; playing: boolean; speed: number; placed: number; pieces: number; phase: number;
@@ -126,6 +128,24 @@ function ShareMenu({ h }: { h: HudHandlers }) {
         <DropdownMenuItem onSelect={() => h.onShare?.('image')}><ImageDown /> Save image</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+/** spec 050: "By the numbers", beside Views and Share; no blur over the canvas */
+function NumbersMenu({ house, compact }: { house: HudHouse; compact: boolean }) {
+  if (!house.stats) return null;
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="icon" aria-label="By the numbers" className={cn(compact ? 'size-10' : 'size-9', 'rounded-lg', paper)}>
+          <ChartColumn />
+        </Button>
+      </PopoverTrigger>
+      {/* on phones below the button, where there's room across the screen; on wide screens beside the controls */}
+      <PopoverContent side={compact ? 'bottom' : 'left'} align={compact ? 'end' : 'start'} collisionPadding={12} className="max-h-[calc(100dvh-24px)] w-[min(20rem,calc(100vw-24px))] overflow-y-auto">
+        <NumbersPanel stats={house.stats} phaseNames={house.phaseNames} />
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -259,6 +279,7 @@ export function Hud({ store, h, house, compact: compactProp }: {
               </a>
               <div className="pointer-events-auto flex gap-1.5">
                 {s.mode === 'orbit' && <ViewsMenu house={house} h={h} />}
+                <NumbersMenu house={house} compact />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="icon" aria-label="Settings" className={cn('size-10 rounded-lg', paper)}>
@@ -366,6 +387,7 @@ export function Hud({ store, h, house, compact: compactProp }: {
                 <CamButton label="Auto-rotate" keyHint="R" pressed={s.autoRotate} onClick={() => h.onCam('auto')}><Repeat /></CamButton>
                 {fullscreenOk && <CamButton label="Fullscreen" onClick={() => h.onCam('full')}><Expand /></CamButton>}
                 <ShareMenu h={h} />
+                <NumbersMenu house={house} compact={false} />
               </div>
             )}
 

@@ -5,6 +5,7 @@ import { buildBarraganHouse } from './model/barraganHouse';
 import { CENTER, HOUSE, SITE, Y } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 const PL = 0.4;
@@ -47,4 +48,6 @@ export const BARRAGAN: HouseDefinition = {
   downtownDir: realToModelDir(75, SITE.rotationDeg),
   // the valley is city on every side: flat ground reads built-up, not grass (spec 010b's flatsBelow); no procedural city
   scenery: { city: false, flatsBelow: 2000 },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['casa-luis-barragan'],
 };

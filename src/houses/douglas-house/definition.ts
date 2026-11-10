@@ -5,6 +5,7 @@ import { buildDouglasHouse } from './model/douglasHouse';
 import { CENTER, HOUSE, OUT_STAIR, SITE, Y } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 const PL = 0.4;
@@ -47,4 +48,6 @@ export const DOUGLAS: HouseDefinition = {
   downtownDir: realToModelDir(160, SITE.rotationDeg),
   // the wooded bluffs of Lake Michigan's shore, the lake at its own level (spec 045, Q4), no city
   scenery: { forest: true, city: false, sea: { levelM: 177.2 } },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['douglas-house'],
 };

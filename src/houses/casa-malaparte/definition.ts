@@ -5,6 +5,7 @@ import { buildMalaparteHouse } from './model/malaparteHouse';
 import { CENTER, HOUSE, SITE, Y } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 const PL = 0.4;
@@ -48,4 +49,6 @@ export const MALAPARTE: HouseDefinition = {
   // Naples is about 30 km north (no procedural city)
   downtownDir: realToModelDir(0, SITE.rotationDeg),
   scenery: { sea: true, chaparral: true, city: false },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['casa-malaparte'],
 };

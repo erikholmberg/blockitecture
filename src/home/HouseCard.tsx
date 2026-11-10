@@ -2,6 +2,22 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { House, houseUrl } from '@/houses/index';
+import { STATS } from '@/houses/stats';
+
+const hex = (c: number) => '#' + c.toString(16).padStart(6, '0');
+
+/** spec 050: the house's colours, each as wide as its share; decoration, so hidden from screen readers */
+function PaletteStrip({ slug }: { slug: string }) {
+  const palette = STATS[slug]?.palette;
+  if (!palette) return null;
+  return (
+    <div data-palette aria-hidden="true" className="-mt-(--card-spacing) flex h-3.5 w-full border-t border-foreground/10">
+      {palette.map((p) => (
+        <div key={p.color} style={{ flexGrow: p.share, backgroundColor: hex(p.color) }} />
+      ))}
+    </div>
+  );
+}
 
 /** Toy-brick placeholder for houses that aren't built yet. */
 function BrickPlaceholder() {
@@ -41,6 +57,7 @@ export function HouseCard({ house }: { house: House }) {
       ) : (
         <BrickPlaceholder />
       )}
+      {live && <PaletteStrip slug={house.slug} />}
       <CardHeader>
         <div className="flex items-start justify-between gap-3">
           <div>

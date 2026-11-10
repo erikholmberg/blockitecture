@@ -5,6 +5,7 @@ import { buildSchroderHouse } from './model/schroderHouse';
 import { CENTER, D, SITE, W, Y } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 const PL = 0.4;
@@ -47,5 +48,7 @@ export const SCHRODER: HouseDefinition = {
   // Utrecht's centre is about 2 km west-north-west (bearing ~290°); there's no procedural city here
   downtownDir: realToModelDir(290, SITE.rotationDeg),
   scenery: { lowlands: true, city: false },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['rietveld-schroder-house'],
 };
 

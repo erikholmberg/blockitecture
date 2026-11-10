@@ -62,6 +62,7 @@ npm run check        # tsc (src + tests) + tests: must pass before every commit
 node scripts/fetch-neighborhood.mjs <slug>   # regenerate public/<slug>/neighborhood.bin and the house's model/lotTerrain.ts (OSM + terrain; cached in scripts/.cache)
 npm run build        # tsc + vite build → dist/
 npm run usage        # Claude tokens per house from this machine's transcripts + usage/ledger.json (--by-spec, --record; spec 018)
+npm run stats        # regenerate src/houses/stats.ts (each house's palette and figures) after any model change (spec 050)
 ```
 
 ## Testability notes

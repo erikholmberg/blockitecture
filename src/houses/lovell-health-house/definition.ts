@@ -5,6 +5,7 @@ import { buildLovellHouse } from './model/lovellHouse';
 import { BALCONY, BALCONY_N, CENTER, SITE, THIRD, THIRD_ENTRY, Y } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 const PL = 0.4;
@@ -46,4 +47,6 @@ export const LOVELL: HouseDefinition = {
   // downtown Los Angeles is about 8 km away, bearing ~150°
   downtownDir: realToModelDir(150, SITE.rotationDeg),
   scenery: { chaparral: true },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['lovell-health-house'],
 };

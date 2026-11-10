@@ -7,6 +7,7 @@ import { buildStahlHouse } from './model/stahlHouse';
 import { CENTER, DRIVE, SITE } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 
@@ -44,4 +45,6 @@ export const STAHL: HouseDefinition = {
   data: 'stahl-house/neighborhood.bin',
   // downtown LA lies ESE of the house; rotated 180° like the rest of the real world
   downtownDir: [-36400, -18400],
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['stahl-house'],
 };

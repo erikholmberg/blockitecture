@@ -6,6 +6,7 @@ import { CENTER, HOUSE, SITE, Y } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { WATER_AREAS } from './model/water';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 const PL = 0.4;
@@ -48,4 +49,6 @@ export const FARNSWORTH: HouseDefinition = {
   // Chicago is about 55 miles away, bearing ~70° (beyond the far grid; no procedural city)
   downtownDir: realToModelDir(70, SITE.rotationDeg),
   scenery: { city: false, lowlands: true, waterAreas: WATER_AREAS },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['farnsworth-house'],
 };

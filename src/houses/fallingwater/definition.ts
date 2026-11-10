@@ -5,6 +5,7 @@ import { buildFallingwater } from './model/fallingwater';
 import { BRIDGE, CENTER, CHIMNEY, ROOF, SITE, TRAY2, TRAY3, Y } from './model/layout';
 import { surfaceFt, TERRAIN } from './model/site';
 import { PHASES } from './phases';
+import { STATS } from '../stats';
 
 const v3 = (x: number, y: number, z: number) => ({ x, y, z });
 const PL = 0.4;
@@ -52,4 +53,6 @@ export const FALLINGWATER: HouseDefinition = {
   // Pittsburgh is about 60 miles away at a bearing of ~300° (not shown: there is no city here)
   downtownDir: realToModelDir(300, SITE.rotationDeg),
   scenery: { forest: true, city: false, flowingWater: true, chaparral: false, flatsBelow: -100000 },
+  // spec 050: the model by the numbers and its palette
+  stats: STATS['fallingwater'],
 };
