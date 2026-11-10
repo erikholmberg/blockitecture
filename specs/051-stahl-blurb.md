@@ -1,7 +1,6 @@
 # 051 — The Stahl House's blurb, without "real hillside"
 
-- **Status:** In progress (requested by Erik 2026-11-10, with the wording approved: "go ahead with that wording". Built and
-  checked in Chrome; committed with Erik's go-ahead, 2026-11-10.)
+- **Status:** Done (requested by Erik 2026-11-10, with the wording approved: "go ahead with that wording". Closed by Erik 2026-11-10: "close the specs")
 - **Owner:** Erik
 - **House:** stahl-house
 - **Created:** 2026-11-10

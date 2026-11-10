@@ -1,7 +1,7 @@
 # 050 — Each house's palette, and its model by the numbers
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it", both recommendations. Built and checked in Chrome;
-  committed with Erik's go-ahead, 2026-11-10.)
+- **Status:** Done (approved by Erik 2026-11-10: "build it", both recommendations. Closed by Erik 2026-11-10: "close the specs", accepting the
+  frame-rate check, A6, which wasn't measured)
 - **Owner:** Erik
 - **Created:** 2026-11-10
 - **Commits:** 4157e4a

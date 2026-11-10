@@ -1,7 +1,7 @@
 # 052 — Vercel Web Analytics
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it", all recommendations. Built and checked in dev; committed
-  with Erik's go-ahead, 2026-11-10. Analytics enabled and A4 checked on the live site the same day.)
+- **Status:** Done (approved by Erik 2026-11-10: "build it", all recommendations. Closed by Erik 2026-11-10: "close the specs", accepting the
+  frame-rate check, A5, which wasn't measured)
 - **Owner:** Erik
 - **Created:** 2026-11-10
 - **Commits:** 18267a9
