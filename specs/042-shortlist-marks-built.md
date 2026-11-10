@@ -3,7 +3,7 @@
 - **Status:** In progress (requested by Erik 2026-11-09: "mark off the ones on the shortlist we've created")
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 599e512
 
 ## Goal
 On the dev photo page `/dev/shortlist/`, it's hard to see which candidates are already built: they only carry a small grey "Live"

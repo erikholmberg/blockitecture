@@ -1,10 +1,10 @@
 # 046 — No studs
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it", all recommendations. Built and checked in Chrome; not
-  committed: Erik commits.)
+- **Status:** In progress (approved by Erik 2026-11-10: "build it", all recommendations. Built and checked in Chrome; committed with
+  Erik's go-ahead, 2026-11-10.)
 - **Owner:** Erik
 - **Created:** 2026-11-10
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 11ed823
 
 ## Goal
 Erik tried the Rose Seidler House without the round studs on top of its pieces (a throwaway edit, 2026-11-10) and loved it: the

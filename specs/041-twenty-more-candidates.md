@@ -3,7 +3,7 @@
 - **Status:** In progress (approved by Erik 2026-11-09: "approved, the mix")
 - **Owner:** Erik
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 599e512
 
 ## Goal
 Nine of spec 016's shortlist houses are now built, so the dev photo page at `/dev/shortlist/` has fewer choices left. Adding 20

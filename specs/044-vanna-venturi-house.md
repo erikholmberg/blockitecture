@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** vanna-venturi-house
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 56eb911 (spec and build, hidden)
 
 ## Goal
 The fourteenth rendering: the house Robert Venturi designed for his mother, Vanna (1962–64), at the end of a long drive off Millman
@@ -172,5 +172,8 @@ About 2½ minutes.
   - **A16 pass:** the fourteenth card is live, with its thumbnail and piece count; the credits page has its section.
 - **Thumbnail:** `/vanna-venturi-house/?cam=-6,12,-44,30,12,12&clean&date=2026-06-21`, cropped to 1200 × 675: the front from the
   drive's side, the split gable and the chimney.
-- **Claude usage** (spec 018): to be recorded after the commit (`npm run usage`).
+- **Claude usage** (spec 018): can't be split out for this house. The commits for specs 041–046 all landed within
+  minutes of each other on 2026-11-10, after one long stretch of uncommitted work, and the ledger splits usage by commit
+  time. So nearly all of it went to the first of them (08fd10a, the close-out of specs 034–040, counted as shared). The
+  house's own figure (2 replies, 0.2%) is only the last few minutes before its commit, and understates it badly.
 
