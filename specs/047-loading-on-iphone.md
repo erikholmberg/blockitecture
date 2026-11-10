@@ -1,7 +1,7 @@
 # 047 — The loading brick keeps turning on an iPhone
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it", the worker. Built and checked in Chrome; waiting on Erik's
-  iPhone, A5. Committed with Erik's go-ahead, 2026-11-10.)
+- **Status:** Done (approved by Erik 2026-11-10: "build it", the worker. Closed by Erik 2026-11-10: "works on iphone now", A5
+  passed on his iPhone)
 - **Owner:** Erik
 - **Created:** 2026-11-10
 - **Commits:** 5b55ab4
@@ -71,5 +71,5 @@ time the house loads, on every device.
 - **Tests:** `tests/buildPayload.test.ts` covers A1–A3. Spec 046's A1 now looks for the stud switch in `buildPayload.ts`, where
   the model is generated, and checks the viewer makes no studs. `npm run check`: 347 tests pass.
   - **Not tests-first:** the worker was written before `tests/buildPayload.test.ts`.
-- **A5 not checked:** needs Erik's iPhone.
+- **A5 pass** (Erik's iPhone, 2026-11-10): "works on iphone now".
 

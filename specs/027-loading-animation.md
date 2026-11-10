@@ -91,3 +91,7 @@ A toy-block animation above the "Sorting blocks…" line, chosen from 23 candida
   - With the main thread frozen for 5 s, it keeps turning: the frames differ. Animating only transforms keeps it off the main
     thread.
   - On a normal load, `#loading` is gone once the intro card shows.
+- **Later (spec 047, 2026-11-10):** on an iPhone the brick stopped while the main thread was busy: iOS Safari doesn't keep this
+  3D animation going off the main thread, which the check above only confirmed in Chrome. The model is now generated in a
+  worker and the scene's setup pauses a frame between steps, so the brick keeps turning there too.
+
