@@ -102,17 +102,17 @@ export function buildSite(b: Builder): HeightMap {
 
 /** the neighbours inside the lot: stucco houses with tile roofs, whole even where they cross its edge [OSM footprints; the rest assumed] */
 function buildNeighbours(b: Builder) {
-  for (const bl of LOT_BUILDINGS) {
+  for (const bl of LOT_BUILDINGS) b.neighbour(() => {
     b.newGroup();
     const xs = bl.ring.map((p) => p[0]), zs = bl.ring.map((p) => p[1]);
     const x0 = Math.floor(Math.min(...xs)), x1 = Math.ceil(Math.max(...xs)), z0 = Math.floor(Math.min(...zs)), z1 = Math.ceil(Math.max(...zs));
     const mine = (x: number, z: number) => inPoly(x + 0.5, z + 0.5, bl.ring);
     let base = Infinity;
     for (let z = z0; z < z1; z += 2) for (let x = x0; x < x1; x += 2) if (mine(x, z)) base = Math.min(base, groundPlates(x, z));
-    if (!Number.isFinite(base)) continue;
+    if (!Number.isFinite(base)) return;
     const top = base + 30 + 3 * Math.floor(hash2(bl.id % 997, 7) * 3);
     const edge = (x: number, z: number) => mine(x, z) && !(mine(x - 1, z) && mine(x + 1, z) && mine(x, z - 1) && mine(x, z + 1));
     b.box(x0, z0, x1, z1, base, top, { kind: 'brick', mask: (x, z) => edge(x, z), color: 0xe8dcc4 });
     b.box(x0, z0, x1, z1, top, top + 2, { kind: 'plate', mask: (x, z) => mine(x, z), color: 0xb5562b });
-  }
+  });
 }

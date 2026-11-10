@@ -57,7 +57,7 @@ export function buildLandscape(b: Builder, hm: HeightMap) {
     tree(b, x, z, hm.at(x, z), 33 + 3 * Math.floor(hash2(x, z) * 4), 11, 0x4f7a3e);
   }
   // the lot's other building, a plain block clipped to the lot
-  for (const bl of LOT_BUILDINGS) {
+  for (const bl of LOT_BUILDINGS) b.neighbour(() => {
     b.newGroup();
     const xs = bl.ring.map((p) => p[0]), zs = bl.ring.map((p) => p[1]);
     const bx0 = Math.max(TERRAIN.x0, Math.floor(Math.min(...xs))), bx1 = Math.min(TERRAIN.x1, Math.ceil(Math.max(...xs)));
@@ -66,5 +66,5 @@ export function buildLandscape(b: Builder, hm: HeightMap) {
     const g = hm.at((bx0 + bx1) >> 1, (bz0 + bz1) >> 1);
     b.box(bx0, bz0, bx1, bz1, g, Y.ROOF, { kind: 'brick', color: 0xcfc8bb, mask: inside });
     b.box(bx0, bz0, bx1, bz1, Y.ROOF, Y.ROOF + 1, { kind: 'plate', color: 0xa9a297, mask: inside });
-  }
+  });
 }

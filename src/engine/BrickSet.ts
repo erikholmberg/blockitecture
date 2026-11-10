@@ -10,6 +10,11 @@ import { DROP_HEIGHT } from '@/engine/motion';
 let dropHeight = DROP_HEIGHT;
 export const setDropHeight = (h: number) => { dropHeight = h; };
 
+/** Spec 038: the most neighbouring buildings a house's lot can hold (one flag each in the shader) */
+export const NB_MAX = 64;
+/** Spec 038: 1 for each lot neighbour hidden because it stands between the camera and the house */
+export const nbHidden = { value: new Array<number>(NB_MAX).fill(0) };
+
 /** When on, everything above the ceiling inside the roof outline is cut away. */
 export const roofCut = { value: 0 };
 /** GLSL for the cut, generated from the house's roof outline (spec 010a). */
@@ -20,15 +25,19 @@ function roofCutGlsl({ y0, y1, rects }: HouseDefinition['roofCut']) {
     `(vCutPos.x > ${f(x0)} && vCutPos.x < ${f(x1)} && vCutPos.z > ${f(z0)} && vCutPos.z < ${f(z1)})`).join(' ||\n   ');
   return `if (uRoofCut > 0.5 && vCutPos.y > ${f(y0)} && vCutPos.y < ${f(y1)} &&\n  (${inRect || 'false'})) discard;`;
 }
-const CUT_VERT_DECL = 'varying vec3 vCutPos;';
+const CUT_VERT_DECL = `varying vec3 vCutPos;\nattribute float aNb;\nuniform float uNbHidden[${NB_MAX}];`;
 const CUT_VERT = 'vCutPos = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;';
+// spec 038: a hidden neighbour's pieces collapse to a point outside the view, so nothing of them is drawn
+const NB_VERT = 'if (aNb > 0.5 && uNbHidden[int(aNb + 0.5) - 1] > 0.5) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);';
 const CUT_FRAG_DECL = 'varying vec3 vCutPos;\nuniform float uRoofCut;';
 
 function withRoofCut(shader: THREE.WebGLProgramParametersWithUniforms) {
   shader.uniforms.uRoofCut = roofCut;
+  shader.uniforms.uNbHidden = nbHidden;
   shader.vertexShader = shader.vertexShader
     .replace('#include <common>', '#include <common>\n' + CUT_VERT_DECL)
-    .replace('#include <begin_vertex>', '#include <begin_vertex>\n' + CUT_VERT);
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\n' + CUT_VERT)
+    .replace('#include <project_vertex>', '#include <project_vertex>\n' + NB_VERT);
   shader.fragmentShader = shader.fragmentShader
     .replace('#include <common>', '#include <common>\n' + CUT_FRAG_DECL)
     .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n' + CUT_FRAG);
@@ -119,9 +128,13 @@ class Layer {
   prevLo = 0;
   prevHi = 0;
   matrices: Float32Array;
+  /** spec 038: the lot neighbour each piece belongs to, plus one (0: the house) */
+  nb: Float32Array;
 
   constructor(geo: THREE.BufferGeometry, mat: THREE.Material, n: number) {
     this.n = n;
+    this.nb = new Float32Array(Math.max(1, n));
+    geo.setAttribute('aNb', new THREE.InstancedBufferAttribute(this.nb, 1));
     this.mesh = new THREE.InstancedMesh(geo, mat, Math.max(1, n));
     this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     this.mesh.frustumCulled = false;
@@ -133,8 +146,9 @@ class Layer {
   }
 
   private fill = 0;
-  push(t: number, px: number, py: number, pz: number, sx: number, sy: number, sz: number, color: THREE.Color) {
+  push(t: number, px: number, py: number, pz: number, sx: number, sy: number, sz: number, color: THREE.Color, nb = -1) {
     const i = this.fill++;
+    this.nb[i] = nb + 1;
     const m = this.matrices, o = i * 16;
     m[o] = sx; m[o + 1] = 0; m[o + 2] = 0; m[o + 3] = 0;
     m[o + 4] = 0; m[o + 5] = sy; m[o + 6] = 0; m[o + 7] = 0;
@@ -240,14 +254,14 @@ export class BrickSet {
     const sphere = new THREE.SphereGeometry(0.5, 14, 10);
 
     this.layers = {
-      box: new Layer(box, plastic, counts.box),
-      round: new Layer(cyl, roundMat, counts.round),
-      stud: new Layer(stud, roundMat, counts.stud),
-      glass: new Layer(box, glassMat, counts.glass),
-      water: new Layer(box, waterMat, counts.water),
-      falls: new Layer(box, fallsMat, counts.falls),
-      light: new Layer(box, lightMat, counts.light),
-      lamp: new Layer(sphere, lampMat, counts.lamp),
+      box: new Layer(box.clone(), plastic, counts.box),
+      round: new Layer(cyl.clone(), roundMat, counts.round),
+      stud: new Layer(stud.clone(), roundMat, counts.stud),
+      glass: new Layer(box.clone(), glassMat, counts.glass),
+      water: new Layer(box.clone(), waterMat, counts.water),
+      falls: new Layer(box.clone(), fallsMat, counts.falls),
+      light: new Layer(box.clone(), lightMat, counts.light),
+      lamp: new Layer(sphere.clone(), lampMat, counts.lamp),
     };
     const L = this.layers;
     L.box.mesh.castShadow = L.box.mesh.receiveShadow = true;
@@ -268,24 +282,24 @@ export class BrickSet {
       const px = b.x + b.w / 2, py = b.y * PLATE + h / 2, pz = b.z + b.d / 2;
       switch (LAYER_OF[b.kind]) {
         case 'box':
-          L.box.push(t, px, py, pz, b.w - G, h - 0.012, b.d - G, col);
+          L.box.push(t, px, py, pz, b.w - G, h - 0.012, b.d - G, col, b.nb);
           break;
         case 'round': {
           const f = b.kind === 'bar' ? 0.32 : 0.96;
-          L.round.push(t, px, py, pz, b.w * f, h - 0.01, b.d * f, col);
+          L.round.push(t, px, py, pz, b.w * f, h - 0.01, b.d * f, col, b.nb);
           break;
         }
         case 'glass': {
           const sx = b.thin === 0 ? 0.25 : b.w - G;
           const sz = b.thin === 2 ? 0.25 : b.d - G;
-          L.glass.push(t, px, py, pz, sx, h - 0.012, sz, col);
+          L.glass.push(t, px, py, pz, sx, h - 0.012, sz, col, b.nb);
           break;
         }
         case 'water':
-          L.water.push(t, px, py, pz, b.w, h, b.d, col);
+          L.water.push(t, px, py, pz, b.w, h, b.d, col, b.nb);
           break;
         case 'falls':
-          L.falls.push(t, px, py, pz, b.w, h, b.d, col);
+          L.falls.push(t, px, py, pz, b.w, h, b.d, col, b.nb);
           break;
         case 'light':
           L.light.push(t, px, py, pz, b.w - G, h - 0.01, b.d - G, col);
@@ -297,7 +311,7 @@ export class BrickSet {
     }
     for (const s of studs) {
       col.setHex(bricks[s.brick].color);
-      L.stud.push(start[s.brick], s.x + 0.5, s.y * PLATE + 0.1, s.z + 0.5, 1, 1, 1, col);
+      L.stud.push(start[s.brick], s.x + 0.5, s.y * PLATE + 0.1, s.z + 0.5, 1, 1, 1, col, bricks[s.brick].nb);
     }
     for (const l of Object.values(L)) {
       l.mesh.instanceMatrix.needsUpdate = true;

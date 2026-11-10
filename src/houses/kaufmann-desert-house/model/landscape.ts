@@ -36,14 +36,14 @@ export function buildLandscape(b: Builder, hm: HeightMap) {
   b.add(x0, z0, Y.POOL_FLOOR, x1 - x0, z1 - z0, Y.POOL - Y.POOL_FLOOR, 0x7fd8ea, 'water');
 
   // the lot's other buildings: plain, low, white [assumed]
-  for (const bl of LOT_BUILDINGS) {
+  for (const bl of LOT_BUILDINGS) b.neighbour(() => {
     b.newGroup();
     const xs = bl.ring.map((p) => p[0]), zs = bl.ring.map((p) => p[1]);
     const bx0 = Math.floor(Math.min(...xs)), bx1 = Math.ceil(Math.max(...xs)), bz0 = Math.floor(Math.min(...zs)), bz1 = Math.ceil(Math.max(...zs));
     const g = hm.at((bx0 + bx1) / 2, (bz0 + bz1) / 2);
     b.box(bx0, bz0, bx1, bz1, g, Y.CEILING, { kind: 'brick', color: 0xe9e4da, mask: (x, z) => inPoly(x + 0.5, z + 0.5, bl.ring) });
     b.box(bx0, bz0, bx1, bz1, Y.CEILING, Y.CEILING + 2, { kind: 'plate', color: 0xf1efe9, mask: (x, z) => inPoly(x + 0.5, z + 0.5, bl.ring) });
-  }
+  });
 
   // a few tall fan palms on the lawn, and along the drive [assumed: photographs]
   for (const [x, z] of [[170, 70], [178, 146], [92, 132], [24, 150], [56, 156], [140, 30], [8, 40]]) palm(b, x, z, hm.at(x, z), 50 + 3 * Math.floor(hash2(x, z) * 8));

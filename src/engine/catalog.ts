@@ -29,6 +29,8 @@ export interface Brick {
   thin?: 0 | 2;
   /** hangs from the ceiling: built after the solid pieces of its phase, top-down (spec 002) */
   hangs?: true;
+  /** a neighbouring building on the lot, not the house: its index (spec 038), so the viewer can hide it when it's in the way */
+  nb?: number;
 }
 
 export const C = {

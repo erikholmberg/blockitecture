@@ -35,7 +35,7 @@ export function buildLandscape(b: Builder, hm: HeightMap) {
   const [x0, z0, x1, z1] = POOL;
   b.add(x0, z0, Y.POOL_BOTTOM, x1 - x0, z1 - z0, Y.WATER - Y.POOL_BOTTOM, 0x7fd8ea, 'water');
 
-  for (const bl of LOT_BUILDINGS) {
+  for (const bl of LOT_BUILDINGS) b.neighbour(() => {
     b.newGroup();
     const xs = bl.ring.map((p) => p[0]), zs = bl.ring.map((p) => p[1]);
     const bx0 = Math.floor(Math.min(...xs)), bx1 = Math.ceil(Math.max(...xs)), bz0 = Math.floor(Math.min(...zs)), bz1 = Math.ceil(Math.max(...zs));
@@ -43,11 +43,11 @@ export function buildLandscape(b: Builder, hm: HeightMap) {
     const inside = (x: number, z: number) => x >= TERRAIN.x0 && x < TERRAIN.x1 && z >= TERRAIN.z0 && z < TERRAIN.z1 && inPoly(x + 0.5, z + 0.5, bl.ring);
     let lo = Infinity, hi = -Infinity;
     for (let z = bz0; z < bz1; z++) for (let x = bx0; x < bx1; x++) if (inside(x, z)) { lo = Math.min(lo, hm.at(x, z)); hi = Math.max(hi, hm.at(x, z)); }
-    if (lo === Infinity) continue;
+    if (lo === Infinity) return;
     const top = hi + 27;
     b.box(bx0, bz0, bx1, bz1, lo, top, { kind: 'brick', color: 0xeae6dc, mask: inside });
     b.box(bx0, bz0, bx1, bz1, top, top + 1, { kind: 'plate', color: 0xb8b2a6, mask: inside });
-  }
+  });
 
   const keepOut: Rect[] = [...ROOFS, TERRACE, BALCONY, BALCONY_N, POOL_CRADLE, ...PADS.map(([r]) => r)];
   const r = rng(1929);

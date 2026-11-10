@@ -140,7 +140,7 @@ function buildRow(b: Builder, hm: HeightMap) {
   const { owner, w } = neighbourCells();
   const at = (x: number, z: number) =>
     x < TERRAIN.x0 || x >= TERRAIN.x1 || z < TERRAIN.z0 || z >= TERRAIN.z1 ? -1 : owner[(z - TERRAIN.z0) * w + (x - TERRAIN.x0)];
-  LOT_BUILDINGS.forEach((bl, i) => {
+  LOT_BUILDINGS.forEach((bl, i) => b.neighbour(() => {
     b.newGroup();
     const xs = bl.ring.map((p) => p[0]), zs = bl.ring.map((p) => p[1]);
     const x0 = Math.floor(Math.min(...xs)) - 3, x1 = Math.ceil(Math.max(...xs)) + 1;
@@ -178,7 +178,7 @@ function buildRow(b: Builder, hm: HeightMap) {
     for (let k = 1; k <= ROW_MANSARD; k++)
       b.box(x0, z0, x1, z1, top + (k - 1) * 3, top + k * 3, { kind: 'brick', mask: (x, z) => mine(x, z) && inset(x, z) === k, color: tile });
     b.box(x0, z0, x1, z1, top + ROW_MANSARD * 3 - 1, top + ROW_MANSARD * 3, { kind: 'plate', mask: (x, z) => mine(x, z) && inset(x, z) > ROW_MANSARD, color: tile });
-  });
+  }));
 }
 
 /** the garden plot of the house, with its fence along the pavements [assumed: photographs] */

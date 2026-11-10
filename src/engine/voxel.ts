@@ -71,6 +71,10 @@ export class Builder {
   dropped: { phase: number; x: number; y: number; z: number; w: number; d: number; h: number; kind: Kind }[] = [];
   /** while true, placed pieces are flagged as ceiling-hung */
   hangs = false;
+  /** spec 038: the neighbouring building being placed (−1: the house and its site) */
+  private nb = -1;
+  /** how many neighbouring buildings have been placed */
+  neighbours = 0;
 
   setPhase(p: number) {
     this.phase = p;
@@ -88,6 +92,14 @@ export class Builder {
     place();
     this.hangs = false;
     this.setPhase(prev);
+  }
+
+  /** Spec 038: place one of the lot's neighbouring buildings; its pieces are tagged so the viewer can hide it. */
+  neighbour(place: () => void) {
+    const prev = this.nb;
+    this.nb = this.neighbours++;
+    place();
+    this.nb = prev;
   }
 
   private idx(x: number, y: number, z: number) {
@@ -137,6 +149,7 @@ export class Builder {
       studs: opts.studs ?? KIND_STUDS[kind],
     };
     if (this.hangs) b.hangs = true;
+    if (this.nb >= 0) b.nb = this.nb;
     this.bricks.push(b);
     this.mark(b);
     return true;
@@ -215,6 +228,7 @@ export class Builder {
                 phase: this.phase, group: this.group, studs, thin,
               };
               if (this.hangs) br.hangs = true;
+              if (this.nb >= 0) br.nb = this.nb;
               this.bricks.push(br);
               this.mark(br);
               done = true;
@@ -229,6 +243,7 @@ export class Builder {
               phase: this.phase, group: this.group, studs, thin,
             };
             if (this.hangs) br.hangs = true;
+            if (this.nb >= 0) br.nb = this.nb;
             this.bricks.push(br);
             this.mark(br);
           }

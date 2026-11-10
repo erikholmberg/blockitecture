@@ -4,7 +4,8 @@ import '@/styles/globals.css';
 import '@/engine/ui/styles.css';
 import { sequence } from '@/engine/sequencer';
 import { clampAboveGround, groundLookup } from '@/engine/controls/ground';
-import { BrickSet, roofCut, waterTime } from '@/engine/BrickSet';
+import { BrickSet, nbHidden, roofCut, waterTime } from '@/engine/BrickSet';
+import { neighbourFootprints, updateHidden } from '@/engine/inTheWay';
 import { Environment } from '@/engine/scene/environment';
 import { City } from '@/engine/scene/cityBackdrop';
 import { loadNeighborhood, NeighborhoodScene } from '@/engine/scene/neighborhood';
@@ -103,7 +104,20 @@ export async function startViewer(house: HouseDefinition) {
     flowingWater: house.scenery?.flowingWater,
   });
   scene.add(set.group);
-
+  // spec 038: the lot's neighbouring buildings, hidden while they stand between the orbit camera and the house
+  const nbFootprints = neighbourFootprints(bricks);
+  const seen = { pos: new THREE.Vector3(Infinity, 0, 0), target: new THREE.Vector3(), mode: '' };
+  function hideInTheWay() {
+    if (seen.mode === mode && seen.pos.distanceToSquared(camera.position) < 0.01 && seen.target.distanceToSquared(orbit.target) < 0.01) return;
+    seen.pos.copy(camera.position); seen.target.copy(orbit.target); seen.mode = mode;
+    if (mode === 'walk') {
+      nbHidden.value.fill(0);
+      hood?.hideInTheWay(null, null);
+      return;
+    }
+    updateHidden(nbFootprints, camera.position, orbit.target, nbHidden.value);
+    hood?.hideInTheWay(camera.position, orbit.target);
+  }
 
   // ---------- controls ----------
   const orbit = new OrbitControls(camera, renderer.domElement);
@@ -325,6 +339,7 @@ export async function startViewer(house: HouseDefinition) {
     app.appendChild(fpsEl);
     const debugApi = {
       house, seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood, sun, renderer, scene, ground,
+      neighboursHidden: () => nbHidden.value.slice(0, nbFootprints.length),
       // spec 037: the share link's query and the postcard, for checking without the clipboard or a download
       shareQuery: () => shareState(),
       postcard: () => renderPostcard(renderer, scene, camera, postcardCaption(house.text, location.host)),
@@ -364,6 +379,7 @@ export async function startViewer(house: HouseDefinition) {
       const c = clampAboveGround(camera.position, ground);
       if (c !== camera.position) camera.position.y = c.y;
     }
+    hideInTheWay();
     // spec 011: keep the near plane as far out as the camera allows, for depth precision (no flicker far away)
     const near = mode === 'walk' ? WALK_NEAR : orbitNear(camera.position.distanceTo(orbit.target));
     if (Math.abs(near - camera.near) > camera.near * 0.05) {

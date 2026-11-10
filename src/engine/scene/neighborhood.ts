@@ -4,6 +4,7 @@ import {
 } from '@/engine/scene/neighborhoodData';
 import { hash2, noise2 } from '@/engine/voxel';
 import type { Lot, Scenery, WaterArea } from '@/engine/house';
+import { Footprint, inTheWay, P3 } from '@/engine/inTheWay';
 
 /**
  * Spec 003: the real Hollywood Hills around the house: terrain, roads and buildings from
@@ -22,6 +23,9 @@ export class NeighborhoodScene {
   private lowlands: boolean;
   private desert: boolean;
   private waterAreas: WaterArea[];
+  /** spec 038: each building's footprint and its vertices, to hide it when it's between the camera and the house */
+  private blds: { fp: Footprint; v0: number; v1: number; hidden: boolean }[] = [];
+  private hidAttr: THREE.BufferAttribute | null = null;
 
   constructor(private n: Neighborhood, private lot: Lot, scenery: Scenery = {}) {
     this.seaY = scenery.sea ? -n.anchor.lotElevationM / 0.3048 : null;
@@ -267,6 +271,9 @@ export class NeighborhoodScene {
       rc.setHex(ROOFS[Math.floor(hash2(Math.round(cz), Math.round(cx)) * ROOFS.length)]);
       // make the ring counter-clockwise (in x,z) so wall normals point out
       if (THREE.ShapeUtils.isClockWise(ring)) ring.reverse();
+      const v0 = pos.length / 3;
+      const fp: Footprint = { x0: Infinity, z0: Infinity, x1: -Infinity, z1: -Infinity, top: y1 };
+      for (const p of ring) { fp.x0 = Math.min(fp.x0, p.x); fp.x1 = Math.max(fp.x1, p.x); fp.z0 = Math.min(fp.z0, p.y); fp.z1 = Math.max(fp.z1, p.y); }
       for (let k = 0; k < ring.length; k++) {
         const a = ring[k], c = ring[(k + 1) % ring.length];
         nrm.set(c.y - a.y, 0, -(c.x - a.x)).normalize();
@@ -276,14 +283,44 @@ export class NeighborhoodScene {
       for (const [a, c, d] of THREE.ShapeUtils.triangulateShape(ring, [])) {
         push(ring[a].x, y1, ring[a].y, up, rc); push(ring[d].x, y1, ring[d].y, up, rc); push(ring[c].x, y1, ring[c].y, up, rc);
       }
+      this.blds.push({ fp, v0, v1: pos.length / 3, hidden: false });
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
     g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
-    const m = new THREE.Mesh(g, this.material({ roughness: 0.85, side: THREE.DoubleSide }));
+    this.hidAttr = new THREE.BufferAttribute(new Float32Array(pos.length / 3), 1).setUsage(THREE.DynamicDrawUsage);
+    g.setAttribute('aHid', this.hidAttr);
+    const mat = this.material({ roughness: 0.85, side: THREE.DoubleSide });
+    // spec 038: a hidden building's vertices collapse to a point outside the view
+    mat.onBeforeCompile = (shader) => {
+      shader.vertexShader = shader.vertexShader
+        .replace('#include <common>', '#include <common>\nattribute float aHid;')
+        .replace('#include <project_vertex>', '#include <project_vertex>\nif (aHid > 0.5) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);');
+    };
+    mat.customProgramCacheKey = () => 'hood-buildings';
+    const m = new THREE.Mesh(g, mat);
     m.receiveShadow = true;
     return m;
+  }
+
+  /** Spec 038: hide the buildings standing between the camera and the house (`null`: show them all, as in Walk) */
+  hideInTheWay(cam: P3 | null, target: P3 | null) {
+    const a = this.hidAttr;
+    if (!a) return;
+    const arr = a.array as Float32Array;
+    let lo = Infinity, hi = -1;
+    for (const b of this.blds) {
+      const h = !!cam && !!target && inTheWay(b.fp, cam, target);
+      if (h === b.hidden) continue;
+      b.hidden = h;
+      arr.fill(h ? 1 : 0, b.v0, b.v1);
+      lo = Math.min(lo, b.v0); hi = Math.max(hi, b.v1);
+    }
+    if (hi < 0) return;
+    a.clearUpdateRanges();
+    a.addUpdateRange(lo, hi - lo);
+    a.needsUpdate = true;
   }
 
   // ---------- dusk ----------
