@@ -1,10 +1,10 @@
 # 050 — Each house's palette, and its model by the numbers
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it", both recommendations. Built and checked in Chrome; not
-  committed.)
+- **Status:** In progress (approved by Erik 2026-11-10: "build it", both recommendations. Built and checked in Chrome;
+  committed with Erik's go-ahead, 2026-11-10.)
 - **Owner:** Erik
 - **Created:** 2026-11-10
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 4157e4a
 
 ## Goal
 Every model already knows its colours, what each piece is (glass, light, brick…) and which of the eight build steps it belongs to,

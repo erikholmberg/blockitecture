@@ -1,11 +1,11 @@
 # 051 — The Stahl House's blurb, without "real hillside"
 
 - **Status:** In progress (requested by Erik 2026-11-10, with the wording approved: "go ahead with that wording". Built and
-  checked in Chrome; not committed.)
+  checked in Chrome; committed with Erik's go-ahead, 2026-11-10.)
 - **Owner:** Erik
 - **House:** stahl-house
 - **Created:** 2026-11-10
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 7d06ae4
 
 ## Goal
 The Stahl House's home card says it's "on the real hillside above the Sunset Strip". That was true of it alone when spec 004 put
