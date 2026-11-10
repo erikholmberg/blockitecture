@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** koshino-house
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** a9309d1 (spec and build)
 
 ## Goal
 The eleventh rendering: Tadao Ando's house for the fashion designer Hiroko Koshino (1979–81, studio added 1983–84) in Okuike, high in
@@ -183,4 +183,6 @@ About 3 minutes.
   - **A14 pass:** 60 fps at `?dpr=1.75` (3.4M triangles).
   - **A15 pass:** the eleventh card is live with its thumbnail; the credits page has its section.
 - **Thumbnail:** `/koshino-house/?cam=118,58,-40,50,6,32&clean&date=2026-06-21`, cropped to 1200 × 675.
-- **Claude usage** (spec 018): to be recorded with the commit.
+- **Claude usage** (spec 018): built in one stretch with spec 040, and both commits landed in the same second, so the ledger
+  can't split them: it puts all of it under `sheats-goldstein-residence`. Together: 131 replies; 174.5k output, 292.5k cache-write and
+  42.3M cache-read tokens; 6.3% of all tokens so far.

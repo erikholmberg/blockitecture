@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** sheats-goldstein-residence
 - **Created:** 2026-11-09
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 018662d (spec and build)
 
 ## Goal
 The twelfth rendering: John Lautner's house for Helen and Paul Sheats (1961–63) on Angelo View Drive, Beverly Crest, Los Angeles. James
@@ -180,4 +180,6 @@ About 4 minutes.
   - **A14 pass:** 60 fps at `?dpr=1.75` (4.7–5.5M triangles).
   - **A15 pass:** the twelfth card is live with its thumbnail; the credits page has its section.
 - **Thumbnail:** `/sheats-goldstein-residence/?cam=40,7,-16,50,8,40&clean&date=2026-06-21`, cropped to 1200 × 675.
-- **Claude usage** (spec 018): to be recorded with the commit.
+- **Claude usage** (spec 018): built in one stretch with spec 039, and both commits landed in the same second, so the ledger
+  can't split them: it puts all of it under `sheats-goldstein-residence`. Together: 131 replies; 174.5k output, 292.5k cache-write and
+  42.3M cache-read tokens; 6.3% of all tokens so far.
