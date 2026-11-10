@@ -1,6 +1,6 @@
 # 049 — Just "Credits"
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it". Built and checked in Chrome; committed with Erik's go-ahead, 2026-11-10.)
+- **Status:** Done (approved by Erik 2026-11-10: "build it". Closed by Erik 2026-11-10: "close the specs")
 - **Owner:** Erik
 - **Created:** 2026-11-10
 - **Commits:** 0147ded

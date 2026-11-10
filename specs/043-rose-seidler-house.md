@@ -1,7 +1,7 @@
 # 043 — The Rose Seidler House
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it", all recommendations. Built; waiting on Erik's checks of
-  walking and the phone controls. Committed with Erik's go-ahead, 2026-11-10.)
+- **Status:** Done (approved by Erik 2026-11-10: "build it", all recommendations. Closed by Erik 2026-11-10: "close the specs", accepting the
+  manual checks that couldn't be run here: walking itself and the phone controls)
 - **Owner:** Erik
 - **House:** rose-seidler-house
 - **Created:** 2026-11-09

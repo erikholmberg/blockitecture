@@ -1,7 +1,6 @@
 # 046 — No studs
 
-- **Status:** In progress (approved by Erik 2026-11-10: "build it", all recommendations. Built and checked in Chrome; committed with
-  Erik's go-ahead, 2026-11-10.)
+- **Status:** Done (approved by Erik 2026-11-10: "build it", all recommendations. Closed by Erik 2026-11-10: "close the specs")
 - **Owner:** Erik
 - **Created:** 2026-11-10
 - **Commits:** 11ed823

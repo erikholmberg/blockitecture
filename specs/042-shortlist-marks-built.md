@@ -1,6 +1,6 @@
 # 042 — The shortlist marks off the houses already built
 
-- **Status:** In progress (requested by Erik 2026-11-09: "mark off the ones on the shortlist we've created")
+- **Status:** Done (requested by Erik 2026-11-09: "mark off the ones on the shortlist we've created". Closed by Erik 2026-11-10: "close the specs")
 - **Owner:** Erik
 - **Created:** 2026-11-09
 - **Commits:** 599e512

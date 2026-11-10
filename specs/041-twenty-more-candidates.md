@@ -1,6 +1,7 @@
 # 041 — Twenty more candidates for the shortlist
 
-- **Status:** In progress (approved by Erik 2026-11-09: "approved, the mix")
+- **Status:** Done (approved by Erik 2026-11-09: "approved, the mix". Closed by Erik 2026-11-10: "close the specs", accepting the Douglas House's
+  card leading with a drawing, the only image of the house on Commons)
 - **Owner:** Erik
 - **Created:** 2026-11-09
 - **Commits:** 599e512
