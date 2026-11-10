@@ -32,7 +32,7 @@ export function HomePage({ houses }: { houses: House[] }) {
             </a>
             .{' '}
             <a className="underline underline-offset-2 hover:text-foreground" href="/credits/">
-              Credits &amp; disclaimers
+              Credits
             </a>{' '}
             · Neighborhoods ©{' '}
             <a className="underline underline-offset-2 hover:text-foreground" href="https://www.openstreetmap.org/copyright">
