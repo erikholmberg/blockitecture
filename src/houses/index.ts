@@ -315,6 +315,25 @@ export const HOUSES: House[] = [
       'Published photographs of the house',
     ],
   },
+  {
+    slug: 'neue-nationalgalerie',
+    wikidata: 'Q130608380',
+    title: 'Neue Nationalgalerie',
+    architect: 'Mies van der Rohe',
+    year: 1968,
+    location: 'Berlin',
+    status: 'live',
+    pieces: 44_419,
+    thumbnail: '/neue-nationalgalerie/thumbnail.jpg',
+    blurb: "A square black steel roof on eight columns over a hall of glass, on a granite terrace in Berlin's Kulturforum.",
+    affiliations: ['the Staatliche Museen zu Berlin', 'David Chipperfield Architects'],
+    sources: [
+      "David Chipperfield Architects' plans and sections of the renovated building, scaled",
+      'Published dimensions: the roof, the grid, the columns, the glass (Wikipedia, TU Dresden, SPK magazine)',
+      'Its outlines and the neighbourhood: OpenStreetMap',
+      'Published photographs of the building',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

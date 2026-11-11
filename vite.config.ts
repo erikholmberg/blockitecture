@@ -25,6 +25,7 @@ export const PAGES = {
   'douglas-house': r('./douglas-house/index.html'),
   'church-of-the-light': r('./church-of-the-light/index.html'),
   'lovell-beach-house': r('./lovell-beach-house/index.html'),
+  'neue-nationalgalerie': r('./neue-nationalgalerie/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 
