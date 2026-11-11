@@ -129,7 +129,6 @@ About 2½ minutes.
     No roof, Walk and the phone controls weren't checked.
   - **A16 not measured.**
 - **Thumbnail:** `/sonneveld-house/?cam=-28,18,-52,24,14,12&clean&date=2026-06-21`.
-- **Claude usage** (spec 018): can't be split out for this building. The four commits for specs 060–063 landed within
-  minutes of each other on 2026-11-11, after one stretch of uncommitted work, and the ledger splits usage by commit time.
-  So nearly all of the four buildings' usage is recorded here, on the first of them (dae0fdb): 0 replies. It overstates
-  this house about fourfold.
+- **Claude usage** (spec 018): can't be split out for this building. The four commits for specs 060–063 carry the same
+  timestamp, after one stretch of uncommitted work, and the ledger splits usage by commit time. So all of it is recorded on
+  the last of them (faf5d9a, spec 063, the Haus am Horn): 144 replies for the four. This building shows none.

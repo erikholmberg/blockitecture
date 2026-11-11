@@ -136,7 +136,6 @@ About 2 minutes.
   - **A17 partly checked:** *Overview* and *The living room* open where they should. No roof, Walk and the phone controls weren't checked.
   - **A18 not measured.**
 - **Thumbnail:** `/haus-am-horn/?cam=-34,22,82,21,6,21&clean&date=2026-06-21`.
-- **Claude usage** (spec 018): can't be split out for this building. The four commits for specs 060–063 landed within
-  minutes of each other on 2026-11-11, after one stretch of uncommitted work, and the ledger splits usage by commit time.
-  So nearly all of it went to the first of them (dae0fdb, spec 060). This building's own figure (144 replies) understates
-  it badly.
+- **Claude usage** (spec 018): can't be split out for this building. The four commits for specs 060–063 carry the same
+  timestamp, after one stretch of uncommitted work, and the ledger splits usage by commit time. So all four buildings' usage
+  is recorded on this one, the last of them (faf5d9a): 144 replies. It overstates this house about fourfold.

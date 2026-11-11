@@ -137,7 +137,6 @@ About 2½ minutes.
   - **A18 partly checked:** *Overview* and *The auditorium* open where they should. No roof, Walk and the phone controls weren't checked.
   - **A19 not measured.**
 - **Thumbnail:** `/unity-temple/?cam=-50,22,125,42,17,46&clean&date=2026-06-21`.
-- **Claude usage** (spec 018): can't be split out for this building. The four commits for specs 060–063 landed within
-  minutes of each other on 2026-11-11, after one stretch of uncommitted work, and the ledger splits usage by commit time.
-  So nearly all of it went to the first of them (dae0fdb, spec 060). This building's own figure (0 replies) understates
-  it badly.
+- **Claude usage** (spec 018): can't be split out for this building. The four commits for specs 060–063 carry the same
+  timestamp, after one stretch of uncommitted work, and the ledger splits usage by commit time. So all of it is recorded on
+  the last of them (faf5d9a, spec 063, the Haus am Horn): 144 replies for the four. This building shows none.
