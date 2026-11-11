@@ -1,6 +1,6 @@
 # 054 — Forty more candidates for the shortlist
 
-- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "approved, keep the five")
+- **Status:** Done (approved by Erik 2026-11-11: "approved, keep the five". Closed by Erik 2026-11-11: "close the specs")
 - **Owner:** Erik
 - **Created:** 2026-11-11
 - **Commits:** ba7a06a

@@ -1,7 +1,7 @@
 # 055 — The Church of the Light
 
-- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
-  of the specs written for it; the four are spec 054's top picks)
+- **Status:** Done (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval of the specs written for it; the four are spec 054's top picks. Closed by Erik 2026-11-11: "close the specs", accepting the manual checks that couldn't be run
+  here: No roof, Walk, the phone controls and measured performance)
 - **Owner:** Erik
 - **House:** church-of-the-light
 - **Created:** 2026-11-11

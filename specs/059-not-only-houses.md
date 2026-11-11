@@ -1,7 +1,6 @@
 # 059 — Not only houses: wording for the first landmarks
 
-- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
-  of the specs written for it)
+- **Status:** Done (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval of the specs written for it. Closed by Erik 2026-11-11: "close the specs")
 - **Owner:** Erik
 - **Created:** 2026-11-11
 - **Commits:** c6164fc
