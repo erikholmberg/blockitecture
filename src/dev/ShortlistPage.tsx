@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { HOUSES } from '@/houses/index';
-import { Candidate, SHORTLIST, builtOnShortlist, livePicks } from '@/dev/shortlist';
+import { Candidate, SHORTLIST, batches, builtOnShortlist, livePicks } from '@/dev/shortlist';
 
 interface Photo { thumb: string; page: string; credit: string }
 
@@ -19,18 +19,21 @@ const PICKS_KEY = 'blockitecture:shortlist-picks';
 /** file names that are not photos of the house */
 const NOT_A_PHOTO = /logo|signature|seal|map|plan|diagram|stamp|coin|icon|\.png$/i;
 
-/** The Wikipedia lead photo of every candidate that has an article, in one request. */
+/** The Wikipedia lead photo of every candidate that has an article, in batches of 50 titles (the API's limit; spec 054). */
 async function leadPhotos(): Promise<Map<string, Photo>> {
   const titles = SHORTLIST.flatMap((c) => (c.wiki ? [c.wiki] : []));
-  const q = new URLSearchParams({
-    action: 'query', format: 'json', origin: '*', redirects: '1', prop: 'pageimages',
-    piprop: 'thumbnail|name', pithumbsize: '1200', titles: titles.join('|'),
-  });
-  const d = (await (await fetch(`https://en.wikipedia.org/w/api.php?${q}`)).json()).query;
   const alias = new Map<string, string>(); // requested title → final title
-  for (const r of [...(d.normalized ?? []), ...(d.redirects ?? [])]) alias.set(r.from, r.to);
+  const byTitle = new Map<string, any>();
+  for (const batch of batches(titles)) {
+    const q = new URLSearchParams({
+      action: 'query', format: 'json', origin: '*', redirects: '1', prop: 'pageimages',
+      piprop: 'thumbnail|name', pithumbsize: '1200', titles: batch.join('|'),
+    });
+    const d = (await (await fetch(`https://en.wikipedia.org/w/api.php?${q}`)).json()).query;
+    for (const r of [...(d.normalized ?? []), ...(d.redirects ?? [])]) alias.set(r.from, r.to);
+    for (const p of Object.values(d.pages) as any[]) byTitle.set(p.title, p);
+  }
   const resolve = (t: string) => { let x = t; while (alias.has(x)) x = alias.get(x)!; return x; };
-  const byTitle = new Map<string, any>(Object.values(d.pages).map((p: any) => [p.title, p]));
   const out = new Map<string, Photo>();
   for (const c of SHORTLIST) {
     const p = c.wiki && byTitle.get(resolve(c.wiki));

@@ -9,10 +9,10 @@ const NEW = [
 ];
 
 describe('spec 041: twenty more candidates', () => {
-  it('A1: 41 candidates with unique slugs, including the 20 new ones in order after the first 21', () => {
+  it('A1: at least 41 candidates with unique slugs, including the 20 new ones in order after the first 21', () => {
     const slugs = SHORTLIST.map((c) => c.slug);
-    expect(slugs).toHaveLength(41);
-    expect(new Set(slugs).size).toBe(41);
-    expect(slugs.slice(21)).toEqual(NEW);
+    expect(slugs.length).toBeGreaterThanOrEqual(41); // spec 054 adds 40 more after these
+    expect(new Set(slugs).size).toBe(slugs.length);
+    expect(slugs.slice(21, 41)).toEqual(NEW);
   });
 });

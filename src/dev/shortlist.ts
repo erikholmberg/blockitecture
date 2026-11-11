@@ -1,5 +1,5 @@
 /**
- * Dev-only: the shortlist of houses to build next (spec 016; 20 more buildings in spec 041), for the photo page at /dev/shortlist/.
+ * Dev-only: the shortlist of houses to build next (spec 016; 20 more buildings in spec 041, 40 more in spec 054), for the photo page at /dev/shortlist/.
  * `wiki` is the English Wikipedia article (its lead photo); `commons` the Wikimedia Commons search for more photos.
  */
 export interface Candidate {
@@ -98,6 +98,88 @@ export const SHORTLIST: Candidate[] = [
     why: 'A white concrete spiral on Fifth Avenue, wider at the top.', wiki: 'Solomon R. Guggenheim Museum', commons: 'Solomon R. Guggenheim Museum exterior' },
   { slug: 'sydney-opera-house', title: 'Sydney Opera House', architect: 'Jørn Utzon', year: 1973, place: 'Sydney', fit: 1,
     why: 'The sail shells over the harbour. Shells in blocks are the showpiece.', wiki: 'Sydney Opera House', commons: 'Sydney Opera House' },
+  // Spec 054: forty more, houses first, then landmarks.
+  { slug: 'lovell-beach-house', title: 'Lovell Beach House', architect: 'Rudolph Schindler', year: 1926, place: 'Newport Beach, California', fit: 3,
+    why: 'Five concrete frames lift the house above the sand. It could reuse the sea scenery.', wiki: 'Lovell Beach House', commons: 'Lovell Beach House' },
+  { slug: 'vdl-research-house', title: 'VDL Research House', architect: 'Richard Neutra', year: 1932, place: 'Silver Lake, Los Angeles', fit: 3,
+    why: 'Glass and aluminium louvres, with a reflecting pool on the roof above Silver Lake Reservoir.', wiki: 'Neutra VDL Studio and Residences', commons: 'Neutra VDL House' },
+  { slug: 'moriyama-house', title: 'Moriyama House', architect: 'Ryue Nishizawa', year: 2005, place: 'Tokyo', fit: 3,
+    why: 'Ten white boxes scattered across one lot, with gardens in between. It looks like a toy set already.', commons: 'Moriyama House Nishizawa' },
+  { slug: 'house-na', title: 'House NA', architect: 'Sou Fujimoto', year: 2011, place: 'Tokyo', fit: 3,
+    why: 'A glass "tree house" made of 21 stacked platforms. You can see every floor through the walls.', commons: 'House NA Fujimoto' },
+  { slug: 'row-house-in-sumiyoshi', title: 'Row House in Sumiyoshi', architect: 'Tadao Ando', year: 1976, place: 'Osaka', fit: 3,
+    why: 'A blank concrete box with an open-air courtyard you cross to reach the bedroom.', wiki: 'Row House in Sumiyoshi', commons: 'Row House Sumiyoshi' },
+  { slug: 'sky-house', title: 'Sky House', architect: 'Kiyonori Kikutake', year: 1958, place: 'Tokyo', fit: 3,
+    why: 'One square room held up on four concrete panels, with "move-net" pods hung underneath.', commons: 'Sky House Kikutake' },
+  { slug: 'tower-house', title: 'Tower House', architect: 'Takamitsu Azuma', year: 1966, place: 'Tokyo', fit: 2,
+    why: 'Six floors of living on a 20 m² lot, a tiny concrete shard.', wiki: 'Tower House (Tokyo)', commons: 'Towerhouse Tokyo' },
+  { slug: 'maison-a-bordeaux', title: 'Maison à Bordeaux', architect: 'OMA / Rem Koolhaas', year: 1998, place: 'Floirac, France', fit: 3,
+    why: 'A 3×3.5 m room that works as a lift between floors. The build could animate it.', commons: 'Maison à Bordeaux Koolhaas' },
+  { slug: 'villa-dall-ava', title: "Villa dall'Ava", architect: 'OMA / Rem Koolhaas', year: 1991, place: 'Saint-Cloud, Paris', fit: 3,
+    why: 'Boxes on skinny stilts, with a rooftop lap pool aimed at the Eiffel Tower.', commons: "Villa dall'Ava" },
+  { slug: 'casa-de-vidro', title: 'Casa de Vidro', architect: 'Lina Bo Bardi', year: 1951, place: 'São Paulo', fit: 3,
+    why: 'A glass box on thin pilotis in the rainforest, with a tree growing up through a hole in it.', commons: 'Casa de Vidro Lina Bo Bardi' },
+  { slug: 'casa-butanta', title: 'Casa Butantã', architect: 'Paulo Mendes da Rocha', year: 1966, place: 'São Paulo', fit: 3,
+    why: 'Raw concrete slabs on four columns, open underneath.', commons: 'Paulo Mendes da Rocha Casa Butantã' },
+  { slug: 'casa-gilardi', title: 'Casa Gilardi', architect: 'Luis Barragán', year: 1976, place: 'Mexico City', fit: 3,
+    why: "Barragán's last house: an indoor pool with a blue wall and a red column in the water.", commons: 'Casa Gilardi' },
+  { slug: 'walker-guest-house', title: 'Walker Guest House', architect: 'Paul Rudolph', year: 1952, place: 'Sanibel Island, Florida', fit: 3,
+    why: 'A tiny square cabin whose wall panels swing up on red cannonball counterweights.', wiki: 'Walker Guest House', commons: 'intitle:"Walker Guest House"' },
+  { slug: 'jacobs-house', title: 'Jacobs House', architect: 'Frank Lloyd Wright', year: 1937, place: 'Madison, Wisconsin', fit: 2,
+    why: 'The first Usonian house: an L of brick and board-and-batten around a garden.', wiki: 'Herbert and Katherine Jacobs First House', commons: 'Jacobs First House' },
+  { slug: 'fisher-house', title: 'Fisher House', architect: 'Louis Kahn', year: 1967, place: 'Hatboro, Pennsylvania', fit: 2,
+    why: 'Two cypress boxes that meet at 45°, with a stone chimney between them.', wiki: 'Fisher House (Hatboro, Pennsylvania)', commons: 'intitle:"Norman and Doris Fisher House"' },
+  { slug: 'muuratsalo-experimental-house', title: 'Muuratsalo Experimental House', architect: 'Alvar Aalto', year: 1953, place: 'Muuratsalo, Finland', fit: 3,
+    why: 'Its courtyard walls are a patchwork of brick bonds, which is ideal for a brick build.', commons: 'Muuratsalo Experimental House' },
+  { slug: 'villa-stein-de-monzie', title: 'Villa Stein-de Monzie', architect: 'Le Corbusier', year: 1927, place: 'Vaucresson (Garches), France', fit: 3,
+    why: 'Ribbon windows, a free plan and roof terraces, with the façade worked out on regulating lines.', wiki: 'Villa Stein', commons: 'Villa Stein Le Corbusier' },
+  { slug: 'sonneveld-house', title: 'Sonneveld House', architect: 'Brinkman & Van der Vlugt', year: 1933, place: 'Rotterdam', fit: 3,
+    why: "Dutch Nieuwe Bouwen with balconies and colour-coded rooms. It's a museum now.", commons: 'Huis Sonneveld Rotterdam' },
+  { slug: 'haus-am-horn', title: 'Haus am Horn', architect: 'Georg Muche', year: 1923, place: 'Weimar', fit: 3,
+    why: 'The Bauhaus model house: a square with a taller living room in the middle under clerestory windows.', wiki: 'Haus am Horn', commons: 'Haus am Horn' },
+  { slug: 'hopkins-house', title: 'Hopkins House', architect: 'Michael & Patty Hopkins', year: 1976, place: 'Hampstead, London', fit: 3,
+    why: 'A glass and steel kit house you enter by a bridge from the street.', wiki: 'Hopkins House, Hampstead', commons: 'Hopkins House Hampstead' },
+  { slug: 'casa-bianchi', title: 'Casa Bianchi', architect: 'Mario Botta', year: 1973, place: 'Riva San Vitale, Switzerland', fit: 3,
+    why: 'A square concrete-block tower by Lake Lugano, entered by a red steel bridge at the top.', commons: 'incategory:"Bianchi House (Via Formeggie 6, Riva San Vitale)"' },
+  { slug: 'sea-ranch-condominium-one', title: 'Sea Ranch Condominium One', architect: 'MLTW', year: 1965, place: 'The Sea Ranch, California', fit: 2,
+    why: 'Shed-roofed redwood boxes on a windswept bluff (sea scenery again).', commons: 'Sea Ranch Condominium' },
+  { slug: 'schminke-house', title: 'Schminke House', architect: 'Hans Scharoun', year: 1933, place: 'Löbau, Germany', fit: 2,
+    why: 'A white ocean liner of a house with angled decks and steel stairs.', commons: 'Haus Schminke' },
+  { slug: 'gehry-residence', title: 'Gehry Residence', architect: 'Frank Gehry', year: 1978, place: 'Santa Monica', fit: 1,
+    why: 'A pink bungalow wrapped in chain-link and corrugated metal, with a tilted glass cube.', wiki: 'Gehry Residence', commons: 'Gehry House Santa Monica' },
+  { slug: 'neue-nationalgalerie', title: 'Neue Nationalgalerie', architect: 'Mies van der Rohe', year: 1968, place: 'Berlin', fit: 3,
+    why: 'A black steel roof on eight columns over a glass hall. Pure planes.', wiki: 'Neue Nationalgalerie', commons: 'Neue Nationalgalerie' },
+  { slug: 'crown-hall', title: 'S. R. Crown Hall', architect: 'Mies van der Rohe', year: 1956, place: 'Chicago', fit: 3,
+    why: 'One column-free room hung from four exposed girders.', wiki: 'S. R. Crown Hall', commons: 'Crown Hall IIT' },
+  { slug: 'church-of-the-light', title: 'Church of the Light', architect: 'Tadao Ando', year: 1989, place: 'Ibaraki, Osaka', fit: 3,
+    why: 'A small concrete box with a cross cut through the wall. The sun can do the rest.', wiki: 'Church of the Light', commons: 'Ibaraki Kasugaoka Church' },
+  { slug: 'therme-vals', title: 'Therme Vals', architect: 'Peter Zumthor', year: 1996, place: 'Vals, Switzerland', fit: 3,
+    why: 'Stacked slabs of quartzite cut into a hillside, with baths inside.', wiki: '7132 Thermal Baths', commons: 'Therme Vals' },
+  { slug: 'unity-temple', title: 'Unity Temple', architect: 'Frank Lloyd Wright', year: 1908, place: 'Oak Park, Illinois', fit: 3,
+    why: 'A poured-concrete cube with a coffered skylight.', wiki: 'Unity Temple', commons: 'Unity Temple Oak Park' },
+  // No `wiki`: its lead image is the museum's logo (spec 054).
+  { slug: 'centre-pompidou', title: 'Centre Pompidou', architect: 'Renzo Piano & Richard Rogers', year: 1977, place: 'Paris', fit: 3,
+    why: 'Colour-coded pipes and escalator tubes on the outside of a steel cage.', commons: 'Centre Pompidou Paris facade' },
+  { slug: 'van-nelle-factory', title: 'Van Nelle Factory', architect: 'Brinkman & Van der Vlugt', year: 1931, place: 'Rotterdam', fit: 3,
+    why: 'Glass curtain walls with diagonal conveyor bridges.', wiki: 'Van Nelle Factory', commons: 'Van Nelle Fabriek' },
+  { slug: 'fagus-factory', title: 'Fagus Factory', architect: 'Walter Gropius', year: 1913, place: 'Alfeld, Germany', fit: 3,
+    why: 'The first glass corner without a column, built before the Bauhaus.', wiki: 'Fagus Factory', commons: 'Fagus Werk' },
+  { slug: 'lever-house', title: 'Lever House', architect: 'SOM', year: 1952, place: 'New York', fit: 3,
+    why: 'A green glass slab on a one-storey podium raised on pilotis.', wiki: 'Lever House', commons: 'Lever House Park Avenue' },
+  { slug: 'lake-shore-drive-860-880', title: '860–880 Lake Shore Drive', architect: 'Mies van der Rohe', year: 1951, place: 'Chicago', fit: 3,
+    why: 'Twin steel-and-glass towers set at right angles, beside the lake.', wiki: '860–880 Lake Shore Drive', commons: '860-880 Lake Shore Drive' },
+  { slug: 'trellick-tower', title: 'Trellick Tower', architect: 'Ernő Goldfinger', year: 1972, place: 'London', fit: 3,
+    why: 'A brutalist slab with a separate service tower joined by sky bridges.', wiki: 'Trellick Tower', commons: 'Trellick Tower' },
+  { slug: 'boston-city-hall', title: 'Boston City Hall', architect: 'Kallmann McKinnell & Knowles', year: 1968, place: 'Boston', fit: 2,
+    why: 'An upside-down brutalist ziggurat of concrete fins.', wiki: 'Boston City Hall', commons: 'Boston City Hall' },
+  { slug: 'casa-del-fascio', title: 'Casa del Fascio', architect: 'Giuseppe Terragni', year: 1936, place: 'Como', fit: 3,
+    why: 'A white marble half-cube with a grid of frames on the façade.', wiki: 'Casa del Fascio (Como)', commons: 'Casa del Fascio Como' },
+  { slug: 'isokon-building', title: 'Isokon Building', architect: 'Wells Coates', year: 1934, place: 'Hampstead, London', fit: 3,
+    why: 'A white concrete block of minimal flats with access decks. Gropius and Agatha Christie lived there.', wiki: 'Isokon Flats', commons: 'Isokon Building' },
+  { slug: 'villa-la-rotonda', title: 'Villa La Rotonda', architect: 'Andrea Palladio', year: 1570, place: 'Vicenza', fit: 2,
+    why: 'Four identical temple porticos around a domed hall, the oldest pick by far.', wiki: 'Villa La Rotonda', commons: 'Villa La Rotonda Vicenza' },
+  { slug: 'katsura-imperial-villa', title: 'Katsura Imperial Villa', architect: 'Prince Toshihito and Toshitada', year: 1624, place: 'Kyoto', fit: 2,
+    why: 'Shoin pavilions on a tatami grid, a modular plan the modernists loved.', wiki: 'Katsura Imperial Villa', commons: 'Katsura Imperial Villa' },
 ];
 
 /** Spec 042: the shortlist slugs whose house is already live in the registry. */
@@ -108,3 +190,8 @@ export function builtOnShortlist(list: Candidate[], houses: { slug: string; stat
 
 /** Spec 042: saved picks without the houses built since. */
 export const livePicks = (picks: string[], built: Set<string>): string[] => picks.filter((s) => !built.has(s));
+
+/** Spec 054: the Wikipedia API takes at most 50 titles per request, so the lead photos are fetched in batches. */
+export const WIKI_TITLE_LIMIT = 50;
+export const batches = <T>(list: T[], size = WIKI_TITLE_LIMIT): T[][] =>
+  Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, (i + 1) * size));
