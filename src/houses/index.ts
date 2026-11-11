@@ -278,6 +278,24 @@ export const HOUSES: House[] = [
       'Published photographs of the house',
     ],
   },
+  {
+    slug: 'church-of-the-light',
+    wikidata: 'Q1655766',
+    title: 'Church of the Light',
+    architect: 'Tadao Ando',
+    year: 1989,
+    location: 'Ibaraki, Osaka',
+    status: 'live',
+    pieces: 13_870,
+    thumbnail: '/church-of-the-light/thumbnail.jpg',
+    blurb: 'A concrete box cut through by a wall at 15°, with a cross of light cut into the wall behind the altar.',
+    affiliations: ['the Ibaraki Kasugaoka Church', 'Tadao Ando Architect & Associates'],
+    sources: [
+      "Tadao Ando Architect & Associates' 1:50 floor plan, with its dimensions",
+      'Published sections and photographs of the chapel',
+      'Its outline and the neighbourhood: OpenStreetMap',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

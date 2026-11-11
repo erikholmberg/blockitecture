@@ -7,7 +7,7 @@ describe('spec 042: the shortlist marks off built houses', () => {
   it('A1: built = shortlist slugs whose house is live', () => {
     const built = builtOnShortlist(SHORTLIST, HOUSES);
     expect([...built].sort()).toEqual([
-      'casa-luis-barragan', 'casa-malaparte', 'douglas-house', 'ennis-house', 'fallingwater',
+      'casa-luis-barragan', 'casa-malaparte', 'church-of-the-light', 'douglas-house', 'ennis-house', 'fallingwater',
       'farnsworth-house', 'kaufmann-desert-house', 'koshino-house', 'lovell-health-house', 'rietveld-schroder-house',
       'rose-seidler-house', 'sheats-goldstein-residence',
     ]);
