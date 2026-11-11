@@ -29,6 +29,7 @@ export const PAGES = {
   'muuratsalo-experimental-house': r('./muuratsalo-experimental-house/index.html'),
   'sonneveld-house': r('./sonneveld-house/index.html'),
   'trellick-tower': r('./trellick-tower/index.html'),
+  'unity-temple': r('./unity-temple/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

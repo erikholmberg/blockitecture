@@ -390,6 +390,24 @@ export const HOUSES: House[] = [
       'Its outlines and the neighbourhood: OpenStreetMap',
     ],
   },
+  {
+    slug: 'unity-temple',
+    wikidata: 'Q1680814',
+    title: 'Unity Temple',
+    architect: 'Frank Lloyd Wright',
+    year: 1908,
+    location: 'Oak Park, Illinois',
+    status: 'live',
+    pieces: 17_443,
+    thumbnail: '/unity-temple/thumbnail.jpg',
+    blurb: 'A cube of poured concrete on a street corner, closed to the street and lit from above through amber glass.',
+    affiliations: ['the Unity Temple Unitarian Universalist Congregation', 'the Frank Lloyd Wright Trust', 'the Frank Lloyd Wright Foundation'],
+    sources: [
+      'The Historic American Buildings Survey (HABS IL-1093, 1967): measured plans, elevations and a section',
+      'Its outline and the neighbourhood: OpenStreetMap',
+      'Published photographs of the building',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
