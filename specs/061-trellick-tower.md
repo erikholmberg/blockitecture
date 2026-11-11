@@ -1,11 +1,11 @@
 # 061 — Trellick Tower
 
-- **Status:** In progress: built, waiting to be committed (approved by Erik 2026-11-11: "can you build 4 more buildings", choosing "the safe four" and to treat that message as
+- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "can you build 4 more buildings", choosing "the safe four" and to treat that message as
   approval of the specs written for it, as for specs 055–058)
 - **Owner:** Erik
 - **House:** trellick-tower
 - **Created:** 2026-11-11
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 87a0587
 
 ## Goal
 Ernő Goldfinger's Trellick Tower (1968–72) in Kensal Town, west London: 31 storeys of flats in rough concrete, with the lifts in
@@ -141,4 +141,7 @@ About 3 minutes.
   - **A18 partly checked:** *Overview* and *The bridges* open where they should. No roof, Walk and the phone controls weren't checked.
   - **A19 not measured.**
 - **Thumbnail:** `/trellick-tower/?cam=-170,150,360,25,150,20&clean&date=2026-06-21`.
-- **Claude usage** (spec 018): not recorded; nothing is committed yet.
+- **Claude usage** (spec 018): can't be split out for this building. The four commits for specs 060–063 landed within
+  minutes of each other on 2026-11-11, after one stretch of uncommitted work, and the ledger splits usage by commit time.
+  So nearly all of it went to the first of them (dae0fdb, spec 060). This building's own figure (0 replies) understates
+  it badly.
