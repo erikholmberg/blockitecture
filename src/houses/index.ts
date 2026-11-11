@@ -353,6 +353,25 @@ export const HOUSES: House[] = [
       'Published photographs of the house',
     ],
   },
+  {
+    slug: 'sonneveld-house',
+    wikidata: 'Q2193739',
+    title: 'Sonneveld House',
+    architect: 'Brinkman & Van der Vlugt',
+    year: 1933,
+    location: 'Rotterdam',
+    status: 'live',
+    pieces: 19_925,
+    thumbnail: '/sonneveld-house/thumbnail.jpg',
+    blurb: 'A white villa of the Dutch Nieuwe Bouwen on a steel frame, with ribbon windows, a roof terrace and rooms in red, blue and yellow.',
+    affiliations: ['the Nieuwe Instituut', 'Stichting Volkskracht Historische Monumenten'],
+    sources: [
+      "The monument register (rijksmonument 46870) and the Nieuwe Instituut's descriptions of the house",
+      'Redrawn plans, elevations and sections, scaled from the two published dimensions',
+      'Its outline and the neighbourhood: OpenStreetMap',
+      'Published photographs of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

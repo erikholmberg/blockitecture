@@ -27,6 +27,7 @@ export const PAGES = {
   'lovell-beach-house': r('./lovell-beach-house/index.html'),
   'neue-nationalgalerie': r('./neue-nationalgalerie/index.html'),
   'muuratsalo-experimental-house': r('./muuratsalo-experimental-house/index.html'),
+  'sonneveld-house': r('./sonneveld-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 
