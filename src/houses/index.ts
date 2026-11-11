@@ -296,6 +296,25 @@ export const HOUSES: House[] = [
       'Its outline and the neighbourhood: OpenStreetMap',
     ],
   },
+  {
+    slug: 'lovell-beach-house',
+    wikidata: 'Q746490',
+    title: 'Lovell Beach House',
+    architect: 'Rudolph Schindler',
+    year: 1926,
+    location: 'Newport Beach, California',
+    status: 'live',
+    pieces: 16_923,
+    thumbnail: '/lovell-beach-house/thumbnail.jpg',
+    blurb: 'Five concrete frames lift the house off the sand at Balboa, a row of bedrooms hung between them over 13th Street.',
+    affiliations: ["the house's owners"],
+    sources: [
+      'The Historic American Buildings Survey (HABS CA-1986, 1968): measured plans, elevations and sections',
+      'The National Register of Historic Places nomination (1974)',
+      'Its outline and the neighbourhood: OpenStreetMap',
+      'Published photographs of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
