@@ -18,6 +18,7 @@ import { DOUGLAS } from '../src/houses/douglas-house/definition';
 import { CHURCH_OF_THE_LIGHT } from '../src/houses/church-of-the-light/definition';
 import { LOVELL_BEACH } from '../src/houses/lovell-beach-house/definition';
 import { NEUE_NATIONALGALERIE } from '../src/houses/neue-nationalgalerie/definition';
+import { MUURATSALO } from '../src/houses/muuratsalo-experimental-house/definition';
 import { VANNA_VENTURI } from '../src/houses/vanna-venturi-house/definition';
 import { FALLINGWATER } from '../src/houses/fallingwater/definition';
 import { FARNSWORTH } from '../src/houses/farnsworth-house/definition';
@@ -58,7 +59,7 @@ describe('028: the camera stays above the ground', () => {
   });
 
   it('A3: every house\'s named views start above the ground (the clamp leaves them alone)', () => {
-    for (const h of [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, VANNA_VENTURI, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE]) {
+    for (const h of [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, VANNA_VENTURI, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE, MUURATSALO]) {
       const { ground } = load(h);
       for (const [name, v] of Object.entries(h.views)) {
         const p = v.view.pos;

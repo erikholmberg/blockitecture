@@ -334,6 +334,25 @@ export const HOUSES: House[] = [
       'Published photographs of the building',
     ],
   },
+  {
+    slug: 'muuratsalo-experimental-house',
+    wikidata: 'Q5755595',
+    title: 'Muuratsalo Experimental House',
+    architect: 'Alvar Aalto',
+    year: 1953,
+    location: 'Muuratsalo, Finland',
+    status: 'live',
+    pieces: 28_560,
+    thumbnail: '/muuratsalo-experimental-house/thumbnail.jpg',
+    blurb: 'White walls on a granite shore of Lake Päijänne, round a courtyard of fifty test panels of red clay and glazed tile.',
+    affiliations: ['the Alvar Aalto Foundation'],
+    sources: [
+      "Alvar Aalto's floor plan and section (1952–53), with their dimensions",
+      'The Alvar Aalto Foundation and the Finnish Heritage Agency',
+      'Its outline, the lake shore and the neighbourhood: OpenStreetMap',
+      'Published photographs of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
