@@ -408,6 +408,25 @@ export const HOUSES: House[] = [
       'Published photographs of the building',
     ],
   },
+  {
+    slug: 'haus-am-horn',
+    wikidata: 'Q525226',
+    title: 'Haus am Horn',
+    architect: 'Georg Muche & the Bauhaus',
+    year: 1923,
+    location: 'Weimar',
+    status: 'live',
+    pieces: 10_233,
+    thumbnail: '/haus-am-horn/thumbnail.jpg',
+    blurb: "The Bauhaus's model house: a square of small rooms round a tall living room lit from above, furnished by the school's workshops.",
+    affiliations: ['the Klassik Stiftung Weimar'],
+    sources: [
+      'The redrawn 1923 ground plan and elevations (Rintallo, Miniatur der Moderne?, 2023), scaled',
+      "Published dimensions and the rooms' furnishing: Wikipedia and the Bauhaus Kooperation",
+      'Its outline and the neighbourhood: OpenStreetMap',
+      'Published photographs of the house',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
