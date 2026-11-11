@@ -43,7 +43,7 @@ export class Environment {
     private scene: THREE.Scene,
     sun: Record<'day' | 'dusk', { theta: number; elevation: number }> | undefined,
     /** the house: shadow/sun centre and its lights (spec 010a) */
-    private house: { center: { x: number; z: number }; lights: { interior: [number, number, number][]; pool?: [number, number, number] } },
+    private house: { center: { x: number; z: number }; lights: { interior: [number, number, number][]; pool?: [number, number, number] }; shadowReach?: number },
   ) {
     this.presets = {
       day: { ...PRESETS.day, ...(sun && { azimuth: sun.day.theta, elevation: sun.day.elevation }) },
@@ -60,8 +60,10 @@ export class Environment {
     s.castShadow = true;
     s.shadow.mapSize.set(4096, 4096);
     const cam = s.shadow.camera;
-    cam.left = -120; cam.right = 120; cam.top = 120; cam.bottom = -120;
-    cam.near = 10; cam.far = 600;
+    // spec 061: a tall building can ask for a wider shadow box (default 120 ft round the centre, as before)
+    const reach = house.shadowReach ?? 120;
+    cam.left = -reach; cam.right = reach; cam.top = reach; cam.bottom = -reach;
+    cam.near = 10; cam.far = 5 * reach;
     s.shadow.bias = -0.0004;
     s.shadow.normalBias = 0.05;
     s.target.position.set(house.center.x, 0, house.center.z);
@@ -101,7 +103,7 @@ export class Environment {
     }
     const lightDir = sun.clone();
     lightDir.y = Math.max(lightDir.y, 0.12);
-    this.sunLight.position.set(this.house.center.x, 0, this.house.center.z).addScaledVector(lightDir.normalize(), 300);
+    this.sunLight.position.set(this.house.center.x, 0, this.house.center.z).addScaledVector(lightDir.normalize(), 2.5 * (this.house.shadowReach ?? 120));
     this.sunLight.intensity = p.sun;
     this.sunLight.color.setHex(p.sunColor);
     this.hemi.intensity = p.hemi;

@@ -28,6 +28,7 @@ export const PAGES = {
   'neue-nationalgalerie': r('./neue-nationalgalerie/index.html'),
   'muuratsalo-experimental-house': r('./muuratsalo-experimental-house/index.html'),
   'sonneveld-house': r('./sonneveld-house/index.html'),
+  'trellick-tower': r('./trellick-tower/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

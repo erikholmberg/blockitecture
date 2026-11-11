@@ -22,9 +22,10 @@ import { LOVELL_BEACH } from '../src/houses/lovell-beach-house/definition';
 import { NEUE_NATIONALGALERIE } from '../src/houses/neue-nationalgalerie/definition';
 import { MUURATSALO } from '../src/houses/muuratsalo-experimental-house/definition';
 import { SONNEVELD } from '../src/houses/sonneveld-house/definition';
+import { TRELLICK } from '../src/houses/trellick-tower/definition';
 
 /** every house definition; adding a live house without adding it here fails A2 */
-const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE, MUURATSALO, SONNEVELD];
+const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE, MUURATSALO, SONNEVELD, TRELLICK];
 
 describe('012: roof last, on every house', () => {
   it('A2: every live house is covered', () => {

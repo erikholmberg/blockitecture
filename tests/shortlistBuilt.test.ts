@@ -10,7 +10,7 @@ describe('spec 042: the shortlist marks off built houses', () => {
       'casa-luis-barragan', 'casa-malaparte', 'church-of-the-light', 'douglas-house', 'ennis-house', 'fallingwater',
       'farnsworth-house', 'kaufmann-desert-house', 'koshino-house', 'lovell-beach-house', 'lovell-health-house',
       'muuratsalo-experimental-house', 'neue-nationalgalerie', 'rietveld-schroder-house', 'rose-seidler-house',
-      'sheats-goldstein-residence', 'sonneveld-house',
+      'sheats-goldstein-residence', 'sonneveld-house', 'trellick-tower',
     ]);
     expect(built.has('stahl-house')).toBe(false);
     expect(built.has('eames-house')).toBe(false);

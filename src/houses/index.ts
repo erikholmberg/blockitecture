@@ -372,6 +372,24 @@ export const HOUSES: House[] = [
       'Published photographs of the house',
     ],
   },
+  {
+    slug: 'trellick-tower',
+    wikidata: 'Q1571416',
+    title: 'Trellick Tower',
+    architect: 'Ernő Goldfinger',
+    year: 1972,
+    location: 'London',
+    status: 'live',
+    pieces: 41_179,
+    thumbnail: '/trellick-tower/thumbnail.jpg',
+    blurb: 'Thirty-one storeys of flats in rough concrete, and a separate lift tower joined to them by a bridge at every third floor.',
+    affiliations: ['the Royal Borough of Kensington and Chelsea'],
+    sources: [
+      "The Historic England listing (1246688) and James Dunnett's published dimensions of the fronts",
+      'Published plans, an elevation and photographs, scaled',
+      'Its outlines and the neighbourhood: OpenStreetMap',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

@@ -73,6 +73,8 @@ export interface HouseDefinition {
   downtownDir: [x: number, z: number];
   /** optional scenery settings; the defaults are the Stahl House's (spec 010b) */
   scenery?: Scenery;
+  /** spec 061: half the width of the sun's shadow box, in ft (default 120); a tower needs more, at a coarser shadow */
+  shadowReach?: number;
   /** spec 050: the model by the numbers and its palette, from src/houses/stats.ts */
   stats?: HouseStats;
 }
