@@ -53,7 +53,8 @@ async function cached(name, fetcher) {
 async function overpass(name, query) {
   const buf = await cached(name, async () => {
     console.log(`overpass: ${name}`);
-    const res = await fetch('https://overpass-api.de/api/interpreter', {
+    // OVERPASS_URL picks a mirror when the main server is overloaded (e.g. https://overpass.kumi.systems/api/interpreter)
+    const res = await fetch(process.env.OVERPASS_URL ?? 'https://overpass-api.de/api/interpreter', {
       method: 'POST',
       headers: { 'User-Agent': UA, 'Content-Type': 'application/x-www-form-urlencoded' },
       body: 'data=' + encodeURIComponent(query),
@@ -232,7 +233,57 @@ async function grid({ half, step, zoom }, despikeFt) {
     for (let k = 0; k < h.length; k++) if (h[k] < surface * 4) { h[k] = bed; lowered++; }
     console.log(`lake ${step} ft grid: ${lowered} samples under ${H.lake.levelM} m lowered to ${H.lake.floorFt} ft below it`);
   }
+  if (H.lakeShore) await floodLake({ x0, z0, step, nx: n, nz: n, h }, H.lakeShore);
   return { x0, z0, step, nx: n, nz: n, h };
+}
+
+/**
+ * Spec 058: where the terrain tiles can't tell a lake from its shores (round Muuratsalo they read lake and land alike as one flat
+ * level), find the lake from OSM: its member ways within `radiusM` are the shore lines; flood the grid from `seed` (model ft, a
+ * point on the water) without crossing them, and lower what floods to a bed `floorFt` below `levelM`. Opt-in.
+ */
+async function floodLake(g, c) {
+  const ways = await overpass(
+    `${SLUG}-lakeshore-islands-${c.radiusM}.json`,
+    // the lake's own member ways, and every island's outline (an island can be its own relation, not one of the lake's rings)
+    `[out:json][timeout:300];(rel["natural"="water"]["name"="${c.name}"](around:5000,${LAT0},${LON0});rel["place"~"^(island|islet)$"](around:${c.radiusM},${LAT0},${LON0});)->.r;(way(r.r)(around:${c.radiusM},${LAT0},${LON0});way["place"~"^(island|islet)$"](around:${c.radiusM},${LAT0},${LON0}););out geom;`,
+  );
+  const shore = new Uint8Array(g.nx * g.nz);
+  const mark = (x, z) => {
+    const i = Math.round((x - g.x0) / g.step), j = Math.round((z - g.z0) / g.step);
+    if (i >= 0 && j >= 0 && i < g.nx && j < g.nz) shore[j * g.nx + i] = 1;
+  };
+  for (const w of ways) {
+    const pts = (w.geometry ?? []).map((q) => toModel(q.lat, q.lon));
+    for (let k = 1; k < pts.length; k++) {
+      const [ax, az] = pts[k - 1], [bx, bz] = pts[k], len = Math.hypot(bx - ax, bz - az), n = Math.max(1, Math.ceil(len / (g.step / 3)));
+      for (let t = 0; t <= n; t++) mark(ax + ((bx - ax) * t) / n, az + ((bz - az) * t) / n);
+    }
+  }
+  const reach = c.radiusM / FT, [sx, sz] = c.seed;
+  const water = new Uint8Array(g.nx * g.nz), queue = [];
+  const si = Math.round((sx - g.x0) / g.step), sj = Math.round((sz - g.z0) / g.step);
+  if (si >= 0 && sj >= 0 && si < g.nx && sj < g.nz) { water[sj * g.nx + si] = 1; queue.push(sj * g.nx + si); }
+  while (queue.length) {
+    const k = queue.pop(), i = k % g.nx, j = (k - i) / g.nx;
+    for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const ii = i + di, jj = j + dj;
+      if (ii < 0 || jj < 0 || ii >= g.nx || jj >= g.nz) continue;
+      const kk = jj * g.nx + ii;
+      if (water[kk] || shore[kk]) continue;
+      if (Math.hypot(g.x0 + ii * g.step - OX, g.z0 + jj * g.step - OZ) > reach) continue;
+      water[kk] = 1; queue.push(kk);
+    }
+  }
+  // the tiles also have holes on land, deeper than the lake: what didn't flood is land, kept `landFt` above the water (enough
+  // that the renderer doesn't take it all for beach)
+  const bed = Math.round((toY(c.levelM) - c.floorFt) * 4), dry = Math.round((toY(c.levelM) + (c.landFt ?? 1)) * 4);
+  let lowered = 0, raised = 0;
+  for (let k = 0; k < water.length; k++) {
+    if (water[k]) { g.h[k] = Math.min(g.h[k], bed); lowered++; }
+    else if (g.h[k] < dry) { g.h[k] = dry; raised++; }
+  }
+  console.log(`lake shore ${g.step} ft grid: ${ways.length} shore ways, ${lowered} samples flooded from the seed, ${raised} on land raised`);
 }
 
 /**

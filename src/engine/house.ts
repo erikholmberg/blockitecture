@@ -51,6 +51,8 @@ export interface HouseDefinition {
     complete: string;
     /** an extra credit line on the intro card, e.g. a no-affiliation note */
     disclaimer?: string;
+    /** spec 059: what the building is, for the numbers panel ("chapel", "gallery"); "house" when left out */
+    noun?: string;
   };
   site: Site;
   phases: Phase[];

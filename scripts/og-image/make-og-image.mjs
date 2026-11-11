@@ -41,7 +41,7 @@ await page.evaluate(async (houses) => {
   </style>`);
   document.body.insertAdjacentHTML('beforeend', `<div id="og"><div class="l"><div class="logo">Blockitecture</div>
     <div class="big">Famous buildings, block by block</div>
-    <div class="sub">${count} houses, from Frank Lloyd Wright to Tadao Ando, each on its real site under the real sun. Watch it build, then walk inside.</div>
+    <div class="sub">${count} buildings, from Frank Lloyd Wright to Tadao Ando, each on its real site under the real sun. Watch it build, then walk inside.</div>
     <div class="url">blockitecture.vercel.app</div></div><div class="g">${tiles}</div></div>`);
   await Promise.all([...document.querySelectorAll('#og img')].map((i) => i.decode()));
 }, HOUSES);

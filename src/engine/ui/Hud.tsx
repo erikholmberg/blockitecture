@@ -143,7 +143,7 @@ function NumbersMenu({ house, compact }: { house: HudHouse; compact: boolean }) 
       </PopoverTrigger>
       {/* on phones below the button, where there's room across the screen; on wide screens beside the controls */}
       <PopoverContent side={compact ? 'bottom' : 'left'} align={compact ? 'end' : 'start'} collisionPadding={12} className="max-h-[calc(100dvh-24px)] w-[min(20rem,calc(100vw-24px))] overflow-y-auto">
-        <NumbersPanel stats={house.stats} phaseNames={house.phaseNames} />
+        <NumbersPanel stats={house.stats} phaseNames={house.phaseNames} noun={house.text.noun} />
       </PopoverContent>
     </Popover>
   );

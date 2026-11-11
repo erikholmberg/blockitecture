@@ -8,19 +8,20 @@ const hex = (c: number) => '#' + c.toString(16).padStart(6, '0');
 const fmt = (n: number) => n.toLocaleString('en-US');
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
-export function NumbersPanel({ stats, phaseNames }: { stats: HouseStats; phaseNames: string[] }) {
+/** `noun`: what the building is, e.g. "chapel" (spec 059); "house" by default */
+export function NumbersPanel({ stats, phaseNames, noun = 'house' }: { stats: HouseStats; phaseNames: string[]; noun?: string }) {
   const total = stats.steps.reduce((a, s) => a + s.seconds, 0);
   const rows: [string, string][] = [
-    ['Pieces', `${fmt(stats.housePieces)} in the house, ${fmt(stats.pieces)} with its site`],
+    ['Pieces', `${fmt(stats.housePieces)} in the ${noun}, ${fmt(stats.pieces)} with its site`],
     ['Height', `${Math.round(stats.heightFt)} ft (${Math.round(stats.heightFt * FT_TO_M)} m)`],
     ['Footprint', `${fmt(stats.footprintFt2)} ft² (${fmt(Math.round(stats.footprintFt2 * FT_TO_M * FT_TO_M))} m²)`],
-    ['Glass', `${pct(stats.glassShare)} of the house`],
+    ['Glass', `${pct(stats.glassShare)} of the ${noun}`],
   ];
   return (
     <div className="flex flex-col gap-3 text-sm">
       <div>
         <p className="font-semibold">By the numbers</p>
-        <p className="text-xs text-muted-foreground">This model, not the real house: blocks round everything to a foot.</p>
+        <p className="text-xs text-muted-foreground">This model, not the real {noun}: blocks round everything to a foot.</p>
       </div>
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
         {rows.map(([k, v]) => (

@@ -105,13 +105,13 @@ export function houseArticle(house: House, text: HouseText): string {
     p(intro),
     p(`A 3D model built from blocks in your browser: watch it go up piece by piece, then fly around it or walk inside.`),
     ...(text.disclaimer ? [p(text.disclaimer)] : []),
-    `<p><a href="/">All houses on ${SITE_NAME}</a> · <a href="/credits/">Credits</a></p>`,
+    `<p><a href="/">All buildings on ${SITE_NAME}</a> · <a href="/credits/">Credits</a></p>`,
     `</article>`,
   ].join('');
 }
 
 export const HOME_DESCRIPTION = (houses: House[] = HOUSES) =>
-  `${liveHouses(houses).length} famous houses rebuilt from blocks in your browser, from Frank Lloyd Wright to Tadao Ando, each on ` +
+  `${liveHouses(houses).length} famous buildings rebuilt from blocks in your browser, from Frank Lloyd Wright to Tadao Ando, each on ` +
   `its real site under the real sun. Watch one go up piece by piece, then walk around it in 3D.`;
 
 /** every published page (the keys of PAGES) → sitemap.xml */
@@ -134,18 +134,18 @@ export function llmsTxt(houses: House[] = HOUSES): string {
 
 > ${HOME_DESCRIPTION(houses)}
 
-Each house is a 3D model made of blocks (1 block = 1 ft), placed on its real site from OpenStreetMap and terrain data and lit by the
+Each building is a 3D model made of blocks (1 block = 1 ft), placed on its real site from OpenStreetMap and terrain data and lit by the
 real sun for its location. The model builds in order (foundation, frame, interior, walls, roof, landscape); visitors can pause
-it, switch between famous views, and walk inside in first person. A fan tribute by ${AUTHOR}, not affiliated with the houses,
+it, switch between famous views, and walk inside in first person. A fan tribute by ${AUTHOR}, not affiliated with the buildings,
 their owners or the architects' foundations.
 
-## Houses
+## Buildings
 
 ${list}
 
 ## About
 
-- [All houses](${absolute('/')}): the home page, with every house.
+- [All buildings](${absolute('/')}): the home page, with every building.
 - [Credits](${absolute('/credits/')}): what each model was built from, and the organisations it isn't affiliated with.
 `;
 }
