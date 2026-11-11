@@ -1,10 +1,10 @@
 # 059 — Not only houses: wording for the first landmarks
 
-- **Status:** In progress: built, waiting to be committed (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
+- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
   of the specs written for it)
 - **Owner:** Erik
 - **Created:** 2026-11-11
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** c6164fc
 
 ## Goal
 Specs 055–058 add the first buildings that aren't houses: the Church of the Light (a chapel) and the Neue Nationalgalerie (a

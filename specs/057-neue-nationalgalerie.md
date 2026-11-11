@@ -1,11 +1,11 @@
 # 057 — The Neue Nationalgalerie
 
-- **Status:** In progress: built, waiting to be committed (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
+- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
   of the specs written for it; the four are spec 054's top picks)
 - **Owner:** Erik
 - **House:** neue-nationalgalerie
 - **Created:** 2026-11-11
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 57da85b
 
 ## Goal
 Mies van der Rohe's Neue Nationalgalerie (1968) in Berlin's Kulturforum. A square black steel roof, 64.8 m across, rests on eight
@@ -121,4 +121,7 @@ About 2½ minutes.
     weren't checked.
   - **A16:** not compared with Casa Malaparte properly. The debug overlay read 57 fps at `dpr 1.75` on this machine.
 - **Thumbnail:** `/neue-nationalgalerie/?cam=-60,12,-110,115,14,95&clean&date=2026-06-21`.
-- **Claude usage:** not recorded; nothing is committed yet.
+- **Claude usage** (spec 018): can't be split out for this building. All six commits for specs 054–059 landed within minutes of
+  each other on 2026-11-11, after one long stretch of uncommitted work, and the ledger splits usage by commit time, so nearly
+  all of it went to the first of them (ba7a06a, spec 054, counted as shared): 344 replies. This building's own figure is close
+  to nothing and understates it badly, as for spec 045.

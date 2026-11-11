@@ -1,11 +1,11 @@
 # 058 — The Muuratsalo Experimental House
 
-- **Status:** In progress: built, waiting to be committed (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
+- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
   of the specs written for it; the four are spec 054's top picks)
 - **Owner:** Erik
 - **House:** muuratsalo-experimental-house
 - **Created:** 2026-11-11
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 1b4388d
 
 ## Goal
 Alvar and Elissa Aalto's summer house, the Koetalo (1952–53), on a granite shore of Lake Päijänne on the island of Muuratsalo,
@@ -149,4 +149,7 @@ About 2½ minutes.
     controls weren't checked.
   - **A17 not measured** (57 fps on the debug overlay at `dpr 1.75`).
 - **Thumbnail:** `/muuratsalo-experimental-house/?cam=3,15,46,24,7,15&clean&date=2026-06-21`.
-- **Claude usage:** not recorded; nothing is committed yet.
+- **Claude usage** (spec 018): can't be split out for this building. All six commits for specs 054–059 landed within minutes of
+  each other on 2026-11-11, after one long stretch of uncommitted work, and the ledger splits usage by commit time, so nearly
+  all of it went to the first of them (ba7a06a, spec 054, counted as shared): 344 replies. This building's own figure is close
+  to nothing and understates it badly, as for spec 045.

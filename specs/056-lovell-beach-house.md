@@ -1,11 +1,11 @@
 # 056 — The Lovell Beach House
 
-- **Status:** In progress: built, waiting to be committed (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
+- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
   of the specs written for it; the four are spec 054's top picks)
 - **Owner:** Erik
 - **House:** lovell-beach-house
 - **Created:** 2026-11-11
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** a907cf0
 
 ## Goal
 Rudolph Schindler's Lovell Beach House (1926) on the sand at Balboa, Newport Beach, built for the same client as Neutra's Lovell
@@ -134,4 +134,7 @@ About 2½ minutes.
     Walk and the phone controls weren't checked.
   - **A17 not measured.**
 - **Thumbnail:** `/lovell-beach-house/?cam=92,14,72,30,15,18&clean&date=2026-06-21`.
-- **Claude usage:** not recorded; nothing is committed yet.
+- **Claude usage** (spec 018): can't be split out for this building. All six commits for specs 054–059 landed within minutes of
+  each other on 2026-11-11, after one long stretch of uncommitted work, and the ledger splits usage by commit time, so nearly
+  all of it went to the first of them (ba7a06a, spec 054, counted as shared): 344 replies. This building's own figure is close
+  to nothing and understates it badly, as for spec 045.

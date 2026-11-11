@@ -1,9 +1,9 @@
 # 054 — Forty more candidates for the shortlist
 
-- **Status:** In progress: built, waiting to be committed (approved by Erik 2026-11-11: "approved, keep the five")
+- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "approved, keep the five")
 - **Owner:** Erik
 - **Created:** 2026-11-11
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** ba7a06a
 
 ## Goal
 Fifteen buildings are now built, so `/dev/shortlist/` has fewer choices left. Adding 40 more candidates (24 houses, 16 landmarks)

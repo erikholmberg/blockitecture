@@ -1,11 +1,11 @@
 # 055 — The Church of the Light
 
-- **Status:** In progress: built, waiting to be committed (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
+- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "build 4 and don't stop until they're done", choosing to treat that message as approval
   of the specs written for it; the four are spec 054's top picks)
 - **Owner:** Erik
 - **House:** church-of-the-light
 - **Created:** 2026-11-11
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** fd6f7a1
 
 ## Goal
 Tadao Ando's Church of the Light (Ibaraki Kasugaoka Church, 1989) in Ibaraki, Osaka. It's a concrete box of three 5.9 m cubes,
@@ -137,4 +137,7 @@ About 2 minutes.
     and the phone controls weren't checked.
   - **A15 not measured.**
 - **Thumbnail:** `/church-of-the-light/?cam=6,6,6.5,59,9,11.5&clean&date=2026-06-21` at 1200 × 675.
-- **Claude usage** (spec 018): not recorded; nothing is committed yet.
+- **Claude usage** (spec 018): can't be split out for this building. All six commits for specs 054–059 landed within minutes of
+  each other on 2026-11-11, after one long stretch of uncommitted work, and the ledger splits usage by commit time, so nearly
+  all of it went to the first of them (ba7a06a, spec 054, counted as shared): 344 replies. This building's own figure is close
+  to nothing and understates it badly, as for spec 045.
