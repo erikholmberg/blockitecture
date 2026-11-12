@@ -3,7 +3,7 @@
 - **Status:** In progress: built, waiting for Erik's look, A6 (Erik picked "1b" on /dev/design/ and approved 2026-11-12: "approved", all three recommendations)
 - **Owner:** Erik
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 8dc9e37
 
 ## Goal
 Looking towards the sun, flat surfaces no longer turn white: the pieces keep their colour. Erik compared nine finishes on
