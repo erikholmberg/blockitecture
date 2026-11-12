@@ -58,7 +58,7 @@ Visitors can orbit (default, slow auto-rotate) or walk through it in first perso
 - **V3** [manual] **No roof** lifts the roof off so you can see inside; **Roof** puts it back.
 - **V4** [manual] **Dusk** lights up the house and the city backdrop; **Day** turns it back.
 - **V6** [manual] On-screen camera controls and named views (spec 006).
-- **V5** [manual] `?debug` shows an FPS / DPR / triangle-count overlay and exposes `window.__stahl`. `?dpr=N` pins the pixel ratio (spec 004).
+- **V5** [manual] `?debug` shows an FPS / DPR / triangle-count overlay and exposes `window.__stahl`. `?dpr=N` pins the pixel ratio (spec 004), kept between 0.5 and 3 (spec 071).
 
 ### Performance & build
 - **P1** [manual] Resolution adapts: after sustained < 38 fps, the pixel ratio drops in 0.25 steps down to 0.75.

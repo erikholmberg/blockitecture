@@ -1,9 +1,9 @@
 # 071 — Security headers, and a limit on `?dpr=`
 
-- **Status:** In progress (approved by Erik 2026-11-12: "approved", taking the proposed answers to Q1 and Q2)
+- **Status:** Done (approved by Erik 2026-11-12: "approved", taking the proposed answers to Q1 and Q2; merged on his "merge")
 - **Owner:** Erik
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 0d3bb93
 
 ## Goal
 The site tells browsers what it is allowed to load and where it may be embedded, so a compromised dependency or a hostile page
@@ -57,8 +57,8 @@ covers the postcard.
 - [x] **Q1** Should other sites be able to embed a house in a frame? **No** (`frame-ancestors 'none'`; approved as proposed). If
   embeds are wanted later (a blog post, a portfolio), this is the line to change.
 - [x] **Q2** Limits for `?dpr=`: **0.5 to 3** (approved as proposed).
-- [ ] **Q3** A5–A7 need a Vercel preview deploy, which means a push to a branch. Not answered by "approved" (it was an
-  either/or), so nothing has been pushed.
+- [x] **Q3** A5–A7 need a Vercel preview deploy: Erik, 2026-11-12: "commit and push to preview". Pushed as the branch
+  `spec-071-security-headers`.
 
 ## Implementation notes
 - `vercel.json`: one `headers` rule on `/(.*)` with the five headers. `src/engine/resolution.ts`: `pinnedDpr()` and
@@ -72,4 +72,19 @@ covers the postcard.
   serves.
 - **A8 passed** (headless Chromium, software rendering, `npm run dev`, 1000 × 700 window): `/stahl-house/?debug&dpr=50` → the
   overlay reads `dpr 3.00`, canvas 3000 × 2100, the page still answers; `dpr=0.1` → `dpr 0.50`; `dpr=abc` → not pinned (1.00).
-- **A5, A6, A7 not checked yet:** they need a Vercel preview deploy (Q3).
+- **Preview deploy** of 0d3bb93: `blockitecture-8phbpq854-erikholmberg.vercel.app` (behind Vercel's sign-in, so checked in
+  Erik's signed-in Chrome, not with `curl`).
+- **A5 passed, with two parts checked another way.** Home, credits, Stahl House and Fallingwater: no Content-Security-Policy
+  message in the console on any of them (only the viewer's own `?debug` logs and two Three.js deprecation warnings). The
+  loading screen went away, Inter and Quantico loaded, the Stahl House build played (9,365 of 27,233 pieces after a few
+  seconds, 64 frames a second), both neighbourhoods loaded. **Share and the postcard were checked through `window.__viewer`,
+  not by pressing the buttons** (to leave the clipboard and Downloads alone): `shareQuery()` gave the link's query, and
+  `postcard()` gave a 1600 × 900 PNG that decoded from a `blob:` URL. Neither the clipboard nor a download is governed by the policy.
+- **A6 passed, by `fetch` in the page and not `curl -I`** (the sign-in wall): `/`, `/stahl-house/` and `/assets/home-….js` each
+  returned 200 with all five headers, the policy exactly as written above.
+- **A7 passed:** `/_vercel/insights/script.js` 200 and `POST /_vercel/insights/view` 200 on each of the four pages.
+- Seen on the preview only: a request to `vercel.live/_next-live/feedback/feedback.js` (Vercel's preview toolbar) came back
+  503. It isn't part of the site and isn't served on production; if the toolbar is wanted on previews, the policy would have
+  to allow `vercel.live` there.
+- **Production** (`blockitecture.vercel.app`, after the merge to `main`): `curl -I` on `/`, `/stahl-house/` and
+  `/assets/home-….js` shows all five headers on each (A6 as written).
