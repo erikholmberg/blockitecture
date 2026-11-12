@@ -3,7 +3,7 @@
 - **Status:** In progress: built and checked here; waiting for Erik's say to close (approved by Erik 2026-11-12: "approved, both", with the recommendation: 10 frames)
 - **Owner:** Erik
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** d827779
 
 ## Goal
 A building page appears about a third of a second sooner. Spec 065 measures the screen's frame rate while the model is made, and

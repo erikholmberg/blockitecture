@@ -3,7 +3,7 @@
 - **Status:** In progress: built, waiting for Erik's iPhone checks, A8 and A9 (approved by Erik 2026-11-12: "approved, both", with all three recommendations)
 - **Owner:** Erik
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** c3c3b62
 
 ## Goal
 A finished building left on screen stops using the phone's graphics chip, so the phone stays cooler and the battery lasts.
