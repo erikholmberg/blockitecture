@@ -1428,5 +1428,61 @@
       "cacheRead": 58253263,
       "output": 286737
     }
+  },
+  {
+    "hash": "3c9de48",
+    "date": "2026-11-11",
+    "specs": [
+      "060"
+    ],
+    "messages": 2,
+    "usage": {
+      "input": 4,
+      "cacheWrite": 2153,
+      "cacheRead": 1609327,
+      "output": 1372
+    }
+  },
+  {
+    "hash": "872fb15",
+    "date": "2026-11-11",
+    "specs": [
+      "060"
+    ],
+    "messages": 2,
+    "usage": {
+      "input": 4,
+      "cacheWrite": 2196,
+      "cacheRead": 1613094,
+      "output": 1595
+    }
+  },
+  {
+    "hash": "8cbbf1e",
+    "date": "2026-11-12",
+    "specs": [
+      "060"
+    ],
+    "messages": 1,
+    "usage": {
+      "input": 2,
+      "cacheWrite": 1853,
+      "cacheRead": 808180,
+      "output": 554
+    }
+  },
+  {
+    "hash": "51a0d62",
+    "date": "2026-11-12",
+    "specs": [
+      "064"
+    ],
+    "messages": 20,
+    "usage": {
+      "input": 44,
+      "cacheWrite": 27545,
+      "cacheRead": 16415598,
+      "output": 19661
+    }
   }
 ]

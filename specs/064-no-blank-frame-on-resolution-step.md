@@ -1,10 +1,11 @@
 # 064 — No blank frame when the resolution steps down
 
-- **Status:** In progress: fixed, waiting for Erik's iPhone check, A5 (approved by Erik 2026-11-11: "There is flickering on my iPhone for various buildings, in the intro with the pop up and
-  while building"; a bug report, specified by its symptom, as for spec 011)
+- **Status:** Done (approved by Erik 2026-11-11: "There is flickering on my iPhone for various buildings, in the intro with the
+  pop up and while building"; a bug report, specified by its symptom, as for spec 011. Closed by Erik 2026-11-11: "Close specs
+  commit and push", before the iPhone check, A5; if flicker remains it gets a new spec)
 - **Owner:** Erik
 - **Created:** 2026-11-11
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 51a0d62
 
 ## Goal
 On an iPhone the screen flickers on various buildings, both while the intro card shows and during the build. The picture should
