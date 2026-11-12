@@ -1,6 +1,7 @@
 # 065 — Crisp on a phone in Low Power Mode
 
-- **Status:** In progress: built, waiting for Erik's iPhone checks, A7 and A8 (approved by Erik 2026-11-11: "Approved", both recommendations)
+- **Status:** Done (approved by Erik 2026-11-11: "Approved", both recommendations; closed by Erik 2026-11-12: "close the spec",
+  with no result reported for the iPhone checks, A7 and A8; if softness or speckles remain they get a new spec)
 - **Owner:** Erik
 - **Created:** 2026-11-11
 - **Commits:** ca18cc5
@@ -67,6 +68,6 @@ phone was in Low Power Mode. A phone that isn't struggling should keep the viewe
     at a steady 30 frames a second;
   - the control, a 60 Hz screen whose page is slowed to about 35 frames a second: threshold 38, and the ratio steps down to
     the phone's floor, 1.0, and stays there.
-- **A7 and A8 not checked:** iOS Safari can't be run here. Erik checks them on his iPhone after the push.
+- **A7 and A8 not checked:** iOS Safari can't be run here, and no result from Erik's iPhone was reported before the spec was closed.
 - **The speckles** weren't investigated here: I didn't look for them in the emulation. Whether they go with the resolution is
   for A7 to tell.
