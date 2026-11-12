@@ -149,11 +149,12 @@ function NumbersMenu({ house, compact }: { house: HudHouse; compact: boolean }) 
   );
 }
 
-function ViewsMenu({ house, h }: { house: HudHouse; h: HudHandlers }) {
+/** spec 070: 40 px on phones, like the buttons beside it; 36 px in the wide layout's camera column (spec 032) */
+function ViewsMenu({ house, h, compact }: { house: HudHouse; h: HudHandlers; compact: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="Views" className={cn('size-9 rounded-lg', paper)}>
+        <Button variant="outline" size="icon" aria-label="Views" className={cn(compact ? 'size-10' : 'size-9', 'rounded-lg', paper)}>
           <Eye />
         </Button>
       </DropdownMenuTrigger>
@@ -278,7 +279,7 @@ export function Hud({ store, h, house, compact: compactProp }: {
                 <span className="truncate">{text.name}</span>
               </a>
               <div className="pointer-events-auto flex gap-1.5">
-                {s.mode === 'orbit' && <ViewsMenu house={house} h={h} />}
+                {s.mode === 'orbit' && <ViewsMenu house={house} h={h} compact />}
                 <NumbersMenu house={house} compact />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -378,7 +379,7 @@ export function Hud({ store, h, house, compact: compactProp }: {
             {/* camera controls (spec 006) */}
             {s.mode === 'orbit' && (
               <div role="toolbar" aria-label="Camera" data-testid="camctl" className="pointer-events-auto absolute top-1/2 right-3.5 flex -translate-y-1/2 flex-col gap-1.5">
-                <ViewsMenu house={house} h={h} />
+                <ViewsMenu house={house} h={h} compact={false} />
                 <CamButton label="Zoom in" keyHint="+" onClick={() => h.onCam('in')}><Plus /></CamButton>
                 <CamButton label="Zoom out" keyHint="−" onClick={() => h.onCam('out')}><Minus /></CamButton>
                 <CamButton label="Rotate left" keyHint="←" onClick={() => h.onCam('left')}><RotateCcw /></CamButton>
