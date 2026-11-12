@@ -5,7 +5,7 @@
   no decision in it)
 - **Owner:** Erik
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 8669379
 
 ## Goal
 On a phone the three buttons at the top right (Views, By the numbers, Settings) are the same size. Today Views is 36 px and the
