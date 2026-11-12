@@ -18,7 +18,7 @@ describe('064: no blank frame when the resolution steps down', () => {
     const setup = lines.filter(([, l]) => /^\s*renderer\.(setPixelRatio|setSize)\(/.test(l));
     const guarded = lines.filter(([, l]) => /redrawAfter\(/.test(l));
     expect(setup.length).toBe(2); // the initial pixel ratio and size, before anything is drawn
-    expect(setup.map(([n]) => n).every((n) => n < 80)).toBe(true);
+    expect(Math.max(...setup.map(([n]) => n))).toBeLessThan(Math.min(...guarded.map(([n]) => n))); // before the loop and the handlers
     expect(guarded.length).toBe(lines.length - 2);
     expect(guarded.length).toBeGreaterThanOrEqual(2); // the adaptive step and the resize handler
   });

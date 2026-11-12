@@ -24,13 +24,33 @@ import { motionSettings, prefersReducedMotion } from '@/engine/motion';
 import { setDropHeight } from '@/engine/BrickSet';
 import { Cam, postcardCaption, postcardFileName, readShare, shareLink, shareQuery } from '@/engine/share';
 import { deliverPostcard, renderPostcard } from '@/engine/postcard';
-import { adaptiveStep, redrawAfter } from '@/engine/resolution';
+import { adaptiveStep, minDpr, redrawAfter, refreshRate, slowThreshold } from '@/engine/resolution';
 
 /**
  * Spec 010a: the viewer for one house. Each house page calls this with its HouseDefinition;
  * nothing in src/engine knows about any particular house.
  */
 /** spec 047: let the page draw a frame (the loading brick turns) between the big setup steps */
+/**
+ * Spec 065: the screen's own frame rate, from about half a second of frames while the page is idle (the loading screen).
+ * Undefined if frames don't come (a background tab) or the run is too short.
+ */
+function measureRefresh(): Promise<number | undefined> {
+  return new Promise((resolve) => {
+    const gaps: number[] = [];
+    let last = 0, done = false;
+    const finish = () => { if (!done) { done = true; resolve(refreshRate(gaps)); } };
+    const tick = (now: number) => {
+      if (done) return;
+      if (last) gaps.push(now - last);
+      last = now;
+      if (gaps.length >= 30 || gaps.reduce((a, g) => a + g, 0) > 600) finish(); else requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    setTimeout(finish, 1500);
+  });
+}
+
 const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => setTimeout(r, 0)));
 
 export async function startViewer(house: HouseDefinition, makeWorker?: () => Worker) {
@@ -59,7 +79,10 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
   // spec 047: in the house's worker when it has one, so the main thread stays free and the loading brick keeps turning
   const t0 = performance.now();
+  // spec 065: while the model is generated in its worker the page is idle, so this is the screen's own rate
+  const refresh = measureRefresh();
   const { bricks, schedule, studs, heightmap } = unpackPayload(await generateModel(house, makeWorker));
+  const adaptive = { slowFps: slowThreshold(await refresh), minDpr: minDpr(isTouch) };
   if (DEBUG) console.log(`[${house.slug}] ${bricks.length} pieces, ${studs.length} studs, generated in ${(performance.now() - t0).toFixed(0)} ms`);
 
   // ---------- renderer & scene ----------
@@ -348,6 +371,8 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
     const debugApi = {
       house, seek: (v: number) => (t = v), schedule, camera, orbit, walker, setMode, env, hood: () => hood, sun, renderer, scene, ground,
       neighboursHidden: () => nbHidden.value.slice(0, nbFootprints.length),
+      // spec 065: the adaptive resolution's threshold and floor on this device, and the pixel ratio now
+      adaptive: () => ({ ...adaptive, dpr }),
       // spec 037: the share link's query and the postcard, for checking without the clipboard or a download
       shareQuery: () => shareState(),
       postcard: () => renderPostcard(renderer, scene, camera, postcardCaption(house.text, location.host)),
@@ -405,7 +430,7 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
     if (fpsAcc > 1) {
       const fps = fpsFrames / fpsAcc;
       if (fpsEl) fpsEl.textContent = `${fps.toFixed(0)} fps · dpr ${dpr.toFixed(2)} · ${renderer.info.render.triangles.toLocaleString()} tris · ${renderer.info.render.calls} calls`;
-      const next = adaptiveStep({ dpr, slow: slowTime }, fps, !!FIXED_DPR);
+      const next = adaptiveStep({ dpr, slow: slowTime }, fps, !!FIXED_DPR, adaptive);
       slowTime = next.slow;
       // spec 064: the new pixel ratio clears the canvas after this frame was drawn, so draw it again at once (no blank flash)
       if (next.dpr !== dpr) { dpr = next.dpr; redrawAfter(renderer, scene, camera, () => renderer.setPixelRatio(dpr)); }
