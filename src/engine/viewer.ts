@@ -25,7 +25,7 @@ import { motionSettings, prefersReducedMotion } from '@/engine/motion';
 import { setDropHeight } from '@/engine/BrickSet';
 import { Cam, postcardCaption, postcardFileName, readShare, shareLink, shareQuery } from '@/engine/share';
 import { deliverPostcard, renderPostcard } from '@/engine/postcard';
-import { adaptiveStep, measurementDone, minDpr, redrawAfter, refreshRate, slowThreshold } from '@/engine/resolution';
+import { adaptiveStep, measurementDone, minDpr, pinnedDpr, redrawAfter, refreshRate, slowThreshold } from '@/engine/resolution';
 import { fpsWindow, lookChanged, mustDraw, renderOptions, type Look } from '@/engine/redraw';
 
 /**
@@ -95,8 +95,8 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   // spec 069: ?shadow=2048 and ?aa=0 are lighter settings to try on a phone; without them, as always
   const options = renderOptions(params);
   const renderer = new THREE.WebGLRenderer({ antialias: options.antialias, powerPreference: 'high-performance' });
-  // ?dpr=1.75 pins the pixel ratio and turns off adaptive resolution (for like-for-like performance checks)
-  const FIXED_DPR = params.has('dpr') ? Number(params.get('dpr')) : 0;
+  // ?dpr=1.75 pins the pixel ratio and turns off adaptive resolution (for like-for-like performance checks); 0.5 to 3 (spec 071)
+  const FIXED_DPR = pinnedDpr(params.get('dpr'));
   let dpr = FIXED_DPR || Math.min(devicePixelRatio, isTouch ? 1.5 : 1.75);
   renderer.setPixelRatio(dpr);
   renderer.setSize(innerWidth, innerHeight);

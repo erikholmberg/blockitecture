@@ -30,6 +30,16 @@ export const DPR_STEP = 0.25;
 export const minDpr = (isTouch: boolean) => (isTouch ? 1 : MIN_DPR);
 
 /**
+ * Spec 071: the pixel ratio `?dpr=` pins, kept between 0.5 and 3 so a crafted link can't ask for a canvas that crashes the tab.
+ * 0 (not pinned) without the parameter, or when it's zero or not a finite number.
+ */
+export const PINNED_DPR = { min: 0.5, max: 3 };
+export function pinnedDpr(param: string | null): number {
+  const v = param === null || param.trim() === '' ? 0 : Number(param);
+  return Number.isFinite(v) && v !== 0 ? Math.min(PINNED_DPR.max, Math.max(PINNED_DPR.min, v)) : 0;
+}
+
+/**
  * Spec 065: what counts as slow on a screen that refreshes `hz` times a second: the same share of it as 38 is of 60, and never
  * above 38. A phone in Low Power Mode is capped at 30, so only under 19 is slow there; unmeasured, it's 38 as before.
  */
