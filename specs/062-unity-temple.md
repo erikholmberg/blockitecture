@@ -1,7 +1,7 @@
 # 062 — Unity Temple
 
-- **Status:** In progress: built and committed, waiting for Erik to close it (approved by Erik 2026-11-11: "can you build 4 more buildings", choosing "the safe four" and to treat that message as
-  approval of the specs written for it, as for specs 055–058)
+- **Status:** Done (approved by Erik 2026-11-11: "can you build 4 more buildings", choosing "the safe four" and to treat that message as approval of the specs written for it, as for specs 055–058. Closed by Erik 2026-11-11: "close the specs", accepting the manual checks that couldn't
+  be run here: No roof, Walk, the phone controls and measured performance)
 - **Owner:** Erik
 - **House:** unity-temple
 - **Created:** 2026-11-11
