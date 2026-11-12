@@ -13,6 +13,15 @@ export function redrawAfter<S, C>(renderer: Redrawable<S, C>, scene: S, camera: 
   renderer.render(scene, camera);
 }
 
+/**
+ * Spec 068: has the frame-rate measurement seen enough? Once the model is ready the page is waiting for it, so 10 intervals
+ * do; while the model is still being made the frames are free, so it runs on to 30 intervals. Over 0.6 s ends it either way.
+ */
+export function measurementDone(intervalsMs: number[], modelReady: boolean): boolean {
+  const n = intervalsMs.length;
+  return n >= 30 || (modelReady && n >= 10) || intervalsMs.reduce((a, g) => a + g, 0) > 600;
+}
+
 export const SLOW_FPS = 38;
 export const MIN_DPR = 0.75;
 export const DPR_STEP = 0.25;

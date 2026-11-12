@@ -25,7 +25,7 @@ import { motionSettings, prefersReducedMotion } from '@/engine/motion';
 import { setDropHeight } from '@/engine/BrickSet';
 import { Cam, postcardCaption, postcardFileName, readShare, shareLink, shareQuery } from '@/engine/share';
 import { deliverPostcard, renderPostcard } from '@/engine/postcard';
-import { adaptiveStep, minDpr, redrawAfter, refreshRate, slowThreshold } from '@/engine/resolution';
+import { adaptiveStep, measurementDone, minDpr, redrawAfter, refreshRate, slowThreshold } from '@/engine/resolution';
 
 /**
  * Spec 010a: the viewer for one house. Each house page calls this with its HouseDefinition;
@@ -33,11 +33,13 @@ import { adaptiveStep, minDpr, redrawAfter, refreshRate, slowThreshold } from '@
  */
 /** spec 047: let the page draw a frame (the loading brick turns) between the big setup steps */
 /**
- * Spec 065: the screen's own frame rate, from about half a second of frames while the page is idle (the loading screen).
+ * Spec 065: the screen's own frame rate, from a run of frames while the page is idle (the loading screen).
  * Undefined if frames don't come (a background tab) or the run is too short.
+ * Spec 068: call modelReady() when the model is made; from then on a shorter run is enough, so the page isn't kept waiting.
  */
-function measureRefresh(): Promise<number | undefined> {
-  return new Promise((resolve) => {
+function measureRefresh(): { rate: Promise<number | undefined>; modelReady: () => void } {
+  let modelIsReady = false;
+  const rate = new Promise<number | undefined>((resolve) => {
     const gaps: number[] = [];
     let last = 0, done = false;
     const finish = () => { if (!done) { done = true; resolve(refreshRate(gaps)); } };
@@ -45,11 +47,12 @@ function measureRefresh(): Promise<number | undefined> {
       if (done) return;
       if (last) gaps.push(now - last);
       last = now;
-      if (gaps.length >= 30 || gaps.reduce((a, g) => a + g, 0) > 600) finish(); else requestAnimationFrame(tick);
+      if (measurementDone(gaps, modelIsReady)) finish(); else requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
     setTimeout(finish, 1500);
   });
+  return { rate, modelReady: () => { modelIsReady = true; } };
 }
 
 const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => setTimeout(r, 0)));
@@ -83,7 +86,8 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   // spec 065: while the model is generated in its worker the page is idle, so this is the screen's own rate
   const refresh = measureRefresh();
   const { bricks, schedule, studs, heightmap } = unpackPayload(await generateModel(house, makeWorker));
-  const adaptive = { slowFps: slowThreshold(await refresh), minDpr: minDpr(isTouch) };
+  refresh.modelReady();
+  const adaptive = { slowFps: slowThreshold(await refresh.rate), minDpr: minDpr(isTouch) };
   if (DEBUG) console.log(`[${house.slug}] ${bricks.length} pieces, ${studs.length} studs, generated in ${(performance.now() - t0).toFixed(0)} ms`);
 
   // ---------- renderer & scene ----------
