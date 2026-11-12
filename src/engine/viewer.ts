@@ -24,6 +24,7 @@ import { motionSettings, prefersReducedMotion } from '@/engine/motion';
 import { setDropHeight } from '@/engine/BrickSet';
 import { Cam, postcardCaption, postcardFileName, readShare, shareLink, shareQuery } from '@/engine/share';
 import { deliverPostcard, renderPostcard } from '@/engine/postcard';
+import { adaptiveStep, redrawAfter } from '@/engine/resolution';
 
 /**
  * Spec 010a: the viewer for one house. Each house page calls this with its HouseDefinition;
@@ -334,7 +335,8 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   addEventListener('resize', () => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
+    // spec 064: a resize clears the canvas, so draw again at once
+    redrawAfter(renderer, scene, camera, () => renderer.setSize(innerWidth, innerHeight));
   });
 
   // ---------- debug overlay ----------
@@ -403,8 +405,10 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
     if (fpsAcc > 1) {
       const fps = fpsFrames / fpsAcc;
       if (fpsEl) fpsEl.textContent = `${fps.toFixed(0)} fps · dpr ${dpr.toFixed(2)} · ${renderer.info.render.triangles.toLocaleString()} tris · ${renderer.info.render.calls} calls`;
-      if (!FIXED_DPR && fps < 38 && dpr > 0.75) { slowTime++; if (slowTime >= 2) { dpr = Math.max(0.75, dpr - 0.25); renderer.setPixelRatio(dpr); slowTime = 0; } }
-      else slowTime = 0;
+      const next = adaptiveStep({ dpr, slow: slowTime }, fps, !!FIXED_DPR);
+      slowTime = next.slow;
+      // spec 064: the new pixel ratio clears the canvas after this frame was drawn, so draw it again at once (no blank flash)
+      if (next.dpr !== dpr) { dpr = next.dpr; redrawAfter(renderer, scene, camera, () => renderer.setPixelRatio(dpr)); }
       fpsAcc = 0; fpsFrames = 0;
     }
     if (hudAcc > 0.1) {
