@@ -1,6 +1,6 @@
 # 066 — Finish options on a dev design page
 
-- **Status:** In progress: built for Erik to look at (asked for by Erik 2026-11-12: "can you add all the options to the design page
+- **Status:** Done (closed by Erik 2026-11-12: "close the specs"; A6 was checked here in a headless browser, not by Erik; A7 was not compared picture for picture, and spec 067 then changed the default finish on purpose). Built for Erik to look at (asked for by Erik 2026-11-12: "can you add all the options to the design page
   for me to look at"; there was no design page, so this adds one). Nothing a visitor sees changes; picking a finish is a later spec.
 - **Owner:** Erik
 - **Created:** 2026-11-12

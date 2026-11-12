@@ -1,6 +1,6 @@
 # 068 — Load without waiting for the frame-rate measurement
 
-- **Status:** In progress: built and checked here; waiting for Erik's say to close (approved by Erik 2026-11-12: "approved, both", with the recommendation: 10 frames)
+- **Status:** Done (closed by Erik 2026-11-12: "close the specs"; approved by Erik 2026-11-12: "approved, both", with the recommendation: 10 frames)
 - **Owner:** Erik
 - **Created:** 2026-11-12
 - **Commits:** d827779

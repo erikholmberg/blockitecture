@@ -1,6 +1,6 @@
 # 067 — Soft satin finish
 
-- **Status:** In progress: built, waiting for Erik's look, A6 (Erik picked "1b" on /dev/design/ and approved 2026-11-12: "approved", all three recommendations)
+- **Status:** Done (closed by Erik 2026-11-12: "close the specs", with no result reported for his own look, A6; Erik picked "1b" on /dev/design/ and approved 2026-11-12: "approved", all three recommendations)
 - **Owner:** Erik
 - **Created:** 2026-11-12
 - **Commits:** 8dc9e37
@@ -47,4 +47,4 @@ Looking towards the sun, flat surfaces no longer turn white: the pieces keep the
   pixel-for-pixel the 1b picture Erik chose; the roof keeps its grey.
 - **Dusk, looked at once:** same view with `&light=dusk`. Nothing turns white. The roof's orange sheen from the sunset is fainter
   than with gloss, so the roof reads a little darker.
-- **A6 not checked:** Erik's own look, by day and at dusk.
+- **A6 not checked:** no result from Erik's own look, by day and at dusk, was reported before the spec was closed.

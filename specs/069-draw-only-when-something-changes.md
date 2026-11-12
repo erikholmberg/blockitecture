@@ -1,6 +1,6 @@
 # 069 — Draw only when something changes
 
-- **Status:** In progress: built, waiting for Erik's iPhone checks, A8 and A9 (approved by Erik 2026-11-12: "approved, both", with all three recommendations)
+- **Status:** Done (closed by Erik 2026-11-12: "close the specs", with no result reported for the iPhone checks, A8 and A9; a follow-up spec decides the phone settings once A9 is tried; approved by Erik 2026-11-12: "approved, both", with all three recommendations)
 - **Owner:** Erik
 - **Created:** 2026-11-12
 - **Commits:** c3c3b62
@@ -86,4 +86,4 @@ What that costs a phone in heat and battery could not be measured here.
   after the build and a drag; the screenshot at rest is a full picture; a drag wakes it (5 frames in 150 ms at 30 Hz) and it
   rests again; the resolution stays at 1.5 throughout. No errors.
 - **A4's switches** work: with `?shadow=2048&aa=0` the shadow map is 2048 and the canvas has no smoothing.
-- **A8 and A9 not checked:** they need Erik's iPhone.
+- **A8 and A9 not checked:** they need Erik's iPhone, and no result was reported before the spec was closed.
