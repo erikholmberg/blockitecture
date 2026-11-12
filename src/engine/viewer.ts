@@ -93,7 +93,7 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   let dpr = FIXED_DPR || Math.min(devicePixelRatio, isTouch ? 1.5 : 1.75);
   renderer.setPixelRatio(dpr);
   renderer.setSize(innerWidth, innerHeight);
-  // spec 066: ?finish=<key> shows a candidate finish (src/engine/finish.ts); without it, today's
+  // spec 066: ?finish=<key> shows a candidate finish (src/engine/finish.ts); without it, the default (soft satin, spec 067)
   const finish = finishFromParam(params.get('finish'));
   renderer.toneMapping = { aces: THREE.ACESFilmicToneMapping, neutral: THREE.NeutralToneMapping, agx: THREE.AgXToneMapping }[finish.tone];
   renderer.outputColorSpace = THREE.SRGBColorSpace;

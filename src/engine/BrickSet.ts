@@ -6,7 +6,7 @@ import { DROP_DUR } from '@/engine/sequencer';
 import type { HouseDefinition } from '@/engine/house';
 
 import { DROP_HEIGHT } from '@/engine/motion';
-import { FINISHES, type Finish } from '@/engine/finish';
+import { DEFAULT_FINISH, FINISHES, type Finish } from '@/engine/finish';
 /** how far pieces drop into place, in plates; 0 with reduced motion (spec 037) */
 let dropHeight = DROP_HEIGHT;
 export const setDropHeight = (h: number) => { dropHeight = h; };
@@ -44,7 +44,7 @@ function withRoofCut(shader: THREE.WebGLProgramParametersWithUniforms) {
     .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n' + CUT_FRAG);
 }
 
-/** Spec 066: a candidate finish's dimmer reflection, and (on boxes) its rougher upward faces. Today's finish changes nothing. */
+/** Spec 066: a candidate finish's dimmer reflection, and (on boxes) its rougher upward faces. The default finish changes nothing. */
 function withFinish(shader: THREE.WebGLProgramParametersWithUniforms, finish: Finish, box: boolean) {
   if (finish.specular !== 1) {
     shader.fragmentShader = shader.fragmentShader.replace(
@@ -240,7 +240,7 @@ export class BrickSet {
     const counts: Record<LayerName, number> = { box: 0, round: 0, stud: studs.length, glass: 0, water: 0, falls: 0, light: 0, lamp: 0 };
     for (const b of bricks) counts[LAYER_OF[b.kind]]++;
 
-    const finish = opts.finish ?? FINISHES.gloss; // spec 066
+    const finish = opts.finish ?? FINISHES[DEFAULT_FINISH]; // specs 066, 067
     const plastic = new THREE.MeshStandardMaterial({ roughness: finish.roughness, metalness: 0.0 });
     addEdgeShading(plastic, 0.32, 0.06, finish);
     // round pieces are mostly the studs on upward faces, so they take the tops' finish

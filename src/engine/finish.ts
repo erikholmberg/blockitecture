@@ -1,6 +1,7 @@
 /**
- * Spec 066: how shiny the pieces are, and the light they're seen in. `gloss` is what every page shows; the others
- * are candidates, reachable only with `?finish=<key>` (like `?dpr=`), for comparing on /dev/design/.
+ * Spec 066: how shiny the pieces are, and the light they're seen in. Spec 067: every page shows `soft-satin`
+ * (Erik's pick; `gloss` was the finish before). The others are reachable only with `?finish=<key>` (like `?dpr=`),
+ * for comparing on /dev/design/. The candidates are written as changes to the old gloss, as they were compared.
  */
 export interface Finish {
   label: string;
@@ -22,14 +23,14 @@ export interface Finish {
 }
 
 const GLOSS: Finish = {
-  label: 'Gloss (today)', note: 'What every page shows now.',
+  label: 'Gloss (previous)', note: 'What every page showed before spec 067.',
   roughness: 0.32, specular: 1, sun: 1, hemi: 1, tone: 'aces', exposure: 1,
 };
 
 export const FINISHES = {
   gloss: GLOSS,
   satin: { ...GLOSS, label: '1a. Satin', note: 'Less shiny plastic: roughness 0.32 → 0.5.', roughness: 0.5 },
-  'soft-satin': { ...GLOSS, label: '1b. Soft satin', note: 'Less shiny still: roughness 0.65.', roughness: 0.65 },
+  'soft-satin': { ...GLOSS, label: '1b. Soft satin (today)', note: 'What every page shows now: roughness 0.65.', roughness: 0.65 },
   dim: { ...GLOSS, label: '2. Gloss, dimmer reflection', note: 'Same gloss, reflection at half strength.', specular: 0.5 },
   matte: { ...GLOSS, label: '3. Matte', note: 'No reflection at all.', roughness: 1, specular: 0 },
   tops: { ...GLOSS, label: '4. Satin tops, glossy sides', note: 'Upward faces at roughness 0.65; sides keep the gloss.', topRoughness: 0.65 },
@@ -39,8 +40,8 @@ export const FINISHES = {
 } satisfies Record<string, Finish>;
 
 export type FinishKey = keyof typeof FINISHES;
-export const DEFAULT_FINISH: FinishKey = 'gloss';
+export const DEFAULT_FINISH: FinishKey = 'soft-satin';
 
-/** the finish a `?finish=` value asks for; anything unknown (or nothing) is today's */
+/** the finish a `?finish=` value asks for; anything unknown (or nothing) is the default */
 export const finishFromParam = (v: string | null): Finish =>
   (v && Object.hasOwn(FINISHES, v) ? FINISHES[v as FinishKey] : FINISHES[DEFAULT_FINISH]);

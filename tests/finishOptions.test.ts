@@ -9,17 +9,14 @@ import { HOUSES } from '../src/houses/index';
 const look = ({ label: _l, note: _n, ...rest }: Finish) => JSON.stringify(rest);
 
 describe('066: finish options', () => {
-  it("A1: the default finish is today's values", () => {
-    expect(DEFAULT_FINISH).toBe('gloss');
+  it('A1: gloss is the old values (it was the default until spec 067)', () => {
     const { label: _l, note: _n, ...today } = FINISHES.gloss;
     expect(today).toEqual({ roughness: 0.32, specular: 1, sun: 1, hemi: 1, tone: 'aces', exposure: 1 });
   });
 
-  it("A2: no value or an unknown value gives today's finish; a known key gives that finish", () => {
-    expect(finishFromParam(null)).toBe(FINISHES.gloss);
-    expect(finishFromParam('')).toBe(FINISHES.gloss);
-    expect(finishFromParam('chrome')).toBe(FINISHES.gloss);
-    expect(finishFromParam('toString')).toBe(FINISHES.gloss);
+  it('A2: no value or an unknown value gives the default finish; a known key gives that finish', () => {
+    for (const v of [null, '', 'chrome', 'toString']) expect(finishFromParam(v)).toBe(FINISHES[DEFAULT_FINISH]);
+    expect(finishFromParam('gloss')).toBe(FINISHES.gloss);
     expect(finishFromParam('satin')).toBe(FINISHES.satin);
     expect(finishFromParam('soft-satin')).toBe(FINISHES['soft-satin']);
   });
@@ -43,7 +40,7 @@ describe('066: finish options', () => {
     }
   });
 
-  it("A5: the viewer passes ?finish= to the pieces, the light and the tone curve; today's finish edits no shader", () => {
+  it('A5: the viewer passes ?finish= to the pieces, the light and the tone curve; the default finish edits no shader', () => {
     const viewer = readFileSync('src/engine/viewer.ts', 'utf8');
     expect(viewer).toContain("finishFromParam(params.get('finish'))");
     expect(viewer).toMatch(/new Environment\([^)]*finish\)/);
@@ -54,7 +51,7 @@ describe('066: finish options', () => {
     // both shader edits are behind a condition today's finish doesn't meet
     expect(withFinish).toContain('if (finish.specular !== 1)');
     expect(withFinish).toContain('if (box && finish.topRoughness !== undefined)');
-    expect(FINISHES.gloss.specular).toBe(1);
-    expect((FINISHES.gloss as Finish).topRoughness).toBeUndefined();
+    expect(FINISHES[DEFAULT_FINISH].specular).toBe(1);
+    expect((FINISHES[DEFAULT_FINISH] as Finish).topRoughness).toBeUndefined();
   });
 });

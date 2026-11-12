@@ -1,6 +1,7 @@
 /**
  * Dev-only page for comparing looks before they go in a spec. Served by `npm run dev` at /dev/design/; not in PAGES
- * (vite.config.ts), so it is never built or deployed. Spec 066: the finish options for the sun's glare.
+ * (vite.config.ts), so it is never built or deployed. Spec 066: the finish options for the sun's glare; spec 067
+ * made soft satin the default.
  * The pictures are made by scripts/design-shots.mjs from the running dev server.
  */
 import { useState } from 'react';
@@ -25,7 +26,7 @@ function Shot({ scene, finish }: { scene: Scene; finish: FinishKey }) {
       />
       <figcaption className="flex items-start justify-between gap-3 p-3">
         <div>
-          <div className="text-sm font-semibold">{today ? 'Gloss (today)' : f.label}</div>
+          <div className="text-sm font-semibold">{today ? FINISHES[DEFAULT_FINISH].label : f.label}</div>
           <div className="text-xs text-muted-foreground">{f.note}</div>
         </div>
         <a href={liveUrl(scene, finish)} target="_blank" rel="noreferrer"
@@ -42,8 +43,8 @@ export function DesignPage() {
     <main className="mx-auto max-w-[1500px] px-6 py-10">
       <h1 className="text-2xl font-semibold tracking-tight">Design: the sun's glare</h1>
       <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
-        Dev only. Today the pieces are glossy, and looking towards the sun flat surfaces turn white. Each picture is
-        the same view in one candidate finish. Hold a picture down to see today's finish in its place; "Live" opens the
+        Dev only. With the old gloss, flat surfaces turned white looking towards the sun; soft satin (1b) replaced it
+        in spec 067. Each picture is the same view in one finish. Hold a picture down to see today's finish in its place; "Live" opens the
         building in that finish so you can orbit it.
       </p>
       {SCENES.map((scene) => (

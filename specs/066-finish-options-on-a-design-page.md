@@ -6,6 +6,9 @@
 - **Created:** 2026-11-12
 - **Commits:** <!-- filled in when Done -->
 
+> Changed by spec 067: soft satin is now the default, so "today's" below means the gloss of the time, and A1, A2 and A5
+> now hold for the default finish (soft satin); gloss keeps its old values behind `?finish=gloss`.
+
 ## Goal
 Looking towards the sun, the glossy pieces turn white (Erik's Stahl House screenshot, 2026-11-12). Before choosing a fix, Erik
 wants to see the alternatives side by side.
