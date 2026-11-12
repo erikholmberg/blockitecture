@@ -1,6 +1,6 @@
 # 070 — Views button the same size as its neighbours on phones
 
-- **Status:** In progress: built, waiting for Erik's look on his phone, A3 (reported by Erik 2026-11-12: "the eye button on mobile
+- **Status:** Done (closed by Erik 2026-11-12: "close the spec", with no result reported for his look on his phone, A3; reported by Erik 2026-11-12: "the eye button on mobile
   looks to be a different size than the other 2 controls at the top of the screen"; built without a review stop, as the fix has
   no decision in it)
 - **Owner:** Erik
@@ -30,4 +30,4 @@ None.
 - `ViewsMenu` in `src/engine/ui/Hud.tsx` takes `compact`, as `NumbersMenu` already does.
 - Measured in an iPhone 14-sized Chromium window (Stahl House, after Start): Views, By the numbers and Settings are each
   40 × 40 px with their tops at 12 px. Before, Views was 36 px.
-- **A3 not checked:** it needs Erik's phone.
+- **A3 not checked:** it needs Erik's phone, and no result was reported before the spec was closed.
