@@ -6,6 +6,7 @@ import { DROP_DUR } from '@/engine/sequencer';
 import type { HouseDefinition } from '@/engine/house';
 
 import { DROP_HEIGHT } from '@/engine/motion';
+import { FINISHES, type Finish } from '@/engine/finish';
 /** how far pieces drop into place, in plates; 0 with reduced motion (spec 037) */
 let dropHeight = DROP_HEIGHT;
 export const setDropHeight = (h: number) => { dropHeight = h; };
@@ -43,8 +44,25 @@ function withRoofCut(shader: THREE.WebGLProgramParametersWithUniforms) {
     .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n' + CUT_FRAG);
 }
 
+/** Spec 066: a candidate finish's dimmer reflection, and (on boxes) its rougher upward faces. Today's finish changes nothing. */
+function withFinish(shader: THREE.WebGLProgramParametersWithUniforms, finish: Finish, box: boolean) {
+  if (finish.specular !== 1) {
+    shader.fragmentShader = shader.fragmentShader.replace(
+      'vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;',
+      `vec3 totalSpecular = (reflectedLight.directSpecular + reflectedLight.indirectSpecular) * ${finish.specular.toFixed(3)};`,
+    );
+  }
+  if (box && finish.topRoughness !== undefined) {
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <roughnessmap_fragment>',
+      `#include <roughnessmap_fragment>\n if (dd.y < 0.002 && vLocalPos.y > 0.0) roughnessFactor = ${finish.topRoughness.toFixed(3)};`,
+    );
+  }
+}
+const finishKey = (f: Finish) => `finish${f.specular}/${f.topRoughness ?? ''}`;
+
 /** Darken box edges so each brick reads as a separate moulded piece. */
-function addEdgeShading(mat: THREE.Material, strength: number, width: number) {
+function addEdgeShading(mat: THREE.Material, strength: number, width: number, finish?: Finish) {
   mat.onBeforeCompile = (shader) => {
     withRoofCut(shader);
     shader.vertexShader = shader.vertexShader
@@ -74,8 +92,9 @@ function addEdgeShading(mat: THREE.Material, strength: number, width: number) {
         float edge = smoothstep(0.0, ${width.toFixed(3)}, mid);
         diffuseColor.rgb *= mix(${(1 - strength).toFixed(3)}, 1.0, edge);`,
       );
+    if (finish) withFinish(shader, finish, true);
   };
-  mat.customProgramCacheKey = () => 'edge' + strength + width;
+  mat.customProgramCacheKey = () => 'edge' + strength + width + (finish ? finishKey(finish) : '');
 }
 
 /** Seconds since start, for flowing water (spec 017). */
@@ -214,17 +233,20 @@ export class BrickSet {
 
   constructor(
     bricks: Brick[], order: number[], start: Float32Array, studs: Stud[], cut: HouseDefinition['roofCut'],
-    opts: { flowingWater?: boolean } = {},
+    opts: { flowingWater?: boolean; finish?: Finish } = {},
   ) {
     CUT_FRAG = roofCutGlsl(cut);
     this.total = order.length;
     const counts: Record<LayerName, number> = { box: 0, round: 0, stud: studs.length, glass: 0, water: 0, falls: 0, light: 0, lamp: 0 };
     for (const b of bricks) counts[LAYER_OF[b.kind]]++;
 
-    const plastic = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.0 });
-    addEdgeShading(plastic, 0.32, 0.06);
-    const roundMat = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.0 });
-    roundMat.onBeforeCompile = withRoofCut;
+    const finish = opts.finish ?? FINISHES.gloss; // spec 066
+    const plastic = new THREE.MeshStandardMaterial({ roughness: finish.roughness, metalness: 0.0 });
+    addEdgeShading(plastic, 0.32, 0.06, finish);
+    // round pieces are mostly the studs on upward faces, so they take the tops' finish
+    const roundMat = new THREE.MeshStandardMaterial({ roughness: finish.topRoughness ?? finish.roughness, metalness: 0.0 });
+    roundMat.onBeforeCompile = (shader) => { withRoofCut(shader); withFinish(shader, finish, false); };
+    roundMat.customProgramCacheKey = () => 'round' + finishKey(finish);
     const glassMat = new THREE.MeshStandardMaterial({
       color: 0xffffff, roughness: 0.04, metalness: 0.2, transparent: true, opacity: 0.22,
       depthWrite: false, envMapIntensity: 1.6,

@@ -12,7 +12,7 @@ pages and the viewer HUD are React + shadcn/ui + Tailwind v4 + Inter (spec 007).
 - `src/houses/<slug>/` — one house: `model/` (its bricks), `phases.ts`, `definition.ts` (texts, site, views, lights, roof cut,
   lot, data path…), `main.ts` (page entry). Page HTML at `<slug>/index.html`, listed in `PAGES` (`vite.config.ts`).
 - `public/<slug>/` — per-house static files (thumbnail, `neighborhood.bin`). `scripts/houses/<slug>.mjs` — its real-world data settings.
-- `dev/` + `src/dev/` — dev-only pages (e.g. `/dev/shortlist/`, photos of candidate houses). Not in `PAGES`, so never built or deployed.
+- `dev/` + `src/dev/` — dev-only pages (`/dev/shortlist/`, photos of candidate houses; `/dev/design/`, looks to compare before they go in a spec). Not in `PAGES`, so never built or deployed.
 - `src/seo/` + `seo.plugin.ts` — link previews, readable HTML, sitemap.xml, robots.txt, llms.txt, all generated from the registry
   and each house's definition (spec 053). The home and credits pages are rendered to HTML at build time and hydrated, so they
   must render the same on the server as in the browser (no `window` during render). Edits to `src/seo/seo.ts` need a dev restart.
@@ -58,7 +58,7 @@ dependency bumps, and docs. Say in the commit message which exemption applies.
 
 ## Commands
 ```sh
-npm run dev          # http://localhost:5173 (?debug for the FPS overlay and window.__stahl; &dpr=1.75 pins resolution for perf A/B)
+npm run dev          # http://localhost:5173 (?debug for the FPS overlay and window.__stahl; &dpr=1.75 pins resolution for perf A/B; &finish=satin shows a candidate finish, spec 066)
 npm test             # Vitest, once
 npm run test:watch
 npm run check        # tsc (src + tests) + tests: must pass before every commit

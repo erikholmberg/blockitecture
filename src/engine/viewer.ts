@@ -1,3 +1,4 @@
+import { finishFromParam } from '@/engine/finish';
 import * as THREE from 'three';
 import { unpackPayload } from '@/engine/buildPayload';
 import { startAnalytics } from '@/analytics';
@@ -92,7 +93,9 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   let dpr = FIXED_DPR || Math.min(devicePixelRatio, isTouch ? 1.5 : 1.75);
   renderer.setPixelRatio(dpr);
   renderer.setSize(innerWidth, innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  // spec 066: ?finish=<key> shows a candidate finish (src/engine/finish.ts); without it, today's
+  const finish = finishFromParam(params.get('finish'));
+  renderer.toneMapping = { aces: THREE.ACESFilmicToneMapping, neutral: THREE.NeutralToneMapping, agx: THREE.AgXToneMapping }[finish.tone];
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -105,7 +108,7 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   // the real sun for this house on the visitor's today, or ?date=YYYY-MM-DD (spec 009)
   const SUN_DAY = dateParam(params.get('date'));
   const sun = { day: sunFor(SUN_DAY, house.site, 'day'), dusk: sunFor(SUN_DAY, house.site, 'dusk') };
-  const env = new Environment(renderer, scene, sun, house);
+  const env = new Environment(renderer, scene, sun, house, finish);
   await nextFrame();
   if (DEBUG) console.log(`[${house.slug}] sun on ${SUN_DAY}: day ${sun.day.bearing.toFixed(0)}° / ${sun.day.elevation.toFixed(0)}°, dusk ${sun.dusk.bearing.toFixed(0)}° / ${sun.dusk.elevation.toFixed(1)}°`);
   let city: City | null = null;
@@ -131,6 +134,7 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   await nextFrame();
   const set = new BrickSet(bricks, schedule.order, schedule.start, studs, house.roofCut, {
     flowingWater: house.scenery?.flowingWater,
+    finish,
   });
   scene.add(set.group);
   await nextFrame();

@@ -44,6 +44,8 @@ export class Environment {
     sun: Record<'day' | 'dusk', { theta: number; elevation: number }> | undefined,
     /** the house: shadow/sun centre and its lights (spec 010a) */
     private house: { center: { x: number; z: number }; lights: { interior: [number, number, number][]; pool?: [number, number, number] }; shadowReach?: number },
+    /** spec 066: a candidate finish's light, as multipliers on the presets */
+    private scale: { sun: number; hemi: number; exposure: number } = { sun: 1, hemi: 1, exposure: 1 },
   ) {
     this.presets = {
       day: { ...PRESETS.day, ...(sun && { azimuth: sun.day.theta, elevation: sun.day.elevation }) },
@@ -104,13 +106,13 @@ export class Environment {
     const lightDir = sun.clone();
     lightDir.y = Math.max(lightDir.y, 0.12);
     this.sunLight.position.set(this.house.center.x, 0, this.house.center.z).addScaledVector(lightDir.normalize(), 2.5 * (this.house.shadowReach ?? 120));
-    this.sunLight.intensity = p.sun;
+    this.sunLight.intensity = p.sun * this.scale.sun;
     this.sunLight.color.setHex(p.sunColor);
-    this.hemi.intensity = p.hemi;
+    this.hemi.intensity = p.hemi * this.scale.hemi;
     this.hemi.color.setHex(p.hemiSky);
     this.hemi.groundColor.setHex(p.hemiGround);
-    this.exposure = p.exposure;
-    this.renderer.toneMappingExposure = p.exposure;
+    this.exposure = p.exposure * this.scale.exposure;
+    this.renderer.toneMappingExposure = this.exposure;
     const fog = this.scene.fog as THREE.Fog;
     fog.color.setHex(p.fog);
     fog.near = p.fogNear; fog.far = p.fogFar;
