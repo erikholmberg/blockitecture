@@ -58,7 +58,7 @@ dependency bumps, and docs. Say in the commit message which exemption applies.
 
 ## Commands
 ```sh
-npm run dev          # http://localhost:5173 (?debug for the FPS overlay and window.__stahl; &dpr=1.75 pins resolution for perf A/B; &finish=gloss shows another finish, spec 066)
+npm run dev          # http://localhost:5173 (?debug for the FPS overlay and window.__stahl; &dpr=1.75 pins resolution for perf A/B; &finish=gloss shows another finish, spec 066; &shadow=2048 and &aa=0 are lighter settings to try on a phone, spec 069)
 npm test             # Vitest, once
 npm run test:watch
 npm run check        # tsc (src + tests) + tests: must pass before every commit

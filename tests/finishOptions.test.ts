@@ -43,7 +43,7 @@ describe('066: finish options', () => {
   it('A5: the viewer passes ?finish= to the pieces, the light and the tone curve; the default finish edits no shader', () => {
     const viewer = readFileSync('src/engine/viewer.ts', 'utf8');
     expect(viewer).toContain("finishFromParam(params.get('finish'))");
-    expect(viewer).toMatch(/new Environment\([^)]*finish\)/);
+    expect(viewer).toMatch(/new Environment\([^)]*finish[,)]/);
     expect(viewer).toMatch(/new BrickSet\([\s\S]{0,200}finish,/);
     expect(viewer).toMatch(/renderer\.toneMapping = \{[^}]*\}\[finish\.tone\]/);
     const set = readFileSync('src/engine/BrickSet.ts', 'utf8');

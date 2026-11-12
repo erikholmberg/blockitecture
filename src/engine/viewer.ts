@@ -26,6 +26,7 @@ import { setDropHeight } from '@/engine/BrickSet';
 import { Cam, postcardCaption, postcardFileName, readShare, shareLink, shareQuery } from '@/engine/share';
 import { deliverPostcard, renderPostcard } from '@/engine/postcard';
 import { adaptiveStep, measurementDone, minDpr, redrawAfter, refreshRate, slowThreshold } from '@/engine/resolution';
+import { fpsWindow, lookChanged, mustDraw, renderOptions, type Look } from '@/engine/redraw';
 
 /**
  * Spec 010a: the viewer for one house. Each house page calls this with its HouseDefinition;
@@ -91,7 +92,9 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   if (DEBUG) console.log(`[${house.slug}] ${bricks.length} pieces, ${studs.length} studs, generated in ${(performance.now() - t0).toFixed(0)} ms`);
 
   // ---------- renderer & scene ----------
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  // spec 069: ?shadow=2048 and ?aa=0 are lighter settings to try on a phone; without them, as always
+  const options = renderOptions(params);
+  const renderer = new THREE.WebGLRenderer({ antialias: options.antialias, powerPreference: 'high-performance' });
   // ?dpr=1.75 pins the pixel ratio and turns off adaptive resolution (for like-for-like performance checks)
   const FIXED_DPR = params.has('dpr') ? Number(params.get('dpr')) : 0;
   let dpr = FIXED_DPR || Math.min(devicePixelRatio, isTouch ? 1.5 : 1.75);
@@ -112,7 +115,7 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   // the real sun for this house on the visitor's today, or ?date=YYYY-MM-DD (spec 009)
   const SUN_DAY = dateParam(params.get('date'));
   const sun = { day: sunFor(SUN_DAY, house.site, 'day'), dusk: sunFor(SUN_DAY, house.site, 'dusk') };
-  const env = new Environment(renderer, scene, sun, house, finish);
+  const env = new Environment(renderer, scene, sun, house, finish, options.shadowMapSize);
   await nextFrame();
   if (DEBUG) console.log(`[${house.slug}] sun on ${SUN_DAY}: day ${sun.day.bearing.toFixed(0)}° / ${sun.day.elevation.toFixed(0)}°, dusk ${sun.dusk.bearing.toFixed(0)}° / ${sun.dusk.elevation.toFixed(1)}°`);
   let city: City | null = null;
@@ -213,6 +216,9 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
 
   // ---------- state ----------
   let t = 0;
+  /** spec 069: something the watched look can't see changed the picture (a resize, the tab coming back): draw the next frame */
+  let asked = true;
+  const askRedraw = () => { asked = true; };
   let playing = false;
   /** spec 036: seconds since Start (null before it), for the intro's exposure dimming */
   let sinceStart: number | null = null;
@@ -368,6 +374,7 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
     camera.updateProjectionMatrix();
     // spec 064: a resize clears the canvas, so draw again at once
     redrawAfter(renderer, scene, camera, () => renderer.setSize(innerWidth, innerHeight));
+    askRedraw();
   });
 
   // ---------- debug overlay ----------
@@ -381,6 +388,8 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
       neighboursHidden: () => nbHidden.value.slice(0, nbFootprints.length),
       // spec 065: the adaptive resolution's threshold and floor on this device, and the pixel ratio now
       adaptive: () => ({ ...adaptive, dpr }),
+      // spec 069: how many frames have been drawn, and whether the page is resting (drawing none)
+      drawn: () => framesDrawn, resting: () => resting, options,
       // spec 037: the share link's query and the postcard, for checking without the clipboard or a download
       shareQuery: () => shareState(),
       postcard: () => renderPostcard(renderer, scene, camera, postcardCaption(house.text, location.host)),
@@ -391,7 +400,13 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
 
   // ---------- loop ----------
   const clock = new THREE.Clock();
-  let fpsAcc = 0, fpsFrames = 0, hudAcc = 0, slowTime = 0;
+  let hudAcc = 0, slowTime = 0;
+  // spec 069: a frame is drawn only when the picture would differ from the last one drawn (src/engine/redraw.ts)
+  let drawnLook: Look | null = null, resting = false, framesDrawn = 0, fpsText = '';
+  let fps = fpsWindow.start();
+  document.addEventListener('visibilitychange', askRedraw);
+  renderer.domElement.addEventListener('webglcontextrestored', askRedraw);
+  const showFps = () => { if (fpsEl) fpsEl.textContent = fpsText + (resting ? ' · resting' : ''); };
   loading.remove();
 
   renderer.setAnimationLoop(() => {
@@ -403,8 +418,8 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
     const placed = set.update(t);
     waterTime.value = (waterTime.value + dt) % 3600;
 
-    const light = env.update(dt);
-    set.setLightLevel(light);
+    const lightLevel = env.update(dt);
+    set.setLightLevel(lightLevel);
     city?.setNight(env.nightFactor);
     hood?.setNight(env.nightFactor);
 
@@ -430,19 +445,36 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
 
     // spec 036: the scene is dimmed by exposure while the intro shows, brightening after Start
     if (sinceStart !== null) sinceStart += dt;
-    renderer.toneMappingExposure = env.exposure * exposureAt(sinceStart);
-    renderer.render(scene, camera);
+    const exposure = env.exposure * exposureAt(sinceStart);
 
-    // adaptive resolution
-    fpsAcc += dt; fpsFrames++; hudAcc += dt;
-    if (fpsAcc > 1) {
-      const fps = fpsFrames / fpsAcc;
-      if (fpsEl) fpsEl.textContent = `${fps.toFixed(0)} fps · dpr ${dpr.toFixed(2)} · ${renderer.info.render.triangles.toLocaleString()} tris · ${renderer.info.render.calls} calls`;
-      const next = adaptiveStep({ dpr, slow: slowTime }, fps, !!FIXED_DPR, adaptive);
+    // spec 069: everything the picture depends on; drawn only if it differs from the last frame drawn
+    const now: Look = {
+      t, mode, roof: roofCut.value, exposure, light: lightLevel, night: env.nightFactor, hidden: nbHidden.value.join(''),
+      cam: [
+        camera.position.x, camera.position.y, camera.position.z,
+        camera.quaternion.x, camera.quaternion.y, camera.quaternion.z, camera.quaternion.w,
+        camera.fov, camera.near, orbit.target.x, orbit.target.y, orbit.target.z,
+      ],
+    };
+    const draw = mustDraw({ changed: lookChanged(drawnLook, now), lightChanging: env.busy, movingWater: set.movingWater, asked });
+    if (draw) {
+      renderer.toneMappingExposure = exposure;
+      renderer.render(scene, camera);
+      drawnLook = now; asked = false; framesDrawn++;
+    }
+    if (resting === draw) { resting = !draw; showFps(); }
+
+    // adaptive resolution, judged only on seconds in which frames were drawn
+    hudAcc += dt;
+    const sample = fpsWindow.add(fps, dt, draw);
+    fps = sample.window;
+    if (sample.fps !== undefined) {
+      fpsText = `${sample.fps.toFixed(0)} fps · dpr ${dpr.toFixed(2)} · ${renderer.info.render.triangles.toLocaleString()} tris · ${renderer.info.render.calls} calls`;
+      showFps();
+      const next = adaptiveStep({ dpr, slow: slowTime }, sample.fps, !!FIXED_DPR, adaptive);
       slowTime = next.slow;
       // spec 064: the new pixel ratio clears the canvas after this frame was drawn, so draw it again at once (no blank flash)
       if (next.dpr !== dpr) { dpr = next.dpr; redrawAfter(renderer, scene, camera, () => renderer.setPixelRatio(dpr)); }
-      fpsAcc = 0; fpsFrames = 0;
     }
     if (hudAcc > 0.1) {
       hudAcc = 0;

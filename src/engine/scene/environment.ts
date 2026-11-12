@@ -46,6 +46,8 @@ export class Environment {
     private house: { center: { x: number; z: number }; lights: { interior: [number, number, number][]; pool?: [number, number, number] }; shadowReach?: number },
     /** spec 066: a candidate finish's light, as multipliers on the presets */
     private scale: { sun: number; hemi: number; exposure: number } = { sun: 1, hemi: 1, exposure: 1 },
+    /** spec 069: the sun's shadow map, in pixels a side */
+    shadowMapSize = 4096,
   ) {
     this.presets = {
       day: { ...PRESETS.day, ...(sun && { azimuth: sun.day.theta, elevation: sun.day.elevation }) },
@@ -60,7 +62,7 @@ export class Environment {
 
     const s = this.sunLight;
     s.castShadow = true;
-    s.shadow.mapSize.set(4096, 4096);
+    s.shadow.mapSize.set(shadowMapSize, shadowMapSize);
     const cam = s.shadow.camera;
     // spec 061: a tall building can ask for a wider shadow box (default 120 ft round the centre, as before)
     const reach = house.shadowReach ?? 120;
@@ -125,6 +127,9 @@ export class Environment {
   /** the day/dusk exposure last applied; the viewer multiplies the intro's dimming into it (spec 036) */
   exposure = 1;
 
+  /** spec 069: the light is still changing, or its reflection map is still to be remade: the picture isn't settled */
+  busy = true;
+
   /** Smoothly blend toward target preset. Returns light level for emissive bricks. */
   update(dt: number) {
     const k = 1 - Math.exp(-dt * 1.6);
@@ -137,8 +142,11 @@ export class Environment {
           const ca = new THREE.Color(a), cb = new THREE.Color(b);
           ca.lerp(cb, k);
           const hex = ca.getHex();
-          c[key] = Math.abs(ca.r - cb.r) + Math.abs(ca.g - cb.g) + Math.abs(ca.b - cb.b) < 0.01 ? b : hex;
-          moving = true;
+          const next = Math.abs(ca.r - cb.r) + Math.abs(ca.g - cb.g) + Math.abs(ca.b - cb.b) < 0.01 ? b : hex;
+          // spec 069: near the end a step is too small to change the 8-bit colour, and it stays there, short of the target.
+          // That is settled, not moving (before, it counted as moving for ever and the reflection map was remade twice a second)
+          if (next !== a) moving = true;
+          c[key] = next;
         }
       } else if (Math.abs(a - b) > 1e-3) {
         c[key] = a + (b - a) * k;
@@ -149,6 +157,7 @@ export class Environment {
       this.apply(c);
       this.envDirty = true;
     }
+    this.busy = moving || this.envDirty;
     this.envTimer -= dt;
     if (this.envDirty && this.envTimer <= 0) {
       this.envRT?.dispose();

@@ -230,6 +230,8 @@ export class BrickSet {
   layers: Record<LayerName, Layer>;
   lightMaterials: THREE.MeshStandardMaterial[] = [];
   total: number;
+  /** spec 069: this house has water that moves (a flowing stream, a waterfall), so its picture never settles */
+  movingWater: boolean;
 
   constructor(
     bricks: Brick[], order: number[], start: Float32Array, studs: Stud[], cut: HouseDefinition['roofCut'],
@@ -239,6 +241,7 @@ export class BrickSet {
     this.total = order.length;
     const counts: Record<LayerName, number> = { box: 0, round: 0, stud: studs.length, glass: 0, water: 0, falls: 0, light: 0, lamp: 0 };
     for (const b of bricks) counts[LAYER_OF[b.kind]]++;
+    this.movingWater = (!!opts.flowingWater && counts.water > 0) || counts.falls > 0;
 
     const finish = opts.finish ?? FINISHES[DEFAULT_FINISH]; // specs 066, 067
     const plastic = new THREE.MeshStandardMaterial({ roughness: finish.roughness, metalness: 0.0 });
