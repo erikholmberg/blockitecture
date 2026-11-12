@@ -3,7 +3,7 @@
 - **Status:** In progress: built, waiting for Erik's iPhone checks, A7 and A8 (approved by Erik 2026-11-11: "Approved", both recommendations)
 - **Owner:** Erik
 - **Created:** 2026-11-11
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** ca18cc5
 
 ## Goal
 On Erik's iPhone the buildings look soft and jagged (reported 2026-11-11, with screenshots of the Neue Nationalgalerie). The
