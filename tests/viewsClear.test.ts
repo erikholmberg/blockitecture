@@ -1,4 +1,4 @@
-// Specs: specs/060-sonneveld-house.md, 061-trellick-tower.md, 062-unity-temple.md, 063-haus-am-horn.md, 073-glass-house.md, 074-villa-savoye.md, 072-habitat-67.md, 075-barcelona-pavilion.md, 076-bauhaus-dessau.md
+// Specs: specs/060-sonneveld-house.md, 061-trellick-tower.md, 062-unity-temple.md, 063-haus-am-horn.md, 073-glass-house.md, 074-villa-savoye.md, 072-habitat-67.md, 075-barcelona-pavilion.md, 076-bauhaus-dessau.md, 077-taliesin-west.md
 // A named view must not start inside a neighbouring building the engine draws outside the lot (found in Chrome: two did).
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
@@ -10,12 +10,13 @@ import { GLASS_HOUSE } from '../src/houses/glass-house/definition';
 import { VILLA_SAVOYE } from '../src/houses/villa-savoye/definition';
 import { BARCELONA_PAVILION } from '../src/houses/barcelona-pavilion/definition';
 import { BAUHAUS_DESSAU } from '../src/houses/bauhaus-dessau/definition';
+import { TALIESIN_WEST } from '../src/houses/taliesin-west/definition';
 import { SONNEVELD } from '../src/houses/sonneveld-house/definition';
 import { TRELLICK } from '../src/houses/trellick-tower/definition';
 import { UNITY_TEMPLE } from '../src/houses/unity-temple/definition';
 
 describe('specs 060–063: views start in the open', () => {
-  for (const h of [SONNEVELD, TRELLICK, UNITY_TEMPLE, HAUS_AM_HORN, GLASS_HOUSE, VILLA_SAVOYE, HABITAT_67, BARCELONA_PAVILION, BAUHAUS_DESSAU]) {
+  for (const h of [SONNEVELD, TRELLICK, UNITY_TEMPLE, HAUS_AM_HORN, GLASS_HOUSE, VILLA_SAVOYE, HABITAT_67, BARCELONA_PAVILION, BAUHAUS_DESSAU, TALIESIN_WEST]) {
     it(`${h.slug}: no view starts inside a neighbouring building`, () => {
       const file = readFileSync(`public/${h.data}`);
       const n = parseNeighborhood(file.buffer.slice(file.byteOffset, file.byteOffset + file.byteLength));

@@ -33,6 +33,7 @@ import { VILLA_SAVOYE } from '../src/houses/villa-savoye/definition';
 import { HABITAT_67 } from '../src/houses/habitat-67/definition';
 import { BARCELONA_PAVILION } from '../src/houses/barcelona-pavilion/definition';
 import { BAUHAUS_DESSAU } from '../src/houses/bauhaus-dessau/definition';
+import { TALIESIN_WEST } from '../src/houses/taliesin-west/definition';
 import { STAHL } from '../src/houses/stahl-house/definition';
 
 const doc = (html: string) => new DOMParser().parseFromString(html, 'text/html');
@@ -40,7 +41,7 @@ const home = doc(renderToString(<HomePage houses={HOUSES} />));
 const credits = doc(renderToString(<CreditsPage houses={HOUSES} />));
 const creditsText = credits.body.textContent ?? '';
 const live = HOUSES.filter((h) => h.status === 'live');
-const DEFINITIONS = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE, MUURATSALO, SONNEVELD, TRELLICK, UNITY_TEMPLE, HAUS_AM_HORN, GLASS_HOUSE, VILLA_SAVOYE, HABITAT_67, BARCELONA_PAVILION, BAUHAUS_DESSAU];
+const DEFINITIONS = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE, MUURATSALO, SONNEVELD, TRELLICK, UNITY_TEMPLE, HAUS_AM_HORN, GLASS_HOUSE, VILLA_SAVOYE, HABITAT_67, BARCELONA_PAVILION, BAUHAUS_DESSAU, TALIESIN_WEST];
 
 describe('021: a credits page', () => {
   it('A1: the home footer links to /credits/ and names no organisation', () => {

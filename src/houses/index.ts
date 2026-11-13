@@ -521,6 +521,25 @@ export const HOUSES: House[] = [
       'Published photographs of the building (Wikimedia Commons), for its heights and details',
     ],
   },
+  {
+    slug: 'taliesin-west',
+    wikidata: 'Q1208310',
+    title: 'Taliesin West',
+    architect: 'Frank Lloyd Wright',
+    year: 1937,
+    location: 'Scottsdale, Arizona',
+    status: 'live',
+    pieces: 37_499,
+    thumbnail: '/taliesin-west/thumbnail.jpg',
+    blurb: 'Wright\'s winter home, studio and school on the desert slope: battered walls of desert stone, red beams under white canvas roofs, and a prow-shaped terrace with a triangular pool.',
+    affiliations: ['the Frank Lloyd Wright Foundation'],
+    sources: [
+      'Measured drawings: Historic American Buildings Survey, HABS AZ-218-D (the Drafting Studio) and AZ-218-G (the Garden Room and Dining Cove), Library of Congress',
+      'Published figures and descriptions: Wikipedia, the Frank Lloyd Wright Foundation and the Cultural Landscape Foundation',
+      'Its outlines, the pool, the walks and the neighbourhood: OpenStreetMap; the terrain: AWS Terrain Tiles',
+      'Published photographs of the buildings',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
