@@ -503,6 +503,24 @@ export const HOUSES: House[] = [
       'Published photographs of the building',
     ],
   },
+  {
+    slug: 'bauhaus-dessau',
+    wikidata: 'Q28738517',
+    title: 'Bauhaus Dessau',
+    architect: 'Walter Gropius',
+    year: 1926,
+    location: 'Dessau',
+    status: 'live',
+    pieces: 34_250,
+    thumbnail: '/bauhaus-dessau/thumbnail.jpg',
+    blurb: 'The Bauhaus school: a pinwheel of white wings, the workshops behind three storeys of glass, a bridge over the street and a block of studios with small balconies.',
+    affiliations: ['the Stiftung Bauhaus Dessau'],
+    sources: [
+      'Published descriptions of the building and its parts: Wikipedia (German and English) and bauhaus-dessau.de',
+      'Its outline, its five parts, the bridge\'s piers and the neighbourhood: OpenStreetMap; the terrain: AWS Terrain Tiles',
+      'Published photographs of the building (Wikimedia Commons), for its heights and details',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

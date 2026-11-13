@@ -127,8 +127,8 @@ describe('061: Trellick Tower', () => {
 
   it('A10: no other house sets shadowReach', async () => {
     const { readdirSync, existsSync } = await import('node:fs');
-    // spec 072: Habitat 67 sets it too, for 930 ft of complex
-    for (const s of readdirSync('src/houses').filter((d) => existsSync(`src/houses/${d}/definition.ts`) && !['trellick-tower', 'habitat-67'].includes(d)))
+    // spec 072: Habitat 67 sets it too, for 930 ft of complex; spec 076: the Bauhaus Dessau, for 345 ft of school
+    for (const s of readdirSync('src/houses').filter((d) => existsSync(`src/houses/${d}/definition.ts`) && !['trellick-tower', 'habitat-67', 'bauhaus-dessau'].includes(d)))
       expect(readFileSync(`src/houses/${s}/definition.ts`, 'utf8'), s).not.toMatch(/shadowReach/);
     expect(H.shadowReach).toBeGreaterThan(120);
   });

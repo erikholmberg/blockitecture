@@ -176,11 +176,52 @@ const roadsRaw = await overpass(
   `[out:json][timeout:180];way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|service)$"](around:${R + 200},${LAT0},${LON0});out tags geom;`,
 );
 
-// the house's own outline(s): by wikidata, or (spec 025, opt-in) by OSM way id when the footprint carries no tags
-const selves = H.fit.osmIds
+const key = (p) => `${p.lat.toFixed(7)},${p.lon.toFixed(7)}`;
+/** join open ways end to end into closed rings */
+const assemble = (ways) => {
+  const left = ways.map((w) => w.slice()), rings = [];
+  while (left.length) {
+    let ring = left.shift();
+    let grew = true;
+    while (key(ring[0]) !== key(ring[ring.length - 1]) && grew) {
+      grew = false;
+      for (let i = 0; i < left.length; i++) {
+        const w = left[i], end = key(ring[ring.length - 1]);
+        if (key(w[0]) === end) ring = ring.concat(w.slice(1));
+        else if (key(w[w.length - 1]) === end) ring = ring.concat(w.slice(0, -1).reverse());
+        else continue;
+        left.splice(i, 1); grew = true; break;
+      }
+    }
+    if (ring.length >= 4) rings.push(ring);
+  }
+  return rings;
+};
+
+/**
+ * Spec 076 (opt-in): the house is a multipolygon relation whose member ways carry no tags (the Bauhaus Dessau), so
+ * `way["building"]` can't see it. Fetch the relations and assemble their outer rings into the house's outline(s).
+ */
+async function relationSelves(ids) {
+  const els = await overpass(`${SLUG}-relations-${ids.join('-')}.json`, `[out:json][timeout:120];(${ids.map((id) => `relation(${id});`).join('')});out geom;`);
+  const out = [];
+  for (const id of ids) {
+    const e = els.find((r) => r.type === 'relation' && r.id === id);
+    if (!e) continue;
+    for (const ring of assemble(e.members.filter((m) => m.type === 'way' && m.role !== 'inner' && m.geometry).map((m) => m.geometry)))
+      out.push({ type: 'relation', id, tags: e.tags, geometry: ring });
+  }
+  return out;
+}
+
+// the house's own outline(s): by wikidata, or (spec 025, opt-in) by OSM way id when the footprint carries no tags, or (spec 076,
+// opt-in) by OSM relation id when the building is a multipolygon of untagged ways
+const selves = H.fit.osmRelations
+  ? await relationSelves(H.fit.osmRelations)
+  : H.fit.osmIds
   ? buildingsRaw.filter((e) => H.fit.osmIds.includes(e.id))
   : buildingsRaw.filter((e) => e.tags?.wikidata === H.fit.wikidata);
-if (!selves.length) throw new Error(`${SLUG}: the house (${H.fit.osmIds ? `ways ${H.fit.osmIds}` : `wikidata ${H.fit.wikidata}`}) was not found in the OSM data`);
+if (!selves.length) throw new Error(`${SLUG}: the house (${H.fit.osmRelations ? `relations ${H.fit.osmRelations}` : H.fit.osmIds ? `ways ${H.fit.osmIds}` : `wikidata ${H.fit.wikidata}`}) was not found in the OSM data`);
 const rings = selves.map((e) => e.geometry.map((g) => [g.lat, g.lon]));
 let fit = fitHouse(rings);
 if (H.fit.rotationSearch) {
@@ -434,6 +475,37 @@ export const LOT_SELF: [number, number][][] = [
 ];
 `;
   }
+  if (H.exportParts) {
+    // spec 076 (opt-in): the house's OSM building parts (relations and ways) and other named ways (a passage under it), in model
+    // ft, so tests can check each part against OSM
+    const { relations = [], ways = [] } = H.exportParts;
+    const els = await overpass(
+      `${SLUG}-parts.json`,
+      `[out:json][timeout:120];(${relations.map((id) => `relation(${id});`).join('')}${ways.map((id) => `way(${id});`).join('')});out geom;`,
+    );
+    const r1 = (v) => Math.round(v * 10) / 10;
+    const pts = (geom) => `[${geom.map((g) => `[${toModel(g.lat, g.lon).map(r1).join(', ')}]`).join(', ')}]`;
+    const lines = [];
+    for (const id of relations) {
+      const e = els.find((r) => r.type === 'relation' && r.id === id);
+      if (!e) throw new Error(`${SLUG}: part relation ${id} not found`);
+      for (const ring of assemble(e.members.filter((m) => m.type === 'way' && m.role !== 'inner' && m.geometry).map((m) => m.geometry)))
+        lines.push(`  { id: ${id}, type: 'relation', tags: ${JSON.stringify(e.tags ?? {})}, pts: ${pts(ring.slice(0, -1))} },`);
+    }
+    for (const id of ways) {
+      const e = els.find((w) => w.type === 'way' && w.id === id);
+      if (!e) throw new Error(`${SLUG}: part way ${id} not found`);
+      const closed = key(e.geometry[0]) === key(e.geometry[e.geometry.length - 1]);
+      lines.push(`  { id: ${id}, type: 'way', tags: ${JSON.stringify(e.tags ?? {})}, pts: ${pts(closed ? e.geometry.slice(0, -1) : e.geometry)} },`);
+    }
+    extra += `
+// The house's OSM building parts and named ways (closed rings without the repeated point; open ways as lines), in model ft.
+// © OpenStreetMap contributors (ODbL). Spec 076.
+export const LOT_PARTS: { id: number; type: 'relation' | 'way'; tags: Record<string, string>; pts: [number, number][] }[] = [
+${lines.join('\n')}
+];
+`;
+  }
   if (H.lotFeatures) {
     // spec 019: the real buildings and streets that overlap the lot (the neighbourhood renderer leaves them out), in model ft
     const inLot = (pts) => pts.some(([x, z]) => x > TERRAIN.x0 - 5 && x < TERRAIN.x1 + 5 && z > TERRAIN.z0 - 5 && z < TERRAIN.z1 + 5);
@@ -481,27 +553,6 @@ async function writeWaterAreas(c) {
     `${SLUG}-water-${c.radiusM}.json`,
     `[out:json][timeout:180];(way["natural"="water"](around:${c.radiusM},${LAT0},${LON0});relation["natural"="water"](around:${c.radiusM},${LAT0},${LON0}););out geom;`,
   );
-  const key = (p) => `${p.lat.toFixed(7)},${p.lon.toFixed(7)}`;
-  /** join open ways end to end into closed rings */
-  const assemble = (ways) => {
-    const left = ways.map((w) => w.slice()), rings = [];
-    while (left.length) {
-      let ring = left.shift();
-      let grew = true;
-      while (key(ring[0]) !== key(ring[ring.length - 1]) && grew) {
-        grew = false;
-        for (let i = 0; i < left.length; i++) {
-          const w = left[i], end = key(ring[ring.length - 1]);
-          if (key(w[0]) === end) ring = ring.concat(w.slice(1));
-          else if (key(w[w.length - 1]) === end) ring = ring.concat(w.slice(0, -1).reverse());
-          else continue;
-          left.splice(i, 1); grew = true; break;
-        }
-      }
-      if (ring.length >= 4) rings.push(ring);
-    }
-    return rings;
-  };
   const toRing = (geom) => geom.map((g) => toModel(g.lat, g.lon)).map(([x, z]) => [Math.round(x), Math.round(z)]);
   const areas = [];
   for (const e of els) {
