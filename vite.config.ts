@@ -34,6 +34,7 @@ export const PAGES = {
   'glass-house': r('./glass-house/index.html'),
   'villa-savoye': r('./villa-savoye/index.html'),
   'habitat-67': r('./habitat-67/index.html'),
+  'barcelona-pavilion': r('./barcelona-pavilion/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

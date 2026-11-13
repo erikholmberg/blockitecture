@@ -484,6 +484,25 @@ export const HOUSES: House[] = [
       'Published photographs of the complex',
     ],
   },
+  {
+    slug: 'barcelona-pavilion',
+    wikidata: 'Q807915',
+    title: 'Barcelona Pavilion',
+    architect: 'Mies van der Rohe & Lilly Reich',
+    year: 1929,
+    location: 'Barcelona',
+    status: 'live',
+    pieces: 26_996,
+    thumbnail: '/barcelona-pavilion/thumbnail.jpg',
+    blurb: 'A travertine plinth with two pools, a thin roof on eight chrome columns, and free walls of marble, onyx and glass that slide past each other. Rebuilt on its site in 1986.',
+    affiliations: ['the Fundació Mies van der Rohe', 'the Ajuntament de Barcelona'],
+    sources: [
+      'The published plan of the pavilion, scaled and fitted to OpenStreetMap',
+      'Published dimensions and materials: Wikipedia, the Fundació Mies van der Rohe, architecture-history.org',
+      'Its outlines, pools, walls and the neighbourhood: OpenStreetMap',
+      'Published photographs of the building',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
