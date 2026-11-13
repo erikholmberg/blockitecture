@@ -141,7 +141,7 @@ describe('037: postcard', () => {
       'Blockitecture · blockitecture.example',
       '© OpenStreetMap contributors · Terrain: Mapzen / AWS Terrain Tiles',
     ]);
-    for (const h of HOUSES) expect(h.slug).toMatch(/^[a-z-]+$/);
+    for (const h of HOUSES) expect(h.slug).toMatch(/^[a-z0-9-]+$/); // spec 072: habitat-67 has digits
     expect(postcardFileName('lovell-health-house')).toBe('lovell-health-house.png');
     for (const l of lines) expect(l).not.toMatch(/brick|lego/i);
     const stahl = postcardCaption({ name: STAHL.text.name, eyebrow: STAHL.text.eyebrow }, 'x');

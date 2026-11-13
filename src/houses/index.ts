@@ -466,6 +466,24 @@ export const HOUSES: House[] = [
       'Published photographs of the villa',
     ],
   },
+  {
+    slug: 'habitat-67',
+    wikidata: 'Q1032248',
+    title: 'Habitat 67',
+    architect: 'Moshe Safdie',
+    year: 1967,
+    location: 'Montreal',
+    status: 'live',
+    pieces: 39_550,
+    thumbnail: '/habitat-67/thumbnail.jpg',
+    blurb: 'Housing for Expo 67 made of 354 identical concrete boxes, stacked across one another in three stepped hills, every roof a garden.',
+    affiliations: ['Habitat 67', 'Safdie Architects'],
+    sources: [
+      "Published figures: Wikipedia (English and French), Safdie Architects, McGill's Safdie archive and The Canadian Encyclopedia",
+      'Its outline, the river and the neighbourhood: OpenStreetMap; the boxes laid over the outline from photographs',
+      'Published photographs of the complex',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

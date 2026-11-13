@@ -27,9 +27,10 @@ import { UNITY_TEMPLE } from '../src/houses/unity-temple/definition';
 import { HAUS_AM_HORN } from '../src/houses/haus-am-horn/definition';
 import { GLASS_HOUSE } from '../src/houses/glass-house/definition';
 import { VILLA_SAVOYE } from '../src/houses/villa-savoye/definition';
+import { HABITAT_67 } from '../src/houses/habitat-67/definition';
 
 /** every house definition; adding a live house without adding it here fails A2 */
-const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE, MUURATSALO, SONNEVELD, TRELLICK, UNITY_TEMPLE, HAUS_AM_HORN, GLASS_HOUSE, VILLA_SAVOYE];
+const DEFINITIONS: HouseDefinition[] = [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE, MUURATSALO, SONNEVELD, TRELLICK, UNITY_TEMPLE, HAUS_AM_HORN, GLASS_HOUSE, VILLA_SAVOYE, HABITAT_67];
 
 describe('012: roof last, on every house', () => {
   it('A2: every live house is covered', () => {
@@ -55,7 +56,7 @@ describe('012: roof last, on every house', () => {
           .filter((d) => !['site', 'landscape'].includes(house.phases[d.phase].role))
           .map((d) => `${house.phases[d.phase].role} ${d.kind} at ${d.x},${d.y},${d.z}`);
         expect(dropped).toEqual([]);
-      });
+      }, 60_000);
 
       it('A3: nothing in the interior lands in mid-air', () => {
         const { builder } = house.build();
@@ -83,7 +84,7 @@ describe('012: roof last, on every house', () => {
           if (!ok) floating.push(`${b.kind} at ${b.x},${b.y},${b.z} (${b.w}×${b.d}×${b.h})`);
         });
         expect(floating).toEqual([]);
-      });
+      }, 60_000); // spec 072: Habitat 67's millions of cells take longer than the default 5 s
     });
   }
 });
