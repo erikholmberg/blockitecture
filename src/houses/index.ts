@@ -447,6 +447,25 @@ export const HOUSES: House[] = [
       'Photographs by Carol M. Highsmith (Library of Congress)',
     ],
   },
+  {
+    slug: 'villa-savoye',
+    wikidata: 'Q940746',
+    title: 'Villa Savoye',
+    architect: 'Le Corbusier & Pierre Jeanneret',
+    year: 1931,
+    location: 'Poissy',
+    status: 'live',
+    pieces: 37_053,
+    thumbnail: '/villa-savoye/thumbnail.jpg',
+    blurb: 'A white box on thin columns with a ribbon window all round, a curved green ground floor shaped by a car\'s turn, and a garden on the roof.',
+    affiliations: ['the Centre des monuments nationaux', 'the Fondation Le Corbusier'],
+    sources: [
+      "The Cité de l'architecture et du patrimoine's fact sheet for its model of the villa: the rooms' areas and the columns' spacing",
+      'The Centre des monuments nationaux: the colours, the ramp and the solarium',
+      'Its outline, the lodge and the neighbourhood: OpenStreetMap',
+      'Published photographs of the villa',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
