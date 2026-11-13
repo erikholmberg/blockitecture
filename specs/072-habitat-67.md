@@ -4,7 +4,7 @@
 - **Owner:** Erik
 - **House:** habitat-67
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 0f3a04d
 
 ## Goal
 Moshe Safdie's Habitat 67 (1964–67) on the Cité du Havre in Montreal: the housing built for Expo 67 out of several hundred
@@ -314,3 +314,4 @@ About 3 minutes. The structure phase, the stacking, is the longest (about 50 s).
   it on a real GPU.
 - **Left for Erik:** the real-GPU performance check (A20), touch controls on a real phone, and the memory on a phone (Q4).
   After that, Status can go to `Done`.
+- **Usage (spec 018):** not separable per building. The four (specs 072–075) were built in parallel and committed minutes apart, and `npm run usage` gives each message to the next commit, so the Glass House's row holds nearly all of the four's work: 866 replies, 2.4M cache write, 167.1M cache read, 914.7k output. Habitat 67 and the Villa Savoye show about 2 replies each and the Barcelona Pavilion none.

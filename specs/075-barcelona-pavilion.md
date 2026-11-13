@@ -4,7 +4,7 @@
 - **Owner:** Erik
 - **House:** barcelona-pavilion
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** f12dc49
 
 ## Goal
 The German Pavilion that Ludwig Mies van der Rohe and Lilly Reich built for the 1929 International Exposition in Barcelona: a
@@ -260,3 +260,4 @@ About 1½ minutes [assumed]; the smallest model by area after the Haus am Horn.
   they pass alone and with two workers. Nothing in them changed.
 - **Left for Erik:** a real-GPU performance comparison with the Stahl House (A22) and the walk on a real phone (A21's touch
   part); the link-preview image (`npm run og-image`) after merging; usage figures once committed.
+- **Usage (spec 018):** not separable per building. The four (specs 072–075) were built in parallel and committed minutes apart, and `npm run usage` gives each message to the next commit, so the Glass House's row holds nearly all of the four's work: 866 replies, 2.4M cache write, 167.1M cache read, 914.7k output. Habitat 67 and the Villa Savoye show about 2 replies each and the Barcelona Pavilion none.

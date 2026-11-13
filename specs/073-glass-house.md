@@ -4,7 +4,7 @@
 - **Owner:** Erik
 - **House:** glass-house
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 9b87b49
 
 ## Goal
 Philip Johnson's Glass House in New Canaan, Connecticut (1949): his own weekend house, a glass box on the edge of a bluff above
@@ -361,3 +361,4 @@ about that size.
   into `layout.ts`, each marked [documented: OSM].
 - **Left for Erik:** A20 on a real GPU and a real phone, and the usage figures (spec 018) after committing. `public/og-image.jpg`
   wasn't remade, as asked.
+- **Usage (spec 018):** not separable per building. The four (specs 072–075) were built in parallel and committed minutes apart, and `npm run usage` gives each message to the next commit, so the Glass House's row holds nearly all of the four's work: 866 replies, 2.4M cache write, 167.1M cache read, 914.7k output. Habitat 67 and the Villa Savoye show about 2 replies each and the Barcelona Pavilion none.

@@ -4,7 +4,7 @@
 - **Owner:** Erik
 - **House:** villa-savoye
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 032f3dd
 
 ## Goal
 The Villa Savoye in Poissy (1928–31), by Le Corbusier and Pierre Jeanneret: a weekend house for Pierre and Eugénie Savoye, and the
@@ -290,3 +290,4 @@ About **2½ minutes** (a compact box, but three levels and two ramps).
     touch viewport the page loads with its compact HUD (Views, numbers, settings, timeline); switching to Walk from the
     settings menu by tap timed out in the headless browser, so the phone controls weren't confirmed.
   - **A23 not measured:** SwiftShader runs at about 10 fps for every house, so it says nothing about performance.
+- **Usage (spec 018):** not separable per building. The four (specs 072–075) were built in parallel and committed minutes apart, and `npm run usage` gives each message to the next commit, so the Glass House's row holds nearly all of the four's work: 866 replies, 2.4M cache write, 167.1M cache read, 914.7k output. Habitat 67 and the Villa Savoye show about 2 replies each and the Barcelona Pavilion none.
