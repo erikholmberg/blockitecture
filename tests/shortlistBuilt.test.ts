@@ -8,7 +8,7 @@ describe('spec 042: the shortlist marks off built houses', () => {
     const built = builtOnShortlist(SHORTLIST, HOUSES);
     expect([...built].sort()).toEqual([
       'casa-luis-barragan', 'casa-malaparte', 'church-of-the-light', 'douglas-house', 'ennis-house', 'fallingwater',
-      'farnsworth-house', 'haus-am-horn', 'kaufmann-desert-house', 'koshino-house', 'lovell-beach-house',
+      'farnsworth-house', 'glass-house', 'haus-am-horn', 'kaufmann-desert-house', 'koshino-house', 'lovell-beach-house',
       'lovell-health-house', 'muuratsalo-experimental-house', 'neue-nationalgalerie', 'rietveld-schroder-house',
       'rose-seidler-house', 'sheats-goldstein-residence', 'sonneveld-house', 'trellick-tower', 'unity-temple',
     ]);

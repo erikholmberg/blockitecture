@@ -427,6 +427,26 @@ export const HOUSES: House[] = [
       'Published photographs of the house',
     ],
   },
+  {
+    slug: 'glass-house',
+    wikidata: 'Q1506237',
+    title: 'Glass House',
+    architect: 'Philip Johnson',
+    year: 1949,
+    location: 'New Canaan',
+    status: 'live',
+    pieces: 46_543,
+    thumbnail: '/glass-house/thumbnail.jpg',
+    blurb: 'A glass box with a black steel frame on a bluff above a pond, a round chimney through its roof, and the windowless guest house facing it.',
+    affiliations: ['the National Trust for Historic Preservation', 'the Glass House'],
+    sources: [
+      "The National Historic Landmark nomination (National Park Service, 1997): the houses' dimensions, materials and furnishing",
+      'The National Trust for Historic Preservation: the rooms, the guest house and the Pavilion',
+      "ArchDaily's plans of the guest house and the Pavilion, scaled",
+      'Its outline and the neighbourhood: OpenStreetMap',
+      'Photographs by Carol M. Highsmith (Library of Congress)',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

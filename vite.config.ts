@@ -31,6 +31,7 @@ export const PAGES = {
   'trellick-tower': r('./trellick-tower/index.html'),
   'unity-temple': r('./unity-temple/index.html'),
   'haus-am-horn': r('./haus-am-horn/index.html'),
+  'glass-house': r('./glass-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 
