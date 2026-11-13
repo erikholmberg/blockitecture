@@ -4,7 +4,7 @@
 - **Owner:** Erik
 - **House:** taliesin-west
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** e56d1ed
 
 ## Goal
 Frank Lloyd Wright's Taliesin West in Scottsdale, Arizona (from 1937): his winter home, studio and school, which he and his apprentices
@@ -431,3 +431,7 @@ against the USPTO).
 - **Changed from the spec's text:** `text.noun` is `'complex'` (as Habitat 67), so the numbers panel doesn't call a campus a
   "house"; the spec didn't name a noun. The lawn and the terrace's paving are separate layers over the terrace's soil, so the
   lawn goes in with the landscape (A15).
+- **Usage (spec 018):** not separable per building. The Bauhaus Dessau and Taliesin West (specs 076–077) were built in
+  parallel and committed minutes apart, and `npm run usage` gives each message to the next commit, so the Bauhaus Dessau's
+  row holds nearly all of both: 295 replies, 602 input, 2.3M cache write, 69.0M cache read, 366.8k output. Taliesin West has
+  no row of its own.

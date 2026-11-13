@@ -5,7 +5,7 @@
 - **Owner:** Erik
 - **House:** bauhaus-dessau
 - **Created:** 2026-11-12
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 087cf3c
 
 ## Goal
 Walter Gropius's school building for the Bauhaus in Dessau (1925–26). It's a pinwheel of white wings:
@@ -477,4 +477,7 @@ It has been part of the **UNESCO World Heritage site** "Bauhaus and its Sites in
     (SwiftShader caps fps; the triangle count is well under Malaparte's 3.4M); the page's main-thread JS heap was 139 MB. The
     build worker's memory wasn't measured.
 - **Thumbnail:** `/bauhaus-dessau/?view=overview&clean&date=2026-06-21`, 1200 × 675.
-- **Usage:** not recorded yet (`npm run usage` after the commit).
+- **Usage (spec 018):** not separable per building. The Bauhaus Dessau and Taliesin West (specs 076–077) were built in
+  parallel and committed minutes apart, and `npm run usage` gives each message to the next commit, so the Bauhaus Dessau's
+  row holds nearly all of both: 295 replies, 602 input, 2.3M cache write, 69.0M cache read, 366.8k output. Taliesin West has
+  no row of its own.
