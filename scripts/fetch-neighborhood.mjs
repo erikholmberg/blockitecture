@@ -247,15 +247,52 @@ const E0 = H.lotElevationM ?? (await elevation(hLat, hLon, NEAR.zoom));
 console.log(`lot elevation ${E0.toFixed(1)} m`);
 const toY = (m) => (m - E0) / FT;
 
-async function grid({ half, step, zoom }, despikeFt) {
+/**
+ * Spec 080 (opt-in, H.ign): bare-ground elevations in metres from IGN's RGE ALTI (the Géoplateforme altimetry API), for
+ * places where the AWS tiles carry the roofs (central Paris). Fetched 5,000 points a request and cached; points IGN has no
+ * value for (−99999) come back as null.
+ */
+async function ignElevations(label, pts) {
+  const out = [];
+  const BATCH = 5000;
+  for (let k = 0; k * BATCH < pts.length; k++) {
+    const part = pts.slice(k * BATCH, (k + 1) * BATCH);
+    const buf = await cached(`${SLUG}-ign-${label}-${k}.json`, async () => {
+      console.log(`ign ${label} ${k + 1}/${Math.ceil(pts.length / BATCH)}`);
+      const res = await fetch('https://data.geopf.fr/altimetrie/1.0/calcul/alti/rest/elevation.json', {
+        method: 'POST',
+        headers: { 'User-Agent': UA, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lon: part.map((p) => p[1].toFixed(7)).join('|'), lat: part.map((p) => p[0].toFixed(7)).join('|'),
+          resource: H.ign.resource, zonly: 'true',
+        }),
+      });
+      if (!res.ok) throw new Error(`ign ${res.status}`);
+      return Buffer.from(await res.arrayBuffer());
+    });
+    const { elevations } = JSON.parse(buf.toString());
+    if (elevations.length !== part.length) throw new Error(`ign ${label} ${k}: ${elevations.length} of ${part.length} points`);
+    for (const e of elevations) out.push(e > -1000 ? e : null);
+  }
+  return out;
+}
+
+async function grid({ half, step, zoom }, despikeFt, name) {
   const n = Math.round((2 * half) / step) + 1;
   const x0 = Math.round(CX - half), z0 = Math.round(CZ - half);
   const h = new Int16Array(n * n);
+  const ign = H.ign?.grids?.includes(name)
+    ? await ignElevations(`${name}-${step}`, Array.from({ length: n * n }, (_, k) => toLatLon(x0 + (k % n) * step, z0 + Math.floor(k / n) * step)))
+    : null;
+  let fallback = 0;
   for (let j = 0; j < n; j++)
     for (let i = 0; i < n; i++) {
       const [lat, lon] = toLatLon(x0 + i * step, z0 + j * step);
-      h[j * n + i] = Math.round(toY(await elevation(lat, lon, zoom)) * 4);
+      const m = ign?.[j * n + i] ?? null;
+      if (ign && m === null) fallback++;
+      h[j * n + i] = Math.round(toY(m ?? (await elevation(lat, lon, zoom))) * 4);
     }
+  if (ign) console.log(`ign ${name} grid: ${n * n - fallback} samples from RGE ALTI, ${fallback} from the tiles`);
   if (despikeFt) despike(h, n, despikeFt, `${step} ft grid`);
   if (H.seaFloorFt !== undefined) {
     // spec 010b: under the (opaque) sea the exact depth doesn't show, but the tiles have corrupt blobs hundreds of
@@ -354,9 +391,9 @@ function despike(h, n, limitFt, label) {
   }
   console.log(`despike ${label}: ${total} samples fixed (worst ${worst.toFixed(0)} ft off its neighbours)`);
 }
-const near = await grid(NEAR, H.despike?.near);
+const near = await grid(NEAR, H.despike?.near, 'near');
 if (H.carveStream) await carveStream(near, H.carveStream);
-const far = await grid(FAR, H.despike?.far);
+const far = await grid(FAR, H.despike?.far, 'far');
 
 /**
  * Spec 017: carve a stream into the near grid along its OSM line. The terrain tiles (10–30 m) smooth a narrow ravine away,
@@ -662,7 +699,8 @@ const arrays = {
 };
 const header = {
   version: 1,
-  attribution: ['© OpenStreetMap contributors (ODbL)', 'Terrain: Mapzen / AWS Terrain Tiles'],
+  // spec 080: a house on IGN's ground credits it too
+  attribution: ['© OpenStreetMap contributors (ODbL)', 'Terrain: Mapzen / AWS Terrain Tiles', ...(H.ign ? ['Terrain: IGN RGE ALTI'] : [])],
   anchor: { lat: LAT0, lon: LON0, rotationDeg: ROT, lotElevationM: +E0.toFixed(2), offsetX: OX, offsetZ: OZ, houseIoU: +fit.score.toFixed(3) },
   scale: { coords: 2, heights: 4 },
   encoding: { nearH: 'row-delta', farH: 'row-delta', bCoords: 'path-delta', rCoords: 'path-delta' },

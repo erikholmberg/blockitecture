@@ -332,7 +332,8 @@ describe('076: the Bauhaus Dessau', () => {
       if (f === 'bauhaus-dessau.mjs') continue;
       const S = (await import(`../scripts/houses/${f}`)).default;
       expect(S.fit.osmRelations, f).toBeUndefined();
-      expect(S.exportParts, f).toBeUndefined();
+      // spec 080: the Centre Pompidou exports its piazza, stacks and neighbours' ways the same way
+      if (f !== 'centre-pompidou.mjs') expect(S.exportParts, f).toBeUndefined();
     }
   });
 
@@ -350,7 +351,7 @@ describe('076: the Bauhaus Dessau', () => {
     expect(H.shadowReach).toBeLessThanOrEqual(250);
     const reach: Record<string, number> = {};
     for (const d of readdirSync('src/houses')) {
-      if (d === 'bauhaus-dessau' || !existsSync(`src/houses/${d}/definition.ts`)) continue;
+      if (['bauhaus-dessau', 'centre-pompidou'].includes(d) || !existsSync(`src/houses/${d}/definition.ts`)) continue;
       const m = readFileSync(`src/houses/${d}/definition.ts`, 'utf8').match(/shadowReach: (\d+)/);
       if (m) reach[d] = +m[1];
     }

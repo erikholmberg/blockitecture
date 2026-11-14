@@ -218,7 +218,7 @@ describe('072: Habitat 67', () => {
     expect(nearest).toBeLessThanOrEqual(60);
     // the Farnsworth House's water areas are as they were (spec 022); the Glass House (spec 073) has its own
     expect(fnv1a(JSON.stringify(FARNSWORTH_WATER))).toBe('7276801b');
-    const others = readdirSync('src/houses').filter((d) => existsSync(`src/houses/${d}/definition.ts`) && !['habitat-67', 'farnsworth-house', 'glass-house'].includes(d));
+    const others = readdirSync('src/houses').filter((d) => existsSync(`src/houses/${d}/definition.ts`) && !['habitat-67', 'farnsworth-house', 'glass-house', 'centre-pompidou'].includes(d));
     for (const s of others) expect(readFileSync(`src/houses/${s}/definition.ts`, 'utf8'), s).not.toMatch(/waterAreas/);
   }, 60_000);
 

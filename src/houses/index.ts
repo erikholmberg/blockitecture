@@ -578,6 +578,25 @@ export const HOUSES: House[] = [
       'Published photographs of the buildings (Wikimedia Commons), for their heights and details',
     ],
   },
+  {
+    slug: 'centre-pompidou',
+    wikidata: 'Q178065',
+    title: 'Centre Pompidou',
+    architect: 'Renzo Piano & Richard Rogers',
+    year: 1977,
+    location: 'Paris',
+    status: 'live',
+    pieces: 37_139,
+    thumbnail: '/centre-pompidou/thumbnail.jpg',
+    blurb: 'A white steel cage turned inside out over a sloping piazza: its columns, trusses and colour-coded pipes all on the outside, and its escalators climbing the front in a glass tube.',
+    affiliations: ['the Centre Pompidou'],
+    sources: [
+      'Published figures: Wikipedia (English and French), the Centre Pompidou\'s own pages on its architecture, its Mérimée record ACR0000721 and the Renzo Piano Building Workshop',
+      'Its outline, the piazza, its stacks, the Atelier Brancusi, the fountain and the neighbourhood: OpenStreetMap',
+      'The ground: IGN RGE ALTI (Géoplateforme)',
+      'Published photographs of the building, for the Chenille and the pipes',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
