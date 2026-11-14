@@ -4,7 +4,7 @@
 - **Owner:** Erik
 - **House:** gropius-house
 - **Created:** 2026-11-13
-- **Commits:** none yet
+- **Commits:** 5e5bf8a
 
 ## Goal
 Walter Gropius's own house in Lincoln, Massachusetts (1938), designed with Marcel Breuer. It was his first building in America.
@@ -565,6 +565,8 @@ woods bring it up to about the Glass House's size.
   - The scaled deck opening was moved, as above.
   - The hall's stair is straight, not curved.
   - The garage isn't in the No roof cut. It sits about 10 ft below the house, under the cut's height.
-- **Usage (spec 018):** not available. The work is uncommitted, and `npm run usage` gives each message to the next commit, so
-  the Gropius House has no row yet. Run it after the commit.
+- **Usage (spec 018):** not separable per building. Specs 078–081 were drafted and built in parallel in one session and
+  committed within a minute, and `npm run usage` gives each message to the next commit, so the Schindler House's row (5b1e614)
+  holds all four: 941 replies, 1,946 input, 3.7M cache write, 246.4M cache read, 1.09M output. The other three have no row
+  of their own.
 

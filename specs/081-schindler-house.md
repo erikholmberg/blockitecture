@@ -4,7 +4,7 @@
 - **Owner:** Erik
 - **House:** schindler-house
 - **Created:** 2026-11-13
-- **Commits:** none yet
+- **Commits:** 5b1e614
 
 ## Goal
 Rudolph Schindler's own house on Kings Road in West Hollywood (1922), also called the Kings Road House or the Schindler Chace
@@ -541,5 +541,7 @@ Center's site. OSM has 833.
 - **Changed from the spec's text:** the north-east wing in line with the garage (above); the lot 250 × 106 ft, not 270 × 135;
   `buildingRelations` added to the data script for Habitat 825; the south entrance's door and stair placed on the west patio;
   the frosted slits and canvas drawn as lit pieces; *A studio* is Rudolph's south-wing studio.
-- **Usage (spec 018):** not available yet: `npm run usage` reads 0 transcripts on this machine and counts per commit, and this
-  work isn't committed.
+- **Usage (spec 018):** not separable per building. Specs 078–081 were drafted and built in parallel in one session and
+  committed within a minute, and `npm run usage` gives each message to the next commit, so the Schindler House's row (5b1e614)
+  holds all four: 941 replies, 1,946 input, 3.7M cache write, 246.4M cache read, 1.09M output. The other three have no row
+  of their own.

@@ -4,7 +4,7 @@
 - **Owner:** Erik
 - **House:** salk-institute
 - **Created:** 2026-11-13
-- **Commits:** none yet
+- **Commits:** beb53fa
 
 ## Goal
 Louis Kahn's Salk Institute for Biological Studies in La Jolla, California (1959–65). It's a research institute on a mesa above the
@@ -549,4 +549,7 @@ wings rise together.
 - **Changed from the spec's text:** *Overview* looks from the south-south-east (pos 40, 230, −470), not the south-west: from the
   south-west it faced east, with the sea behind the camera. The tie-hole spacing, the lake threshold and the lower landing's level,
   above.
-- **Usage (spec 018):** not available yet: `npm run usage` gives messages to commits, and this work isn't committed.
+- **Usage (spec 018):** not separable per building. Specs 078–081 were drafted and built in parallel in one session and
+  committed within a minute, and `npm run usage` gives each message to the next commit, so the Schindler House's row (5b1e614)
+  holds all four: 941 replies, 1,946 input, 3.7M cache write, 246.4M cache read, 1.09M output. The other three have no row
+  of their own.

@@ -4,7 +4,7 @@
 - **Owner:** Erik
 - **House:** centre-pompidou
 - **Created:** 2026-11-13
-- **Commits:** none yet
+- **Commits:** d0320d3
 
 ## Goal
 Renzo Piano and Richard Rogers's Centre Georges Pompidou (1971–77) on the Plateau Beaubourg in Paris: the national museum of
@@ -215,9 +215,9 @@ Ministry). Its president is Laurent Le Bon (since 2021). Its protections and lab
   - **level 6**: the restaurant's tables near the north end;
   - every floor's open area otherwise empty. At least 12 interior elements are marked **[assumed]**.
 - **The piazza** (the landscape):
-  - the setts laid on its real slope, falling about 3.2 m (8 plates) toward the building, in steps of **1 plate every 7 studs**
+  - the setts laid on its real slope, falling about 3.2 m (26 plates) toward the building, in steps of **1 plate every 7 studs**
     **[IGN]**, under the overhang to the glass;
-  - the seven white ventilation stacks, 2.4 m (8 studs) across as stepped rounds, 7 m (17 plates) high **[OSM]**;
+  - the seven white ventilation stacks, 2.4 m (8 studs) across as stepped rounds, 7 m (57 plates) high **[OSM]**;
   - the piazza's edge along rue Saint-Martin and its cut corner along rue Saint-Merri **[OSM]**;
   - a few street trees and bollards where OSM maps them **[OSM]**.
 - **The lot:** about **x −35…610, z −200…255 ft** (645 × 455 ft), from just south of the building to the Atelier Brancusi's north
@@ -311,8 +311,8 @@ The target, as for Habitat 67: **at most 50,000 pieces in all and 30,000 in the 
 
 **Site**
 - **A8** [unit] The piazza fits OSM's way 55507605 (IoU ≥ 0.75 for the part inside the lot), and its surface falls toward the
-  building: the ground at its west edge is 8 plates (within 2) above the Forum's floor. The seven ventilation stacks stand at
-  their OSM ways' centres (within 3 ft), each 17 plates high (within 2).
+  building: the ground at its west edge is 26 plates (within 2) above the Forum's floor. The seven ventilation stacks stand at
+  their OSM ways' centres (within 3 ft), each 57 plates high (within 2).
 - **A9** [unit] The Atelier Brancusi fits OSM's way 55503399 (IoU ≥ 0.7).
 - **A10** [unit] The lot terrain meets the neighbourhood's terrain at its edges, and no terrain sample within 300 ft of the lot is
   more than 10 ft above the IGN level there (the AWS tiles' roofs are gone). No terrain spikes (the spec 010b check).
@@ -449,7 +449,7 @@ The target, as for Habitat 67: **at most 50,000 pieces in all and 30,000 in the 
 - **Changed from the spec's text:**
   - *A8's two plate counts are metres divided by 0.4.* "Falls about 3.2 m (8 plates)" and "7 m (17 plates) high": a plate is
     0.4 ft, so 3.2 m is 26 plates and 7 m is 57. The model follows the metres (the IGN slope, OSM's height=7), and the test checks
-    26 ± 2 and 57 ± 2. Erik may prefer lower stacks: OSM's 7 m is sourced "bing; extrapolation".
+    26 ± 2 and 57 ± 2. Erik may prefer lower stacks: OSM's 7 m is sourced "bing; extrapolation". A8 above now reads 26 and 57.
   - *The walk starts halfway down the piazza* (z −95), not at its top: the walker only lands on ground under 4 ft, and the top
     is 10 ft up.
   - *No trees or bollards:* the data script doesn't fetch OSM's trees, and none were added by hand. The car park's small vents
@@ -477,4 +477,7 @@ The target, as for Habitat 67: **at most 50,000 pieces in all and 30,000 in the 
   - **A21 pass:** the home page shows the live card with its thumbnail; the credits page lists the centre and its sources.
   - **A22 pass:** at `?debug&dpr=1.75`, finished (before the 360 strip lights went in): 1,518,842 triangles, 18 calls, 43–58 fps while orbiting (Casa Malaparte:
     3.4M triangles). The build worker's grid is 65.8 MB; the page's JS heap 242 MB.
-- **Usage (spec 018):** `npm run usage` gives no row yet: it counts by commit, and nothing is committed.
+- **Usage (spec 018):** not separable per building. Specs 078–081 were drafted and built in parallel in one session and
+  committed within a minute, and `npm run usage` gives each message to the next commit, so the Schindler House's row (5b1e614)
+  holds all four: 941 replies, 1,946 input, 3.7M cache write, 246.4M cache read, 1.09M output. The other three have no row
+  of their own.
