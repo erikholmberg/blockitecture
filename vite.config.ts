@@ -37,6 +37,7 @@ export const PAGES = {
   'barcelona-pavilion': r('./barcelona-pavilion/index.html'),
   'bauhaus-dessau': r('./bauhaus-dessau/index.html'),
   'taliesin-west': r('./taliesin-west/index.html'),
+  'gropius-house': r('./gropius-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

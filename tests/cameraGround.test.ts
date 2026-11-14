@@ -29,6 +29,7 @@ import { HABITAT_67 } from '../src/houses/habitat-67/definition';
 import { BARCELONA_PAVILION } from '../src/houses/barcelona-pavilion/definition';
 import { BAUHAUS_DESSAU } from '../src/houses/bauhaus-dessau/definition';
 import { TALIESIN_WEST } from '../src/houses/taliesin-west/definition';
+import { GROPIUS_HOUSE } from '../src/houses/gropius-house/definition';
 import { VANNA_VENTURI } from '../src/houses/vanna-venturi-house/definition';
 import { FALLINGWATER } from '../src/houses/fallingwater/definition';
 import { FARNSWORTH } from '../src/houses/farnsworth-house/definition';
@@ -69,7 +70,7 @@ describe('028: the camera stays above the ground', () => {
   });
 
   it('A3: every house\'s named views start above the ground (the clamp leaves them alone)', () => {
-    for (const h of [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, VANNA_VENTURI, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE, MUURATSALO, SONNEVELD, TRELLICK, UNITY_TEMPLE, HAUS_AM_HORN, GLASS_HOUSE, VILLA_SAVOYE, HABITAT_67, BARCELONA_PAVILION, BAUHAUS_DESSAU, TALIESIN_WEST]) {
+    for (const h of [STAHL, EAMES, FALLINGWATER, SCHRODER, FARNSWORTH, ENNIS, MALAPARTE, KAUFMANN, LOVELL, BARRAGAN, KOSHINO, SHEATS_GOLDSTEIN, ROSE_SEIDLER, VANNA_VENTURI, DOUGLAS, CHURCH_OF_THE_LIGHT, LOVELL_BEACH, NEUE_NATIONALGALERIE, MUURATSALO, SONNEVELD, TRELLICK, UNITY_TEMPLE, HAUS_AM_HORN, GLASS_HOUSE, VILLA_SAVOYE, HABITAT_67, BARCELONA_PAVILION, BAUHAUS_DESSAU, TALIESIN_WEST, GROPIUS_HOUSE]) {
       const { ground } = load(h);
       for (const [name, v] of Object.entries(h.views)) {
         const p = v.view.pos;

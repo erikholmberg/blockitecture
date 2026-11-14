@@ -540,6 +540,26 @@ export const HOUSES: House[] = [
       'Published photographs of the buildings',
     ],
   },
+  {
+    slug: 'gropius-house',
+    wikidata: 'Q4179781',
+    title: 'Gropius House',
+    architect: 'Walter Gropius',
+    year: 1938,
+    location: 'Lincoln, Massachusetts',
+    status: 'live',
+    pieces: 39_290,
+    thumbnail: '/gropius-house/thumbnail.jpg',
+    blurb: 'Gropius\'s first building in America: a white box of vertical wood siding on a hilltop above an orchard, with a canopy angled off its front, a wall of glass block and an outdoor spiral stair.',
+    affiliations: ['Historic New England'],
+    sources: [
+      'The National Historic Landmark nomination (National Park Service, 2000): the house\'s dimensions, materials, rooms and grounds',
+      'Photographs: Historic American Buildings Survey, HABS MA-1228 (Library of Congress), the north front scaled from its range pole',
+      'Historic New England\'s Conservation Management Plan: the landscape and the orchard',
+      'Its outline, the garage, the drive and the neighbourhood: OpenStreetMap; the terrain: AWS Terrain Tiles and USGS 3DEP',
+      'Published figures and descriptions: Wikipedia',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
