@@ -40,6 +40,7 @@ export const PAGES = {
   'gropius-house': r('./gropius-house/index.html'),
   'salk-institute': r('./salk-institute/index.html'),
   'centre-pompidou': r('./centre-pompidou/index.html'),
+  'schindler-house': r('./schindler-house/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

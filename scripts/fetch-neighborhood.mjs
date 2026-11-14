@@ -214,6 +214,24 @@ async function relationSelves(ids) {
   return out;
 }
 
+// spec 081 (opt-in): buildings mapped as multipolygon relations of untagged ways (Habitat 825, next to the Schindler House) are
+// invisible to `way["building"]`; bring each relation's outer rings in as buildings with the relation's tags (no courtyards)
+if (H.buildingRelations) {
+  const rels = await overpass(
+    `${SLUG}-building-relations-${R}.json`,
+    `[out:json][timeout:180];relation["building"](around:${R},${LAT0},${LON0});out geom;`,
+  );
+  let added = 0;
+  for (const e of rels) {
+    if (e.type !== 'relation' || !e.members) continue;
+    for (const ring of assemble(e.members.filter((m) => m.type === 'way' && m.role !== 'inner' && m.geometry).map((m) => m.geometry))) {
+      buildingsRaw.push({ type: 'relation', id: e.id, tags: e.tags, geometry: ring });
+      added++;
+    }
+  }
+  console.log(`building relations: ${added} outlines from ${rels.length} relations`);
+}
+
 // the house's own outline(s): by wikidata, or (spec 025, opt-in) by OSM way id when the footprint carries no tags, or (spec 076,
 // opt-in) by OSM relation id when the building is a multipolygon of untagged ways
 const selves = H.fit.osmRelations

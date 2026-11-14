@@ -597,6 +597,25 @@ export const HOUSES: House[] = [
       'Published photographs of the building, for the Chenille and the pipes',
     ],
   },
+  {
+    slug: 'schindler-house',
+    wikidata: 'Q1932041',
+    title: 'Schindler House',
+    architect: 'Rudolph Schindler',
+    year: 1922,
+    location: 'West Hollywood, California',
+    status: 'live',
+    pieces: 8_185,
+    thumbnail: '/schindler-house/thumbnail.jpg',
+    blurb: 'Schindler\'s own house on Kings Road: tilt-up concrete slabs with slits of light between them, redwood and canvas walls opening onto lawns, and sleeping baskets on the roof.',
+    affiliations: ['the Friends of the Schindler House', 'the MAK Center for Art and Architecture'],
+    sources: [
+      'The Historic American Buildings Survey (HABS CA-1939, 1969), Library of Congress: measured plans, elevations and sections',
+      'The National Register of Historic Places nomination (Esther McCoy, 1970)',
+      'Published figures and descriptions: Wikipedia, the Friends of the Schindler House and the MAK Center',
+      'Its outline and the neighbourhood: OpenStreetMap; the terrain: AWS Terrain Tiles',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
