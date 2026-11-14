@@ -38,6 +38,7 @@ export const PAGES = {
   'bauhaus-dessau': r('./bauhaus-dessau/index.html'),
   'taliesin-west': r('./taliesin-west/index.html'),
   'gropius-house': r('./gropius-house/index.html'),
+  'salk-institute': r('./salk-institute/index.html'),
   credits: r('./credits/index.html'), // spec 021
 };
 

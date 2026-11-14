@@ -560,6 +560,24 @@ export const HOUSES: House[] = [
       'Published figures and descriptions: Wikipedia',
     ],
   },
+  {
+    slug: 'salk-institute',
+    wikidata: 'Q128635401',
+    title: 'Salk Institute',
+    architect: 'Louis Kahn',
+    year: 1965,
+    location: 'La Jolla, California',
+    status: 'live',
+    pieces: 51_993,
+    thumbnail: '/salk-institute/thumbnail.jpg',
+    blurb: 'Two mirror-image concrete laboratory wings on a mesa above the Pacific, their teak studies turned toward the sea, and between them a bare travertine plaza cut by a single line of water.',
+    affiliations: ['the Salk Institute for Biological Studies'],
+    sources: [
+      'Published figures and descriptions: Wikipedia, salk.edu, the Cultural Landscape Foundation and Docomomo (the Getty Conservation Institute\'s teak conservation)',
+      'Its outlines, the plaza, the water and the trees: OpenStreetMap (SanGIS footprints); the terrain and the sea: AWS Terrain Tiles',
+      'Published photographs of the buildings (Wikimedia Commons), for their heights and details',
+    ],
+  },
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;

@@ -354,7 +354,7 @@ describe('076: the Bauhaus Dessau', () => {
       const m = readFileSync(`src/houses/${d}/definition.ts`, 'utf8').match(/shadowReach: (\d+)/);
       if (m) reach[d] = +m[1];
     }
-    expect(reach).toEqual({ 'trellick-tower': 300, 'habitat-67': 480 });
+    expect(reach).toEqual({ 'trellick-tower': 300, 'habitat-67': 480, 'salk-institute': 220 }); // spec 079 adds the Salk Institute's
   });
 
   it('A16: the lot meets the real ground at its edges, and is flat: within 3 ft across the lot inside its 40 ft edge', () => {
