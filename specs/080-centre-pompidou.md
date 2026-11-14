@@ -1,6 +1,6 @@
 # 080 — Centre Pompidou
 
-- **Status:** In progress (approved by Erik 2026-11-13, "Approved", with every recommended answer; built, the phone check and Erik's review of the deviations open)
+- **Status:** In progress (deviations approved by Erik 2026-11-14, "Approved"; approved by Erik 2026-11-13, "Approved", with every recommended answer; built, the phone check open)
 - **Owner:** Erik
 - **House:** centre-pompidou
 - **Created:** 2026-11-13
@@ -449,7 +449,7 @@ The target, as for Habitat 67: **at most 50,000 pieces in all and 30,000 in the 
 - **Changed from the spec's text:**
   - *A8's two plate counts are metres divided by 0.4.* "Falls about 3.2 m (8 plates)" and "7 m (17 plates) high": a plate is
     0.4 ft, so 3.2 m is 26 plates and 7 m is 57. The model follows the metres (the IGN slope, OSM's height=7), and the test checks
-    26 ± 2 and 57 ± 2. Erik may prefer lower stacks: OSM's 7 m is sourced "bing; extrapolation". A8 above now reads 26 and 57.
+    26 ± 2 and 57 ± 2. Erik may prefer lower stacks: OSM's 7 m is sourced "bing; extrapolation". Kept at 7 m (Erik, 2026-11-14), and the viewer's terrain credit left as it is. A8 above now reads 26 and 57.
   - *The walk starts halfway down the piazza* (z −95), not at its top: the walker only lands on ground under 4 ft, and the top
     is 10 ft up.
   - *No trees or bollards:* the data script doesn't fetch OSM's trees, and none were added by hand. The car park's small vents

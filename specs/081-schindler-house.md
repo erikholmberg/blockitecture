@@ -1,6 +1,6 @@
 # 081 — The Schindler House
 
-- **Status:** In progress (approved by Erik 2026-11-13, "Approved", with every recommended answer; built, the phone's touch controls not checked)
+- **Status:** In progress (deviations approved by Erik 2026-11-14, "Approved"; approved by Erik 2026-11-13, "Approved", with every recommended answer; built, the phone's touch controls not checked)
 - **Owner:** Erik
 - **House:** schindler-house
 - **Created:** 2026-11-13

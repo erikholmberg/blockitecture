@@ -1,6 +1,6 @@
 # 079 — The Salk Institute
 
-- **Status:** In progress (approved by Erik 2026-11-13, "Approved", with every recommended answer; built, A22 failed and parts of A18 and A20 open: see Implementation notes)
+- **Status:** In progress (deviations approved by Erik 2026-11-14, "Approved"; approved by Erik 2026-11-13, "Approved", with every recommended answer; built, A22 failed and parts of A18 and A20 open: see Implementation notes)
 - **Owner:** Erik
 - **House:** salk-institute
 - **Created:** 2026-11-13

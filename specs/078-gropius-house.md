@@ -1,6 +1,6 @@
 # 078 — The Gropius House
 
-- **Status:** In progress (approved by Erik 2026-11-13, "Approved", with every recommended answer; built, A22 on a real GPU and touch-dragging on a real phone left to check)
+- **Status:** In progress (deviations approved by Erik 2026-11-14, "Approved"; approved by Erik 2026-11-13, "Approved", with every recommended answer; built, A22 on a real GPU and touch-dragging on a real phone left to check)
 - **Owner:** Erik
 - **House:** gropius-house
 - **Created:** 2026-11-13
