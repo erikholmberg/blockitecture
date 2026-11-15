@@ -5,6 +5,8 @@
 - **Created:** 2026-11-09
 - **Commits:** 58392c6
 
+
+> **Changed by spec 082:** three columns from `lg` (1024 px); still one on phones and two from `sm`.
 ## Goal
 The thumbnails are the best advertisement for each house, but at three across on a wide screen each card is only about 345 px wide.
 Two across makes each image about 530 px wide, roughly 2.4× the area, without turning the home page into a long scroll.

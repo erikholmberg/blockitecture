@@ -37,8 +37,8 @@ describe('026: a tighter intro card', () => {
     expect([...card.querySelectorAll('button')].some((b) => b.textContent?.includes('Start building'))).toBe(true);
   });
 
-  it('A2: three labelled hints in the footer band: orbit, zoom, walk on desktop; orbit, pinch, tap-to-hide on phones', () => {
-    for (const [compact, want] of [[false, ['Drag to orbit', 'Scroll to zoom', 'Walk to explore']], [true, ['Drag to orbit', 'Pinch to zoom', 'Tap to hide controls']]] as const) {
+  it('A2: labelled hints in the footer band: orbit, zoom, walk (and spec 082\'s [ ] keys) on desktop; orbit, pinch, tap-to-hide on phones', () => {
+    for (const [compact, want] of [[false, ['Drag to orbit', 'Scroll to zoom', 'Walk to explore', '[ ] Other buildings']], [true, ['Drag to orbit', 'Pinch to zoom', 'Tap to hide controls']]] as const) {
       const card = show(STAHL, compact);
       const footer = card.querySelector('[data-intro-footer]')!;
       expect([...footer.querySelectorAll('[data-hint]')].map((h) => h.textContent)).toEqual(want);

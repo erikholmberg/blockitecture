@@ -3,6 +3,11 @@
  * Adding a house: an entry here, a `<slug>/index.html` page (listed in vite.config.ts PAGES),
  * and its static files in `public/<slug>/` (thumbnail.jpg, data).
  */
+import type { NavBuilding } from '@/engine/nav';
+
+/** spec 082: the home page's regions */
+export type Region = 'us-west' | 'us-east' | 'europe' | 'elsewhere';
+
 export interface House {
   slug: string;
   title: string;
@@ -10,6 +15,10 @@ export interface House {
   architect: string;
   year: number;
   location: string;
+  /** spec 082: a home, or a landmark (a building that isn't a house: its definition sets `text.noun`, spec 059) */
+  type: 'house' | 'landmark';
+  /** spec 082: where it stands, for the home page's region filter */
+  region: Region;
   status: 'live' | 'coming-soon';
   /** pieces in the finished model (live houses) */
   pieces?: number;
@@ -34,6 +43,8 @@ export const HOUSES: House[] = [
     architect: 'Pierre Koenig',
     year: 1960,
     location: 'Hollywood Hills, Los Angeles',
+    type: 'house',
+    region: 'us-west',
     status: 'live',
     pieces: 27_233,
     thumbnail: '/stahl-house/thumbnail.jpg',
@@ -51,6 +62,8 @@ export const HOUSES: House[] = [
     architect: 'Charles & Ray Eames',
     year: 1949,
     location: 'Pacific Palisades, Los Angeles',
+    type: 'house',
+    region: 'us-west',
     status: 'live',
     pieces: 21_657,
     thumbnail: '/eames-house/thumbnail.jpg',
@@ -68,6 +81,8 @@ export const HOUSES: House[] = [
     architect: 'Frank Lloyd Wright',
     year: 1939,
     location: 'Mill Run, Pennsylvania',
+    type: 'house',
+    region: 'us-east',
     status: 'live',
     pieces: 58_425,
     thumbnail: '/fallingwater/thumbnail.jpg',
@@ -87,6 +102,8 @@ export const HOUSES: House[] = [
     architect: 'Gerrit Rietveld',
     year: 1924,
     location: 'Utrecht, Netherlands',
+    type: 'house',
+    region: 'europe',
     status: 'live',
     pieces: 10_668,
     thumbnail: '/rietveld-schroder-house/thumbnail.jpg',
@@ -105,6 +122,8 @@ export const HOUSES: House[] = [
     architect: 'Ludwig Mies van der Rohe',
     year: 1951,
     location: 'Plano, Illinois',
+    type: 'house',
+    region: 'us-east',
     status: 'live',
     pieces: 13_052,
     thumbnail: '/farnsworth-house/thumbnail.jpg',
@@ -122,6 +141,8 @@ export const HOUSES: House[] = [
     architect: 'Frank Lloyd Wright',
     year: 1924,
     location: 'Los Feliz, Los Angeles',
+    type: 'house',
+    region: 'us-west',
     status: 'live',
     pieces: 31_820,
     thumbnail: '/ennis-house/thumbnail.jpg',
@@ -140,6 +161,8 @@ export const HOUSES: House[] = [
     architect: 'Adalberto Libera / Curzio Malaparte',
     year: 1938,
     location: 'Capri, Italy',
+    type: 'house',
+    region: 'europe',
     status: 'live',
     pieces: 59_758,
     thumbnail: '/casa-malaparte/thumbnail.jpg',
@@ -158,6 +181,8 @@ export const HOUSES: House[] = [
     architect: 'Richard Neutra',
     year: 1946,
     location: 'Palm Springs, California',
+    type: 'house',
+    region: 'us-west',
     status: 'live',
     pieces: 20_326,
     thumbnail: '/kaufmann-desert-house/thumbnail.jpg',
@@ -176,6 +201,8 @@ export const HOUSES: House[] = [
     architect: 'Richard Neutra',
     year: 1929,
     location: 'Los Feliz, Los Angeles',
+    type: 'house',
+    region: 'us-west',
     status: 'live',
     pieces: 23_428,
     thumbnail: '/lovell-health-house/thumbnail.jpg',
@@ -194,6 +221,8 @@ export const HOUSES: House[] = [
     architect: 'Luis Barragán',
     year: 1948,
     location: 'Tacubaya, Mexico City',
+    type: 'house',
+    region: 'elsewhere',
     status: 'live',
     pieces: 24_482,
     thumbnail: '/casa-luis-barragan/thumbnail.jpg',
@@ -211,6 +240,8 @@ export const HOUSES: House[] = [
     architect: 'Tadao Ando',
     year: 1981,
     location: 'Ashiya, Japan',
+    type: 'house',
+    region: 'elsewhere',
     status: 'live',
     pieces: 32_677,
     thumbnail: '/koshino-house/thumbnail.jpg',
@@ -229,6 +260,8 @@ export const HOUSES: House[] = [
     architect: 'John Lautner',
     year: 1963,
     location: 'Beverly Crest, Los Angeles',
+    type: 'house',
+    region: 'us-west',
     status: 'live',
     pieces: 56_669,
     thumbnail: '/sheats-goldstein-residence/thumbnail.jpg',
@@ -247,6 +280,8 @@ export const HOUSES: House[] = [
     architect: 'Harry Seidler',
     year: 1950,
     location: 'Sydney, Australia',
+    type: 'house',
+    region: 'elsewhere',
     status: 'live',
     pieces: 19_226,
     thumbnail: '/rose-seidler-house/thumbnail.jpg',
@@ -266,6 +301,8 @@ export const HOUSES: House[] = [
     architect: 'Richard Meier',
     year: 1973,
     location: 'Harbor Springs, Michigan',
+    type: 'house',
+    region: 'us-east',
     status: 'live',
     pieces: 33_445,
     thumbnail: '/douglas-house/thumbnail.jpg',
@@ -285,6 +322,8 @@ export const HOUSES: House[] = [
     architect: 'Tadao Ando',
     year: 1989,
     location: 'Ibaraki, Osaka',
+    type: 'landmark',
+    region: 'elsewhere',
     status: 'live',
     pieces: 13_870,
     thumbnail: '/church-of-the-light/thumbnail.jpg',
@@ -303,6 +342,8 @@ export const HOUSES: House[] = [
     architect: 'Rudolph Schindler',
     year: 1926,
     location: 'Newport Beach, California',
+    type: 'house',
+    region: 'us-west',
     status: 'live',
     pieces: 16_923,
     thumbnail: '/lovell-beach-house/thumbnail.jpg',
@@ -322,6 +363,8 @@ export const HOUSES: House[] = [
     architect: 'Mies van der Rohe',
     year: 1968,
     location: 'Berlin',
+    type: 'landmark',
+    region: 'europe',
     status: 'live',
     pieces: 44_419,
     thumbnail: '/neue-nationalgalerie/thumbnail.jpg',
@@ -341,6 +384,8 @@ export const HOUSES: House[] = [
     architect: 'Alvar Aalto',
     year: 1953,
     location: 'Muuratsalo, Finland',
+    type: 'house',
+    region: 'europe',
     status: 'live',
     pieces: 28_560,
     thumbnail: '/muuratsalo-experimental-house/thumbnail.jpg',
@@ -360,6 +405,8 @@ export const HOUSES: House[] = [
     architect: 'Brinkman & Van der Vlugt',
     year: 1933,
     location: 'Rotterdam',
+    type: 'house',
+    region: 'europe',
     status: 'live',
     pieces: 19_925,
     thumbnail: '/sonneveld-house/thumbnail.jpg',
@@ -379,6 +426,8 @@ export const HOUSES: House[] = [
     architect: 'Ernő Goldfinger',
     year: 1972,
     location: 'London',
+    type: 'landmark',
+    region: 'europe',
     status: 'live',
     pieces: 41_179,
     thumbnail: '/trellick-tower/thumbnail.jpg',
@@ -397,6 +446,8 @@ export const HOUSES: House[] = [
     architect: 'Frank Lloyd Wright',
     year: 1908,
     location: 'Oak Park, Illinois',
+    type: 'landmark',
+    region: 'us-east',
     status: 'live',
     pieces: 17_443,
     thumbnail: '/unity-temple/thumbnail.jpg',
@@ -415,6 +466,8 @@ export const HOUSES: House[] = [
     architect: 'Georg Muche & the Bauhaus',
     year: 1923,
     location: 'Weimar',
+    type: 'house',
+    region: 'europe',
     status: 'live',
     pieces: 10_233,
     thumbnail: '/haus-am-horn/thumbnail.jpg',
@@ -434,6 +487,8 @@ export const HOUSES: House[] = [
     architect: 'Philip Johnson',
     year: 1949,
     location: 'New Canaan',
+    type: 'house',
+    region: 'us-east',
     status: 'live',
     pieces: 46_543,
     thumbnail: '/glass-house/thumbnail.jpg',
@@ -454,6 +509,8 @@ export const HOUSES: House[] = [
     architect: 'Le Corbusier & Pierre Jeanneret',
     year: 1931,
     location: 'Poissy',
+    type: 'house',
+    region: 'europe',
     status: 'live',
     pieces: 37_053,
     thumbnail: '/villa-savoye/thumbnail.jpg',
@@ -473,6 +530,8 @@ export const HOUSES: House[] = [
     architect: 'Moshe Safdie',
     year: 1967,
     location: 'Montreal',
+    type: 'landmark',
+    region: 'elsewhere',
     status: 'live',
     pieces: 39_550,
     thumbnail: '/habitat-67/thumbnail.jpg',
@@ -491,6 +550,8 @@ export const HOUSES: House[] = [
     architect: 'Mies van der Rohe & Lilly Reich',
     year: 1929,
     location: 'Barcelona',
+    type: 'landmark',
+    region: 'europe',
     status: 'live',
     pieces: 26_996,
     thumbnail: '/barcelona-pavilion/thumbnail.jpg',
@@ -510,6 +571,8 @@ export const HOUSES: House[] = [
     architect: 'Walter Gropius',
     year: 1926,
     location: 'Dessau',
+    type: 'landmark',
+    region: 'europe',
     status: 'live',
     pieces: 34_250,
     thumbnail: '/bauhaus-dessau/thumbnail.jpg',
@@ -528,6 +591,8 @@ export const HOUSES: House[] = [
     architect: 'Frank Lloyd Wright',
     year: 1937,
     location: 'Scottsdale, Arizona',
+    type: 'landmark',
+    region: 'us-west',
     status: 'live',
     pieces: 37_499,
     thumbnail: '/taliesin-west/thumbnail.jpg',
@@ -547,6 +612,8 @@ export const HOUSES: House[] = [
     architect: 'Walter Gropius',
     year: 1938,
     location: 'Lincoln, Massachusetts',
+    type: 'house',
+    region: 'us-east',
     status: 'live',
     pieces: 39_290,
     thumbnail: '/gropius-house/thumbnail.jpg',
@@ -567,6 +634,8 @@ export const HOUSES: House[] = [
     architect: 'Louis Kahn',
     year: 1965,
     location: 'La Jolla, California',
+    type: 'landmark',
+    region: 'us-west',
     status: 'live',
     pieces: 51_993,
     thumbnail: '/salk-institute/thumbnail.jpg',
@@ -585,6 +654,8 @@ export const HOUSES: House[] = [
     architect: 'Renzo Piano & Richard Rogers',
     year: 1977,
     location: 'Paris',
+    type: 'landmark',
+    region: 'europe',
     status: 'live',
     pieces: 37_139,
     thumbnail: '/centre-pompidou/thumbnail.jpg',
@@ -604,6 +675,8 @@ export const HOUSES: House[] = [
     architect: 'Rudolph Schindler',
     year: 1922,
     location: 'West Hollywood, California',
+    type: 'house',
+    region: 'us-west',
     status: 'live',
     pieces: 8_185,
     thumbnail: '/schindler-house/thumbnail.jpg',
@@ -619,3 +692,10 @@ export const HOUSES: House[] = [
 ];
 
 export const houseUrl = (h: House) => `/${h.slug}/`;
+
+/** spec 082: the viewer's building menu: every live building, in the home page's order (newest first) */
+export const navList = (houses: House[] = HOUSES): NavBuilding[] =>
+  houses
+    .filter((h) => h.status === 'live')
+    .reverse()
+    .map(({ slug, title, architect, year, thumbnail }) => ({ slug, title, architect, year, thumbnail }));

@@ -9,9 +9,9 @@ const html = renderToString(<HomePage houses={HOUSES} />);
 const doc = new DOMParser().parseFromString(html, 'text/html');
 
 describe('007: home page', () => {
-  it('A2: one card per house, in registry order', () => {
+  it('A2: one card per house; spec 082: newest first (the reverse of the registry, which is in the order they were added)', () => {
     const titles = [...doc.querySelectorAll('[data-house]')].map((c) => c.getAttribute('data-house'));
-    expect(titles).toEqual(HOUSES.map((h) => h.slug));
+    expect(titles).toEqual(HOUSES.filter((h) => h.status === 'live').map((h) => h.slug).reverse());
   });
 
   it('A2: the Stahl House card links to its page', () => {

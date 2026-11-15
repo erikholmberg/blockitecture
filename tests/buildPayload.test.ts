@@ -39,7 +39,8 @@ describe('047: the model, generated off the main thread', () => {
   it('A3: every house page starts the viewer with its own worker, which serves that house', () => {
     for (const s of slugs) {
       const main = readFileSync(`src/houses/${s}/main.ts`, 'utf8');
-      expect(main, s).toMatch(/startViewer\((\w+), \(\) => new Worker\(new URL\('\.\/worker\.ts', import\.meta\.url\), \{ type: 'module' \}\)\)/);
+      // spec 082 adds the building list after the worker
+      expect(main, s).toMatch(/startViewer\((\w+), \(\) => new Worker\(new URL\('\.\/worker\.ts', import\.meta\.url\), \{ type: 'module' \}\)(, navList\(\))?\)/);
       const name = main.match(/startViewer\((\w+),/)![1];
       expect(existsSync(`src/houses/${s}/worker.ts`), s).toBe(true);
       const worker = readFileSync(`src/houses/${s}/worker.ts`, 'utf8');

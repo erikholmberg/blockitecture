@@ -66,7 +66,7 @@ export function CreditsPage({ houses }: { houses: House[] }) {
 
         <footer className="mt-14 text-xs text-muted-foreground">
           <a href="/" className="underline underline-offset-2 hover:text-foreground">
-            ← All houses
+            ← All buildings
           </a>
         </footer>
       </div>

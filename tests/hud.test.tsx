@@ -109,11 +109,11 @@ describe('007: React HUD wiring', () => {
     expect(screen.getByText('Shaping the hillside')).toBeTruthy();
     expect(screen.getByText('100 / 27,222 pieces')).toBeTruthy();
     expect(screen.getByRole('link', { name: /OpenStreetMap contributors/ }).getAttribute('href')).toBe('https://www.openstreetmap.org/copyright');
-    expect(screen.getByRole('link', { name: /All houses/ }).getAttribute('href')).toBe('/');
+    expect(screen.getByRole('link', { name: /All buildings/ }).getAttribute('href')).toBe('/');
   });
 });
 
-describe('007: "All houses" returns home, even before the build starts', () => {
+describe('007: "All buildings" (spec 082) returns home, even before the build starts', () => {
   for (const compact of [false, true]) {
     it(`the link sits above the intro's backdrop (${compact ? 'phone' : 'desktop'})`, () => {
       const store = createHudStore({

@@ -5,6 +5,8 @@
 - **Created:** 2026-11-08
 - **Commits:** 54f994d
 
+
+> **Changed by spec 082:** the cards are newest first (not registry order), and "← All houses" reads "← All buildings".
 ## Goal
 Erik wants to make many of these brick-by-brick renderings. Today the site *is* the Stahl House viewer at `/`.
 We need a home page listing the renderings as cards that click through to each one, built with **shadcn/ui** and the

@@ -47,7 +47,7 @@ describe('014: phone controls', () => {
     for (const g of ['Camera mode', 'Roof', 'Light', 'Speed']) expect(screen.queryByRole('group', { name: g })).toBeNull();
     expect(screen.queryByRole('radio')).toBeNull();
     expect(screen.queryByRole('link', { name: /OpenStreetMap contributors/ })).toBeNull();
-    expect(screen.getByRole('link', { name: /All houses/ }).getAttribute('href')).toBe('/');
+    expect(screen.getByRole('link', { name: /All buildings/ }).getAttribute('href')).toBe('/');
     expect(screen.getByRole('slider', { name: 'Build timeline' })).toBeTruthy();
   });
 

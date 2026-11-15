@@ -2,7 +2,7 @@
  * Spec 026: a tighter intro card. Title, text and the Start button in the main column; the control hints, the
  * disclaimer and (on phones) the map credit in a footer band. Used by the HUD on every house page.
  */
-import { Footprints, Hand, Move3d, Play, ZoomIn, EyeOff } from 'lucide-react';
+import { ArrowLeftRight, Footprints, Hand, Move3d, Play, ZoomIn, EyeOff } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import type { HouseDefinition } from '@/engine/house';
@@ -19,7 +19,7 @@ export function IntroCard({ text, pieces, compact, onStart, onFinished, credit }
 }) {
   const hints: [ReactNode, string][] = compact
     ? [[<Hand key="o" />, 'Drag to orbit'], [<ZoomIn key="z" />, 'Pinch to zoom'], [<EyeOff key="h" />, 'Tap to hide controls']]
-    : [[<Move3d key="o" />, 'Drag to orbit'], [<ZoomIn key="z" />, 'Scroll to zoom'], [<Footprints key="w" />, 'Walk to explore']];
+    : [[<Move3d key="o" />, 'Drag to orbit'], [<ZoomIn key="z" />, 'Scroll to zoom'], [<Footprints key="w" />, 'Walk to explore'], [<ArrowLeftRight key="b" />, '[ ] Other buildings']]; // spec 082: the keys
   return (
     // spec 036: its own compositing layer, and a smaller shadow, so the browser doesn't repaint it as the scene redraws
     <div data-intro className="w-full max-w-[400px] transform-gpu overflow-hidden rounded-xl border bg-card text-card-foreground shadow-lg">

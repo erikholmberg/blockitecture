@@ -34,7 +34,7 @@ function BrickPlaceholder() {
   );
 }
 
-export function HouseCard({ house }: { house: House }) {
+export function HouseCard({ house, isNew = false }: { house: House; isNew?: boolean }) {
   const live = house.status === 'live';
   const card = (
     <Card
@@ -65,7 +65,11 @@ export function HouseCard({ house }: { house: House }) {
             {house.subtitle && <CardDescription>{house.subtitle}</CardDescription>}
           </div>
           {live ? (
-            <Badge>{house.pieces?.toLocaleString('en-US')} pieces</Badge>
+            <div className="flex shrink-0 flex-col items-end gap-1">
+              <Badge>{house.pieces?.toLocaleString('en-US')} pieces</Badge>
+              {/* spec 082: the last four added */}
+              {isNew && <Badge data-new variant="secondary">New</Badge>}
+            </div>
           ) : (
             <Badge variant="secondary">Coming soon</Badge>
           )}
@@ -75,7 +79,8 @@ export function HouseCard({ house }: { house: House }) {
         <p className="text-sm text-muted-foreground">
           {house.architect} · {house.year} · {house.location}
         </p>
-        <p className="text-sm leading-relaxed">{house.blurb}</p>
+        {/* spec 082: two lines on the card; the full text stays in the HTML */}
+        <p className="line-clamp-2 text-sm leading-relaxed">{house.blurb}</p>
       </CardContent>
     </Card>
   );

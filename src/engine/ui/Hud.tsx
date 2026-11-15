@@ -21,11 +21,18 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils';
 import { createHudStore, HudSnapshot, HudStore } from '@/engine/ui/hudStore';
 import { IntroCard } from '@/engine/ui/IntroCard';
+import { BuildingMenu, PrevNext } from '@/engine/ui/BuildingMenu';
+import type { NavBuilding } from '@/engine/nav';
 
 export type CamAction = 'in' | 'out' | 'left' | 'right' | 'home' | 'auto' | 'full' | `view:${string}`;
 
 /** What the HUD shows about the house (spec 010a). */
-export type HudHouse = Pick<HouseDefinition, 'text' | 'views' | 'stats'> & { phaseNames: string[] };
+export type HudHouse = Pick<HouseDefinition, 'text' | 'views' | 'stats'> & {
+  phaseNames: string[];
+  /** spec 082: this building's slug and every building, for the building menu and ‹ › (passed in by the house's main.ts) */
+  slug?: string;
+  buildings?: NavBuilding[];
+};
 
 export interface HudState {
   t: number; total: number; playing: boolean; speed: number; placed: number; pieces: number; phase: number;
@@ -174,6 +181,7 @@ export function Hud({ store, h, house, compact: compactProp }: {
   store: HudStore; h: HudHandlers; house: HudHouse; compact?: boolean;
 }) {
   const { text } = house;
+  const nav = house.slug && house.buildings?.length ? { slug: house.slug, buildings: house.buildings } : null;
   const s = useSyncExternalStore(store.subscribe, store.get);
   const media = useCompact();
   const compact = compactProp ?? media;
@@ -272,12 +280,23 @@ export function Hud({ store, h, house, compact: compactProp }: {
           <>
             {/* spec 014: one line of title on the left, Views and Settings on the right */}
             <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
-              {/* spec 007: "All houses" works before the build starts too, above the intro's backdrop */}
-              <a href="/" className={cn('pointer-events-auto relative z-20 flex h-10 min-w-0 items-center gap-1.5 rounded-md px-3 text-[13px] font-semibold', paper)}>
-                <ArrowLeft className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
-                <span className="sr-only">All houses: </span>
-                <span className="truncate">{text.name}</span>
-              </a>
+              {/* spec 007: the way home works before the build starts too, above the intro's backdrop; spec 082: the name
+                  opens the building menu as a sheet */}
+              {nav ? (
+                <div className={cn('pointer-events-auto relative z-20 flex h-10 min-w-0 items-center rounded-md', paper)}>
+                  <a href="/" className="flex h-10 shrink-0 items-center pr-1.5 pl-3">
+                    <ArrowLeft className="size-3.5 text-muted-foreground" aria-hidden />
+                    <span className="sr-only">All buildings</span>
+                  </a>
+                  <BuildingMenu buildings={nav.buildings} slug={nav.slug} name={text.name} compact />
+                </div>
+              ) : (
+                <a href="/" className={cn('pointer-events-auto relative z-20 flex h-10 min-w-0 items-center gap-1.5 rounded-md px-3 text-[13px] font-semibold', paper)}>
+                  <ArrowLeft className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+                  <span className="sr-only">All buildings: </span>
+                  <span className="truncate">{text.name}</span>
+                </a>
+              )}
               <div className="pointer-events-auto flex gap-1.5">
                 {s.mode === 'orbit' && <ViewsMenu house={house} h={h} compact />}
                 <NumbersMenu house={house} compact />
@@ -351,12 +370,20 @@ export function Hud({ store, h, house, compact: compactProp }: {
           <>
             {/* top: title and toggles */}
             <div className="absolute inset-x-3.5 top-3.5 flex flex-wrap items-start justify-between gap-2.5">
-              {/* spec 007: "All houses" works before the build starts too, above the intro's backdrop */}
+              {/* spec 007: the way home works before the build starts too, above the intro's backdrop; spec 082: the name opens
+                  the building menu, and ‹ › step to the neighbours */}
               <div className={cn('pointer-events-auto relative z-20 rounded-md px-3 py-2', paper)}>
                 <a href="/" className="mb-0.5 flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
-                  <ArrowLeft className="size-3" aria-hidden /> All houses
+                  <ArrowLeft className="size-3" aria-hidden /> All buildings
                 </a>
-                <div className="text-[13px] font-semibold">{text.name}</div>
+                {nav ? (
+                  <div className="flex items-center gap-1">
+                    <BuildingMenu buildings={nav.buildings} slug={nav.slug} name={text.name} compact={false} />
+                    <PrevNext buildings={nav.buildings} slug={nav.slug} />
+                  </div>
+                ) : (
+                  <div className="text-[13px] font-semibold">{text.name}</div>
+                )}
                 <div className="hidden text-[11px] text-muted-foreground sm:block">{text.address}</div>
               </div>
               <div className="pointer-events-auto flex flex-wrap justify-end gap-2">

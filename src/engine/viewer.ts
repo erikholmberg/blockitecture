@@ -17,6 +17,7 @@ import { Walker } from '@/engine/controls/walk';
 import { attachTouch } from '@/engine/controls/touch';
 import { isTap } from '@/engine/controls/tap';
 import { CamAction, mountHud } from '@/engine/ui/Hud';
+import { NavBuilding, isTyping, keyTarget } from '@/engine/nav';
 import { Glide, MAX_DIST, MIN_DIST, orbitNear, rotated, View, WALK_NEAR, zoomed } from '@/engine/controls/cameraMoves';
 import { wantsCity, type HouseDefinition } from '@/engine/house';
 import { dateParam, sunFor } from '@/engine/scene/sun';
@@ -58,7 +59,11 @@ function measureRefresh(): { rate: Promise<number | undefined>; modelReady: () =
 
 const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => setTimeout(r, 0)));
 
-export async function startViewer(house: HouseDefinition, makeWorker?: () => Worker) {
+/**
+ * `buildings` (spec 082): every building, newest first, for the building menu and the `[` `]` keys; the house's main.ts
+ * passes `navList()` from the registry, which the engine may not import.
+ */
+export async function startViewer(house: HouseDefinition, makeWorker?: () => Worker, buildings: NavBuilding[] = []) {
   startAnalytics(); // spec 052: count this house page's visit
   const app = document.getElementById('app')!;
   const loading = document.getElementById('loading')!;
@@ -302,7 +307,10 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
     onShare: (kind) => void (kind === 'link' ? copyLink() : savePostcard()),
     onRoof(on) { roofCut.value = on ? 0 : 1; },
     onCam: camAction,
-  }, schedule.total, bricks.length, { text: house.text, views: house.views, stats: house.stats, phaseNames: house.phases.map((p) => p.name) });
+  }, schedule.total, bricks.length, {
+    text: house.text, views: house.views, stats: house.stats, phaseNames: house.phases.map((p) => p.name),
+    slug: house.slug, buildings,
+  });
   hud.setPhaseTicks(schedule.phaseStart, schedule.total);
 
   hud.setAutoRotate(orbit.autoRotate);
@@ -348,7 +356,10 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   }
 
   addEventListener('keydown', (e) => {
-    if (e.target instanceof HTMLInputElement) return;
+    if (isTyping(e.target)) return;
+    // spec 082: [ and ] go to the previous and next building
+    const to = e.altKey || e.ctrlKey || e.metaKey ? null : keyTarget(e.code, buildings, house.slug);
+    if (to) { location.href = to; return; }
     // the keys the HUD's own widgets use (timeline slider, toggle groups, menus) belong to them, not to the camera;
     // everything else (P, F, Tab, H, R, + / −) still works while one of them has focus
     const widgetKey = /^(Arrow|Home$|End$|Page)/.test(e.key);

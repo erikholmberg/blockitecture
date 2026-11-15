@@ -134,7 +134,7 @@ describe('spec 053: link previews, search engines and AI answers', () => {
   });
 
   it('A9: a house added to the registry shows up everywhere with nothing else to edit', () => {
-    const extra: House = { slug: 'test-house', title: 'Test House', architect: 'A. Architect', year: 1999, location: 'Somewhere',
+    const extra: House = { slug: 'test-house', title: 'Test House', architect: 'A. Architect', year: 1999, location: 'Somewhere', type: 'house', region: 'elsewhere',
       status: 'live', pieces: 10, thumbnail: '/test-house/thumbnail.jpg', blurb: 'A house for the test.' };
     const houses = [...HOUSES, extra];
     expect(seo.llmsTxt(houses)).toContain('[Test House](https://blockitecture.vercel.app/test-house/)');
