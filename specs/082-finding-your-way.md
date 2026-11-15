@@ -3,7 +3,7 @@
 - **Status:** In progress (approved by Erik 2026-11-14, "approve", with every recommended answer; built, every criterion checked, not yet committed)
 - **Owner:** Erik
 - **Created:** 2026-11-14
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** ae3e25e
 
 ## Goal
 With 32 buildings, there is only one way from one building to another: back to the home page, then down a two-column list of
