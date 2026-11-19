@@ -2,12 +2,12 @@
  * Spec 026: a tighter intro card. Title, text and the Start button in the main column; the control hints, the
  * disclaimer and (on phones) the map credit in a footer band. Used by the HUD on every house page.
  */
-import { ArrowLeftRight, Footprints, Hand, Move3d, Play, ZoomIn, EyeOff } from 'lucide-react';
+import { ArrowLeftRight, Footprints, Hand, Move3d, Play, Volume2, VolumeX, ZoomIn, EyeOff } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import type { HouseDefinition } from '@/engine/house';
 
-export function IntroCard({ text, pieces, compact, onStart, onFinished, credit }: {
+export function IntroCard({ text, pieces, compact, onStart, onFinished, credit, muted, onMute }: {
   text: HouseDefinition['text'];
   pieces: number;
   compact: boolean;
@@ -16,6 +16,9 @@ export function IntroCard({ text, pieces, compact, onStart, onFinished, credit }
   onFinished?: () => void;
   /** the map credit, shown on phones (where it isn't in the corner) */
   credit?: ReactNode;
+  /** spec 083: the build comes with music; this says so before it plays, and turns it off or on */
+  muted?: boolean;
+  onMute?: () => void;
 }) {
   const hints: [ReactNode, string][] = compact
     ? [[<Hand key="o" />, 'Drag to orbit'], [<ZoomIn key="z" />, 'Pinch to zoom'], [<EyeOff key="h" />, 'Tap to hide controls']]
@@ -32,7 +35,7 @@ export function IntroCard({ text, pieces, compact, onStart, onFinished, credit }
         <p className="text-sm leading-relaxed text-muted-foreground">
           {text.intro[0]} <b className="text-foreground">{pieces.toLocaleString('en-US')}</b> {text.intro[1]}
         </p>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <Button className="w-fit gap-1.5 px-4" onClick={onStart}>
             <Play className="size-3.5 fill-current" />
             Start building
@@ -40,6 +43,15 @@ export function IntroCard({ text, pieces, compact, onStart, onFinished, credit }
           {onFinished && (
             <button type="button" onClick={onFinished} className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground">
               See it finished
+            </button>
+          )}
+          {onMute && (
+            <button
+              type="button" onClick={onMute} aria-pressed={!muted}
+              className="ml-auto flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground [&_svg]:size-4"
+            >
+              {muted ? <VolumeX /> : <Volume2 />}
+              {muted ? 'Music off' : 'Music on'}
             </button>
           )}
         </div>

@@ -1,5 +1,6 @@
 import { Separator } from '@/components/ui/separator';
 import { House } from '@/houses/index';
+import { MUSIC } from '@/engine/music';
 
 /** "A, B or C" */
 const either = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} or ${xs[xs.length - 1]}`);
@@ -60,6 +61,17 @@ export function CreditsPage({ houses }: { houses: House[] }) {
                 OpenStreetMap contributors
               </a>{' '}
               (ODbL). Terrain from Mapzen / AWS Terrain Tiles.
+            </p>
+          </section>
+          <section data-credits="music">
+            <h2 className="text-lg font-semibold tracking-tight">Music</h2>
+            <p className="mt-2 text-sm">
+              “{MUSIC.title}” by {MUSIC.artist} (
+              <a className="underline underline-offset-2" href={MUSIC.artistUrl}>incompetech.com</a>), licensed under{' '}
+              <a className="underline underline-offset-2" href={MUSIC.licenceUrl}>
+                Creative Commons: By Attribution 4.0
+              </a>
+              . Played quieter than the original.
             </p>
           </section>
         </main>

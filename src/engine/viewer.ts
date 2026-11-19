@@ -18,6 +18,8 @@ import { attachTouch } from '@/engine/controls/touch';
 import { isTap } from '@/engine/controls/tap';
 import { CamAction, mountHud } from '@/engine/ui/Hud';
 import { NavBuilding, isTyping, keyTarget } from '@/engine/nav';
+import { MUSIC, readMuted, shouldPlay, writeMuted } from '@/engine/music';
+import { browserStorage, createMusicPlayer } from '@/engine/musicPlayer';
 import { Glide, MAX_DIST, MIN_DIST, orbitNear, rotated, View, WALK_NEAR, zoomed } from '@/engine/controls/cameraMoves';
 import { wantsCity, type HouseDefinition } from '@/engine/house';
 import { dateParam, sunFor } from '@/engine/scene/sun';
@@ -295,8 +297,17 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
   renderer.domElement.addEventListener('pointerup', (e) => lift(e, false));
   renderer.domElement.addEventListener('pointercancel', (e) => lift(e, true));
 
+  // spec 083: the soundtrack. Nothing is made or downloaded here; the first press does that (musicPlayer.ts)
+  const music = createMusicPlayer(`${import.meta.env.BASE_URL}${MUSIC.path}`);
+  const storage = browserStorage();
+  let started = false, muted = readMuted(storage);
+  const syncMusic = () => music.sync(shouldPlay({ started, muted, hidden: document.hidden }));
+  const toggleMute = () => { muted = !muted; writeMuted(storage, muted); hud.setMuted(muted); syncMusic(); };
+  document.addEventListener('visibilitychange', syncMusic);
+
   const hud = mountHud(app, {
-    onStart() { playing = true; sinceStart = 0; },
+    onStart() { playing = true; sinceStart = 0; started = true; syncMusic(); },
+    onMute: toggleMute,
     onPlayPause() { playing = !playing; if (t >= schedule.total) { t = 0; playing = true; } },
     onSpeed(s) { speed = s; },
     onSeek(v) { t = v; },
@@ -312,6 +323,7 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
     slug: house.slug, buildings,
   });
   hud.setPhaseTicks(schedule.phaseStart, schedule.total);
+  hud.setMuted(muted);
 
   hud.setAutoRotate(orbit.autoRotate);
   // a shared view (spec 007's ?view=, spec 037's ?cam= and ?t=)
@@ -365,6 +377,7 @@ export async function startViewer(house: HouseDefinition, makeWorker?: () => Wor
     const widgetKey = /^(Arrow|Home$|End$|Page)/.test(e.key);
     if (widgetKey && e.target instanceof Element && e.target.closest('[role=slider],[role=menu],[data-slot=toggle-group]')) return;
     if (e.code === 'KeyP') { playing = !playing; }
+    if (e.code === 'KeyM' && !e.altKey && !e.ctrlKey && !e.metaKey) toggleMute();
     if (e.code === 'KeyF' && mode === 'orbit') t = schedule.total;
     if (e.code === 'Tab') { e.preventDefault(); setMode(mode === 'orbit' ? 'walk' : 'orbit'); }
     if (mode === 'orbit') {

@@ -47,6 +47,7 @@ Visitors can orbit (default, slow auto-rotate) or walk through it in first perso
 ### Timeline & HUD: manual
 - **H1** [manual] The intro card shows the live piece count; **Start building** starts playback.
 - **H2** [manual] Play/pause (button or `P`), 1×/4×/16× speed, scrubbing, **Finish** (or `F` in orbit mode) and **Restart** all work.
+- Since spec 083 a building page also has music, off until the visitor switches it on (the intro card's switch, the speaker button or `M`).
 - **H3** [manual] The timeline shows a tick at each phase start; the current phase name and placed/total count update while it plays.
 
 ### Views: manual

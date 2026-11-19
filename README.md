@@ -16,6 +16,7 @@ foundations and pool, the steel frame, the furniture, the glass and walls, the r
 around it, or walk through it while it goes up.
 
 - **Timeline**: play/pause (P), 1×/4×/16× speed, scrub, finish (F), restart
+- **Music**: off until you switch it on (the intro card's switch, the speaker button or M); then a jazz track plays with the build and loops, and the choice is remembered (spec 083)
 - **Orbit / Walk** (Tab): WASD + mouse, Shift to run, Space to jump; a touch joystick on phones
 - **Camera controls**: zoom (+/−), rotate (←/→), home (H), auto-rotate (R), fullscreen, and named views:
   Overview, The famous view, Pool, Hills & basin

@@ -17,6 +17,8 @@ export interface HudSnapshot {
   chromeHidden: boolean;
   /** spec 037: a brief note, such as "Link copied" ('' or absent: none) */
   note?: string;
+  /** spec 083: the visitor turned the music off */
+  muted?: boolean;
 }
 
 export function createHudStore(initial: HudSnapshot) {

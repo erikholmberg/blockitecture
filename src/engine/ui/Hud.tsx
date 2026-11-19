@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  ArrowLeft, ChartColumn, Expand, Eye, Home, ImageDown, Link2, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Repeat, Share2, SlidersHorizontal,
+  ArrowLeft, ChartColumn, Expand, Eye, Home, ImageDown, Link2, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Repeat, Share2, SlidersHorizontal, Volume2, VolumeX,
 } from 'lucide-react';
 import type { HouseDefinition } from '@/engine/house';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -51,6 +51,8 @@ export interface HudHandlers {
   onCam(a: CamAction): void;
   /** spec 037: copy a link to this view, or save a postcard of it */
   onShare?(kind: 'link' | 'image'): void;
+  /** spec 083: turn the music off or on */
+  onMute?(): void;
 }
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -232,6 +234,21 @@ export function Hud({ store, h, house, compact: compactProp }: {
     </Button>
   );
 
+  // spec 083: pressed means the music is on
+  const muteButton = (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="outline" size="icon" className="size-9 shrink-0 rounded-lg"
+          aria-label={s.muted ? 'Music off (M)' : 'Music on (M)'} aria-pressed={!s.muted} onClick={() => h.onMute?.()}
+        >
+          {s.muted ? <VolumeX /> : <Volume2 />}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="top">{s.muted ? 'Turn music on (M)' : 'Turn music off (M)'}</TooltipContent>
+    </Tooltip>
+  );
+
   // spec 014: on phones a tap on the scene hides everything but a thin progress line
   if (compact && started && s.chromeHidden) {
     return (
@@ -253,6 +270,8 @@ export function Hud({ store, h, house, compact: compactProp }: {
               compact={compact}
               onStart={() => { setStarted(true); h.onStart(); }}
               onFinished={() => { setStarted(true); h.onStart(); h.onFinish(); }}
+              muted={!!s.muted}
+              onMute={h.onMute}
               credit={<a href={OSM_URL} target="_blank" rel="noopener" className="text-[11px] text-muted-foreground underline">{CREDIT}</a>}
             />
           </div>
@@ -364,6 +383,7 @@ export function Hud({ store, h, house, compact: compactProp }: {
               </div>
               <span className="shrink-0 text-xs text-muted-foreground tabular-nums">{fmt(Math.min(t, s.total))}</span>
               <Button variant="outline" size="sm" onClick={h.onFinish}>Finish</Button>
+              {muteButton}
             </div>
           </>
         ) : (
@@ -439,6 +459,7 @@ export function Hud({ store, h, house, compact: compactProp }: {
               <span className="w-9 shrink-0 text-xs text-muted-foreground tabular-nums">{fmt(Math.min(t, s.total))}</span>
               <Button variant="outline" size="sm" onClick={h.onFinish}>Finish</Button>
               <Button variant="outline" size="sm" onClick={h.onRestart}>Restart</Button>
+              {muteButton}
             </div>
           </>
         )}
@@ -467,6 +488,8 @@ export function mountHud(parent: HTMLElement, h: HudHandlers, total: number, pie
     setWalkHint: (walkHint: string) => store.set({ walkHint }),
     setAutoRotate: (autoRotate: boolean) => store.set({ autoRotate }),
     setLight: (light: 'day' | 'dusk') => store.set({ light }),
+    /** spec 083 */
+    setMuted: (muted: boolean) => store.set({ muted }),
     hide: () => store.set({ hidden: true }),
     /** spec 037: a brief note ("Link copied"), cleared after a couple of seconds */
     note: (note: string) => {
