@@ -7,7 +7,7 @@
   and it keeps playing while exploring)
 - **Owner:** Erik
 - **Created:** 2026-11-19
-- **Commits:** <!-- filled in when Done -->
+- **Commits:** 3ef40d9
 
 ## Goal
 A building page has a soundtrack: one jazz track starts when the visitor starts the build and keeps playing while they
